@@ -1,0 +1,257 @@
+---
+layout: base.njk
+tags: oc
+permalink: "{%if character_slug %}{{character_slug}}/{% endif %}{{ page_url | slugify }}/"
+---
+
+<div class="content oc" data-id="{{id}}">
+
+  <div id="profile">
+
+    <div class="header card">
+      <div class="text">
+        <h1 class="name">{{name}}{% if show_character_ids %}<span class="id">(#{{id}})</span>{% endif %}</h1>
+        <div class="flex-end">
+        {%- if creator_name -%}
+        <span class="creator">
+          <b>Creator:</b>&nbsp;{%- if creator_url -%}<a href="{{creator_url}}">{%- endif -%}{{creator_name}}{%- if creator_url -%}</a>{%- endif -%}
+        </span>
+        {%- endif -%}
+        <span class="created"><b>Created:</b> {{ created | htmlDateString }}</span>
+        <span class="updated"><b>Updated:</b> {{ updated | htmlDateString }}</span>
+        </div>
+      </div>
+      <div class="icon"><img src="{{icon}}" alt="Icon of {{name}}"></div>
+    </div>
+
+    <div class="backstory card">
+    <h3 class="content-title">Profile</h3>
+    {{ content | safe }}
+    </div>
+
+    {% if basic_info %}
+    <div class="info card">
+    <h3 class="content-title">Basic Info</h3>
+      <div class="keypairs">
+      {%- for key, value in basic_info -%}
+        <div class="key">{{key}}</div><div class="value">{{value | safe}}</div>
+      {%- endfor -%}
+      </div>
+    </div>
+    {% endif %}
+
+    {% if stats %}
+<div class="card">
+<h3 class="content-title">Attributes</h3>
+  <div class="stat-table">
+    <div class="stat str">
+      <strong class="stat-label">
+        <span aria-hidden="true">STR</span><span class="sr-only">Strength</span>
+      </strong>
+      <span class="stat-val">
+        {{stats.STR}}
+      </span>
+      <span class="stat-icon" aria-hidden="true">
+      <i class="fa-solid fa-dumbbell" aria-hidden="true"></i>
+      </span>
+    </div>
+    
+    <div class="stat dex">
+      <strong class="stat-label">
+        <span aria-hidden="true">DEX</span><span class="sr-only">Dexterity</span>
+      </strong>
+      <span class="stat-val">
+        {{stats.DEX}}
+      </span>
+      <span class="stat-icon" aria-hidden="true">
+      <i class="fa-solid fa-person-running" aria-hidden="true"></i>
+      </span>
+    </div>
+    
+    <div class="stat con">
+      <strong class="stat-label">
+        <span aria-hidden="true">CON</span><span class="sr-only">Constitution</span>
+      </strong>
+      <span class="stat-val">
+        {{stats.CON}}
+      </span>
+      <span class="stat-icon" aria-hidden="true">
+      <i class="fa-solid fa-heart-pulse" aria-hidden="true"></i>
+      </span>
+    </div>
+    
+    <div class="stat int">
+      <strong class="stat-label">
+        <span aria-hidden="true">INT</span><span class="sr-only">Intelligence</span>
+      </strong>
+      <span class="stat-val">
+        {{stats.INT}}
+      </span>
+      <span class="stat-icon" aria-hidden="true">
+      <i class="fa-solid fa-book" aria-hidden="true"></i>
+      </span>
+    </div>
+    
+    <div class="stat wis">
+      <strong class="stat-label">
+        <span aria-hidden="true">WIS</span><span class="sr-only">Wisdom</span>
+      </strong>
+      <span class="stat-val">
+        {{stats.WIS}}
+      </span>
+      <span class="stat-icon" aria-hidden="true">
+      <i class="fa-solid fa-eye" aria-hidden="true"></i>
+      </span>
+    </div>
+    
+    <div class="stat cha">
+      <strong class="stat-label">
+        <span aria-hidden="true">CHA</span><span class="sr-only">Charisma</span>
+      </strong>
+      <span class="stat-val">
+        {{stats.CHA}}
+      </span>
+      <span class="stat-icon" aria-hidden="true">
+        <i class="fa-solid fa-spray-can-sparkles" aria-hidden="true"></i>
+      </span>
+    </div>
+    </div>
+    
+  </div>
+{% endif %}
+
+  </div>
+
+  <div id="connections">
+
+    {% if friends and friends.length > 0 %}
+    <div class="card friends">
+      <h3 class="content-title">Friends</h3>
+      <ul class="oc-list extra-small">
+        {%- for friend in friends -%}
+          {%- for oc in collections.ocs -%}
+            {% if oc.data.id == friend %}
+              <li><a href="{{oc.url}}"><img src="{{oc.data.icon}}" alt="{{oc.data.name}}"></a></li>
+            {% endif %}
+          {%- endfor -%}
+        {%- endfor -%}
+        </ul>
+    </div>
+    {% endif %}
+    
+    {% if enemies and enemies.length > 0 %}
+    <div class="enemies card">
+      <h3 class="content-title">Enemies</h3>
+      <ul class="oc-list extra-small">
+      {%- for enemy in enemies -%}
+          {%- for oc in collections.ocs -%}
+            {% if oc.data.id == enemy %}
+              <li><a href="{{oc.url}}"><img src="{{oc.data.icon}}"></a></li>
+            {% endif %}
+          {%- endfor -%}
+        {%- endfor -%}
+      </ul>
+    </div>
+    {% endif %}
+
+    {% if connections and display_connections_on_profiles %}
+    <div class="card connections">
+      <h3 class="content-title">Connections</h3>
+      <ul class="connection-list">
+        {%- for character, opinion in connections -%}
+          {%- for oc in collections.ocs -%}
+            {% if (oc.data.id == character) %}
+              <li class="connection">
+                <div class="portrait"><div class="icon me"><img src="{{ icon }}"></div></div>
+                <div class="portrait"><div class="icon you"><a href="{{oc.url}}"><img src="{{oc.data.icon}}"></a></div></div>
+                <div class="connection-bubble left"><h3 class="name">{{name}}</h3>{{ opinion }}<i class="fa-solid fa-play tail" aria-hidden="true"></i></div>
+                <div class="connection-bubble right">
+                  <h3 class="name">{{oc.data.name}}</h3>
+                  {% if oc.data.connections is defined and oc.data.connections and id in oc.data.connections %}
+                  {{ oc.data.connections[id] }}
+                  {% else %}
+                  ...
+                  {% endif %}
+                  <i class="fa-solid fa-play tail" aria-hidden="true"></i>
+                </div>
+              </li>
+            {% endif %}
+          {%- endfor -%}
+        {%- endfor -%}
+        </ul>
+    </div>
+    {% endif %}
+
+  </div>
+
+  <div id="worlds">
+
+    {%- if worlds and worlds.length -%}
+    <div class="card">
+    <h3 class="content-title">Worlds</h3>
+      {%- for world in worlds -%}
+        <a href="/{% if world_slug %}{{world_slug}}/{% endif %}{{world | slugify }}">{{world}}</a>&nbsp;
+      {%- endfor -%}
+    </div>
+    {%- endif -%}
+
+  </div>
+
+  <div id="tags">
+    
+    {%- if tags and tags.length -%}
+    <div class="card">
+    <h3 class="content-title">Tags</h3>
+      {%- for tag in tags -%}
+        {%- if (tag != "oc") -%}
+          <a href="/{% if tag_slug %}{{tag_slug}}/{% endif %}{{tag | slugify }}">#{{tag.toLowerCase()}}</a>&nbsp;
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+    {%- endif -%}
+
+  </div>
+    
+  <div id="gallery-wrapper">
+    {% if gallery %}
+    <div class="card">
+      <h2 class="content-title">
+        {{ name }}'s Gallery
+      </h2>
+      <ul class="masonry-gallery" id="gallery">
+        {% for image in gallery %}
+          <li>
+          <img src="{%if image.thumb_url != null %}{{image.thumb_url}}{% else %}{{image.full_url}}{% endif %}" class="lightbox-thumb" data-full="{{image.full_url}}" data-title="{{image.title | safe}}" data-caption="{{image.description | safe}}" data-index="{{ loop.index0 }}" alt="{{image.alt}}" aria-role="button" title="Click for full image." tabindex="0">
+          </li>
+        {% endfor %}
+      </ul>
+
+      <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" type="button" aria-label="Close" ><i class="fa-sharp-duotone fa-solid fa-circle-xmark" aria-hidden="true"></i></button>
+        <button class="lightbox-arrow lightbox-prev" type="button" aria-label="Previous image" ><i class="fa-sharp fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+        <div class="lightbox-wrapper" tabindex="-1">
+          <div class="lightbox-content-wrapper">
+            <figure class="lightbox-figure">
+                <div class="lightbox-image-wrap"><img id="lightbox-image" src="" alt=""></div>
+                <figcaption>
+                    <div class="figcaption-inner">
+                      <h3 id="lightbox-title"></h3>
+                      <div id="lightbox-caption"></div>
+                      <span id="lightbox-counter" aria-live="polite"></span>
+                    </div>
+                </figcaption>
+            </figure>
+          </div>
+        </div>
+        <button class="lightbox-arrow lightbox-next" type="button" aria-label="Next image" ><i class="fa-sharp fa-solid fa-chevron-right" aria-hidden="true"></i></button>
+      </div>
+    {% endif %}
+    </div>
+  </div>
+    
+</div>
+  
+<script type="text/javascript" src="/public/js/lightbox.js"></script>
+{% if custom_css %}
+<link rel="stylesheet" type="text/css" href="/public/css/{{custom_css}}.css" />
+{% endif %}

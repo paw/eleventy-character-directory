@@ -1,0 +1,59 @@
+---
+layout: base.njk
+title: "Home"
+---
+
+{# The Home page uses this template–it extends the base template #}
+{# change the variables for: #}
+{# limit => number of chars shown on the page. set to 0 to disable both sections quickly. #}
+{# show_recently_created & show_recently_updated: true or false. enable these sections. #}
+
+<div class="content">
+
+  <section class="card">
+    {{ content | safe }}
+  </section>
+    
+  {% if character_config.ocs_per_homepage_row or character_config.ocs_per_homepage_row > 0 %}
+    {% if character_config.show_featured %}
+      <section class="card">
+        <h3 class="content-title">
+          Featured
+        </h3>
+        <ul class="oc-list small">
+          {%- for oc in collections.featured_ocs | limit(character_config.ocs_per_homepage_row) -%}
+            <li class="oc"><a href="{{ oc.url }}" title="{{ oc.data.name }}"><img src="{{ oc.data.icon }}"></a></li>
+          {%- endfor -%}
+        </ul>
+      </section>
+    {% endif %}
+
+    {% if character_config.show_recently_created %}
+      <section class="card">
+        <h3 class="content-title">
+          Recently Created
+        </h3>
+        <ul class="oc-list small">
+          {%- for oc in collections.oc_tags_by_created[ 'oc' ] | limit(character_config.ocs_per_homepage_row) -%}
+            <li class="oc"><a href="{{ oc.url }}" title="{{ oc.data.name }}"><img src="{{ oc.data.icon }}"></a></li>
+          {%- endfor -%}
+        </ul>
+      </section>
+    {% endif %}
+
+    {% if character_config.show_recently_updated %}
+      <section class="card">
+        <h3 class="content-title">
+          Recently Updated
+        </h3>
+        <ul class="oc-list small">
+        {%- for oc in collections.oc_tags[ 'oc' ] | limit(character_config.ocs_per_homepage_row) -%}
+          <li class="oc"><a href="{{ oc.url }}" title="{{ oc.data.name }}"><img src="{{ oc.data.icon }}"></a></li>  
+        {%- endfor -%}
+        </ul>
+      </section>
+    {% endif %}
+  {% endif %}
+</div>
+
+

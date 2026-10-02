@@ -1,0 +1,49 @@
+---
+layout: base.njk
+pagination:
+  data: collections.ocs_ordered_by_id
+  size: 4
+  reverse: false
+permalink: "all/{% if pagination.pageNumber > 0 %}{{ pagination.pageNumber | plus: 1 }}/{% endif %}"
+---
+
+<div class="content">
+<nav class="directory breadcrumbs card" aria-label="Breadcrumb">
+
+<div>
+<i class="fa-solid fa-folder-tree" aria-hidden="true"></i>
+<a href="/{{ character_config.base_directory | slugify }}/">
+    {{ character_config.base_directory }}
+</a>
+</div>
+<div><a href="/{{ character_config.base_directory | slugify }}/"><i class="fa-solid fa-folder"></i> View Folders</a></div>
+</nav>
+  <section class="card">{{ content | safe }}</section>
+  <section class="card">
+    <ul class="oc-list large">
+      {%- for oc in pagination.items -%}
+        <li class="oc">
+          <a href="{{ oc.url }}"><img src="{{ oc.data.icon }}" alt="{{ oc.data.name }}"></a>
+          {% if show_name_badges %}<a href="{{ oc.url }}" class="character-name-badge">{{ oc.data.name }}</a>{% endif %}
+        </li>
+      {%- endfor -%}
+    </ul>
+  </section>
+  {% if pagination.pageLinks.length > 1 %}
+    <nav class="pagination card">
+      {% if pagination.previousPageLink %}
+        <a class="pagination-item" href="{{ pagination.previousPageHref | url }}" title="Previous Page"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></a>
+      {% else %}
+        <span class="pagination-item disabled"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></span>
+      {% endif %}
+      <span>
+        Page {{ pagination.pageNumber + 1 }} of {{ pagination.pages.length }}
+      </span>
+      {% if pagination.nextPageLink %}
+        <a class="pagination-item" href="{{ pagination.nextPageHref | url }}" title="Next Page"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+      {% else %}
+        <span class="pagination-item disabled"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+      {% endif %}
+    </nav>
+  {% endif %}
+</div>

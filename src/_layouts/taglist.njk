@@ -1,0 +1,22 @@
+---
+layout: base.njk
+permalink: "/{{ title | slugify }}/"
+---
+
+{# Template for the Tag Directory #}
+{# Lists tags in alphabetical order #}
+
+<div class="wrapper home">
+  <div class="content">
+    {{ content | safe }}
+    <ul>
+      {%- for tag in collections.oc_taglist | sort(false, false, tag) -%}
+      <li><a href="/tagged/{{tag | slugify}}">{{tag}}</a></li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</div>
+
+<script type="text/javascript">
+
+</script>

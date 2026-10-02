@@ -1,0 +1,10 @@
+---
+layout: all_by_id.njk
+pagination:
+  data: collections.ocs_ordered_by_created
+  size: 4
+  reverse: false
+permalink: "created/{% if pagination.pageNumber > 0 %}{{ pagination.pageNumber | plus: 1 }}/{% endif %}"
+---
+
+{{ content | safe }}

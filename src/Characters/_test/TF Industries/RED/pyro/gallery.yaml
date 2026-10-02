@@ -1,0 +1,9 @@
+images:
+
+    - full: Pyro.png
+      thumbnail: Pyro.png
+      title: image 1
+      description: description
+      alt: alt text
+      credit: artist name here
+      credit_url: https://artistwebsite.com

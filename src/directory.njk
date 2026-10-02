@@ -1,0 +1,212 @@
+---
+layout: base.njk
+
+pagination:
+    data: collections.characterDirectoryPages
+    size: 1
+    alias: page
+
+permalink: "{{ page.directory.url }}{% if page.page > 1 %}/{{ page.page }}/{% endif %}"
+---
+
+<div class="content">
+<nav class="directory breadcrumbs card" aria-label="Breadcrumb">
+
+<div>
+<i class="fa-solid fa-folder-tree" aria-hidden="true"></i>
+<a href="/{{ character_config.base_directory | slugify }}/">
+    {{ character_config.base_directory }}
+</a>
+
+{% if page.directory.path %}
+
+    {% for part in page.directory.pathParts %}
+        <span aria-hidden="true">/</span>
+
+        <a href="/{{ character_config.base_directory | slugify }}/{{ part.path }}/">
+            {{ part.name }}
+        </a>
+    {% endfor %}
+
+{% endif %}
+</div>
+<div><a href="/all/"><i class="fa-solid fa-solid fa-users"></i> View All</a></div>
+</nav>
+
+<header class="directory-header card">
+
+    <div class="text">
+        <h1>
+        {% if page.directory.path == "" %}
+            <i class="fa-solid fa-users" aria-hidden="true"></i>&nbsp;{{ character_config.base_directory }}
+        {% else %}
+            <i class="fa-solid fa-folder" aria-hidden="true"></i>&nbsp;{{ page.directory.name }}
+        {% endif %}
+        </h1>
+        {% if page.directory.description %}
+
+    <div class="directory-description">
+        {{ page.directory.description.html | safe }}
+    </div>
+
+{% endif %}
+
+    </div>
+
+    {% if page.directory.icon %}
+
+    <div class="folder-icon">
+        <img src="/public/images/folders/{{ page.directory.icon_url }}" alt="">
+    </div>
+
+    {% endif %}
+
+
+</header>
+
+
+{% if page.directory.children.length %}
+
+
+<section class="directories card">
+
+    <h2 class="content-title">Folders</h2>
+
+    <ul class="folder-list extra-small">
+
+        {% for folder in page.directory.children %}
+
+            <li>
+                <a
+                    href="{{ folder.url }}"
+                    class="folder"
+                >
+
+                
+
+                    {% if folder.icon %}
+                    <div class="folder-icon">
+                        <img
+                            src="/public/images/folders/{{ folder.icon_url }}"
+                            alt=""
+                        >
+                    </div>
+
+                    {% else %}
+
+                        <div
+                            class="folder-placeholder folder-icon"
+                        >
+                            <i class="fa-solid fa-folder closed" aria-hidden="true"></i>
+                            <i class="fa-solid fa-folder-open open" aria-hidden="true"></i>
+                        </div>
+
+                    {% endif %}
+
+            </a>
+
+
+                <div class="folder-name">
+                    {{ folder.name }}
+                </div>
+            </li>
+
+        {% endfor %}
+
+    </ul>
+
+</section>
+
+
+{% endif %}
+
+
+{% if page.directory.path == "" and page.characters.length > 0 %}
+
+    <section class="characters card">
+
+    <h2 class="content-title">Unsorted Characters</h2>
+
+        <ul class="oc-list large">
+
+            {% for oc in page.characters %}
+
+                <li class="oc">
+                    <a href="{{ oc.url }}"><img src="{{ oc.data.icon }}" alt="{{ oc.data.name }}"></a>
+                    {% if show_name_badges %}<a href="{{ oc.url }}" class="character-name-badge">{{ oc.data.name }}</a>{% endif %}
+                </li>
+
+            {% endfor %}
+
+        </ul>
+
+    </section>
+
+{% elif page.characters.length > 0 %}
+
+
+<section class="characters card">
+
+    <h2 class="content-title">Characters</h2>
+
+    <ul class="oc-list large">
+
+        {% for oc in page.characters %}
+
+            <li class="oc">
+                <a href="{{ oc.url }}"><img src="{{ oc.data.icon }}" alt="{{ oc.data.name }}"></a>
+                {% if show_name_badges %}<a href="{{ oc.url }}" class="character-name-badge">{{ oc.data.name }}</a>{% endif %}
+            </li>
+
+        {% endfor %}
+
+    </ul>
+
+</section>
+
+
+{% elseif not page.directory.children.length %}
+
+
+<div class="card">
+    <i>This folder is empty.</i>
+</div>
+
+
+{% endif %}
+
+{% if page.pageCount > 1 %}
+
+
+<nav
+    class="pagination card"
+    aria-label="Character pagination"
+>
+
+    {% if page.page > 1 %}
+        <a class="pagination-item" href="{% if page.page == 2 %}{{ page.directory.url }}{% else %}{{ page.directory.url }}{{ page.page - 1 }}/{% endif %}" title="Previous Page"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></a>
+    {% else %}
+        <span class="pagination-item disabled"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></span>
+    {% endif %}
+
+
+    <span class="pagination-current">
+
+        Page
+        {{ page.page }}
+        of
+        {{ page.pageCount }}
+
+    </span>
+
+    {% if page.page < page.pageCount %}
+        <a class="pagination-item" href="{{ page.directory.url }}{{ page.page + 1 }}/" title="Next Page"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+    {% else %}
+        <span class="pagination-item disabled"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+    {% endif %}
+
+</nav>
+
+
+{% endif %}
+</div>

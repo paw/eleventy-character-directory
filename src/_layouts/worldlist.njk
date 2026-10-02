@@ -1,0 +1,23 @@
+---
+layout: base.njk
+templateClass: tmpl-home
+permalink: "/{{ title | slugify }}/"
+---
+
+{# Template for the Settings Directory #}
+{# Lists settings in alphabetical order #}
+
+<div class="wrapper home">
+  <div class="content">
+    {{ content | safe }}
+    <ul>
+      {%- for world in collections.oc_worlds  | sort(false, false, world) -%}
+      <li><a href="/world/{{world.name | slugify}}">{{world.name}}</a></li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</div>
+
+<script type="text/javascript">
+
+</script>

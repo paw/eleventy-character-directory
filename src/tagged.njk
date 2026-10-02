@@ -1,0 +1,24 @@
+---
+layout: base.njk
+templateClass: tmpl-home
+pagination:
+  data: collections.oc_tags
+  size: 1
+  alias: tag
+  filter: ["oc","all"]
+permalink: "{% if tag_slug %}{{tag_slug}}/{% endif %}{{ tag | slugify }}/{% if tag.page > 1 %}{{ tag.page }}/{% endif %}"
+---
+
+<div class="wrapper">
+  <div class="content">
+    <h3>Tag: “{{ tag }}”</h3>
+    <ol class="oc-list large">
+    {% set taglist = collections.oc_tags[ tag ] %}
+    {% for oc in taglist | reverse %}
+      {% if oc.data.show_in_directory == true %}
+        <li class="oc"><a href="{{ oc.url }}" title="{{ oc.data.name }}"><img src="{{ oc.data.icon }}" title="{{ oc.data.name }}"></a></li>
+      {% endif %}
+    {% endfor %}
+    </ol>
+  </div>
+</div>

@@ -1,0 +1,1 @@
+A mysterious company based in Washington, USA that is "devoted to the highest level of craftsmanship and personal security". Headed by the Administrator, they specialize in the very latest in military technology, selling all manner of deadly, cutting-edge devices to prospective buyers. They also run the popular 'Buildables' line of engineering products. 

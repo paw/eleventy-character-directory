@@ -1,0 +1,20 @@
+{
+    "base_directory" : "Characters",
+    "ocs_per_directory_page": 4,
+    "show_empty_directories": true,
+    "sort_characters_by": "id",
+
+    "ocs_per_homepage_row" : 5,
+    "show_featured": false,
+    "show_recently_created": true,
+    "show_recently_updated": true,
+
+    "show_character_ids": false,
+    "show_name_badges": true,
+    "display_connections_on_profiles": false,
+
+    "stories_slug": "s",
+    "world_slug": "w",
+    "tag_slug": "t",
+    "character_slug": "c"
+}

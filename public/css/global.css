@@ -1,0 +1,832 @@
+/******************************************************************************
+START Glitch hello-app default styles
+
+yes this started as a glitch project
+******************************************************************************/
+/* Our default values set as CSS variables */
+:root {
+  --color-bg: #322F31;
+  --color-navbar: #5A5354;
+  --color-text-main: #fcfbf6;
+  --color-text-header: #5ab5d1;
+  --color-borders: rgba(255, 255, 255, 0.125);
+  --color-borders-hover: rgba(255, 255, 255, 0.25);
+  --color-sidebar-bg: #474243;
+  --border-radius: 3px;
+  --borders: 1px solid var(--color-borders);
+  --color-card: #3A3639;
+  --color-primary: #AFECE0;
+  --color-primary-hover: #81c7b9;
+  --color-primary-text: #000;
+  --color-link: #5ab5d1;
+  --color-link-hover: #96d0e2;
+  --wrapper-height: 85vh;
+  --image-max-width: 320px;
+  --font-family: -apple-system,system-ui,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;
+  --font-family-header: -apple-system,system-ui,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;
+  --modal: rgba(0,0,0,0.5);
+}
+
+.no-scroll { overflow: hidden }
+.text-center { text-align: center }
+.text-right { text-align: right }
+.text-justify { text-align: justify }
+
+/* Basic page style resets */
+* {
+  box-sizing: border-box;
+}
+[hidden], .hide {
+  display: none !important;
+}
+dialog {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+.lightbox[open] {
+  padding: 2em;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  overflow: visible;
+  background: none;
+}
+.lightbox .wrapper {
+  display: block;
+  margin: auto;
+  overflow-y: auto;
+  height: 100%;
+  background: #fff;
+  padding: 0.5em;
+}
+.lightbox .close {
+  position: absolute;
+  top: 0.5em;
+  right: 0.5em;
+}
+.lightbox .prev {
+  position: absolute;
+  top: 50%;
+  left: -0.5em;
+}
+.lightbox .next {
+  position: absolute;
+  top: 50%;
+  right: -0.5em;
+}
+
+.lightbox::backdrop {
+  background-color: var(--modal);
+}
+.lightbox img {
+  display: block;
+  margin: auto auto 0.5em auto;
+  max-width: 100%;
+}
+.oc-list.large, .folder-list.large {
+  grid-gap: 0.9rem;
+  --cols: 4;
+}
+.oc-list.small, .folder-list.small {
+  grid-gap: 0.6rem;
+  --cols: 5;
+}
+.oc-list.extra-small, .folder-list.extra-small {
+  grid-gap: 0.5rem;
+  --cols: 7;
+}
+.oc-list, .folder-list {
+  --parent-padding: 0;
+  --cols: 4;
+  display: grid;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  grid-gap: 0.5rem;
+  --width: calc((100% - (var(--parent-padding) * 2)) / var(--cols));
+  grid-template-columns: repeat(var(--cols), var(--width));
+  justify-items: center;
+}
+@media screen and (max-width: 830px) {
+  .oc-list, .folder-list {
+    --cols: 3;
+  };
+  .oc-list.small, .folder-list.small {
+    --cols: 4;
+  };
+  .oc-list.extra-small, .folder-list.extra-small {
+    --cols: 5;
+  };
+}
+@media screen and (max-width: 670px) {
+  .oc-list, .folder-list {
+    --cols: 2;
+  };
+  .oc-list.small, .folder-list.small {
+    --cols: 3;
+  };
+  .oc-list.extra-small, .folder-list.extra-small {
+    --cols: 4;
+  };
+}
+@media screen and (max-width: 550px) {
+  .oc-list, .folder-list {
+    --cols: 1;
+  };
+  .oc-list.small, .folder-list.small {
+    --cols: 2;
+  };
+  .oc-list.extra-small, .folder-list.extra-small {
+    --cols: 3;
+  };
+}
+@media screen and (max-width: 400px) {
+  .oc-list, .folder-list {
+    --cols: 1;
+  };
+  .oc-list.small, .folder-list.small {
+    --cols: 1;
+  };
+  .oc-list.extra-small, .folder-list.extra-small {
+    --cols: 2;
+  };
+}
+.connection-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+.connection {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.connection > div {
+  flex: 0 0 calc(50% - 1rem);
+  max-width: 50%;
+}
+.connection > div:nth-child(odd) {
+  margin-right: 0.5rem;
+}
+.connection > div:nth-child(even) {
+  margin-left: 0.5rem;
+}
+.connection .portrait:first-child .icon {
+  margin-left: auto;
+  height: 150px;
+  width: 150px;
+}
+.connection-bubble {
+  background: #5a5354;
+  border-radius: 0.5rem;
+  position: relative;
+  padding: 0.75rem;
+  margin-top: 35px;
+  z-index: 2;
+  line-height: 1.5em;
+}
+.connection-bubble .tail {
+  color: #5a5354;
+  position: absolute;
+  z-index: -1;
+  font-size: 2.5rem;
+}
+.connection-bubble.left .tail {
+  right: 10%;
+  top: -1.8rem;
+  transform: rotate(-100deg) scaleY(0.8);
+}
+.connection-bubble.right .tail {
+  left: 10%;
+  top: -1.8rem;
+  transform: rotate(-80deg) scaleY(0.8);
+}
+@media screen and (max-width: 600px) {
+  .connection div.connection-bubble {
+    flex: 0 0 100%;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .connection-bubble.left {
+    order: -1;
+    margin-top: 0;
+    margin-bottom: 35px;
+  }
+  .connection-bubble.left .tail {
+    left: 30%;
+    right: unset;
+    top: unset;
+    bottom: -1.8rem;
+    transform: rotate(80deg) scaleY(0.8);
+  }
+  .connection-bubble.right .tail {
+    left: unset;
+    right: 30%;
+    top: -1.8rem;
+    transform: rotate(-100deg) scaleY(0.8);
+  }
+}
+
+.card .oc-list, .card .folder-list {
+  --parent-padding: 1.25rem;
+}
+.oc-list:empty {
+  display: block;
+}
+.oc-list:empty::before {
+  content: 'No characters found.';
+  opacity: 0.9;
+  font-style: italic;
+}
+.oc-list li, .folder-list li, .connection-list .you a {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+.oc-list a:has(img), .connection-list .you a:has(img), .connection-list .icon.me, .folder-list .folder-icon, .directory-header .folder-icon, .folder-placeholder, .masonry-column img {
+  padding: 0.2rem;
+  border: var(--borders);
+  border-radius: var(--border-radius);
+}
+.connection-list .icon a img {
+  max-width: 100%;
+  height: auto;
+}
+.character-name-badge, .folder-name, #tags a, #worlds a {
+	background-color: var(--color-primary);
+	background-image: none;
+	border-color: var(--color-borders);
+	color: var(--color-primary-text);
+  padding: 0.2rem 0.5rem;
+  margin: auto;
+  border-radius: var(--border-radius);
+  text-align:center;
+  word-wrap: break-word;
+  margin-top: 0.5rem;
+}
+.oc .header .id {
+  color: var(--color-text-main);
+  font-size: 1rem;
+  display: inline-block;
+  margin-left: 0.5rem;
+  opacity: 0.5;
+  vertical-align: middle;
+}
+.oc-list.large .character-name-badge {
+  max-width: 200px;
+}
+.character-name-badge:hover, #tags a:hover, #worlds a:hover {
+  text-decoration: none;
+	color: var(--color-primary-text);
+  background-color: var(--color-primary-hover);
+}
+.oc-list a:hover img, .folder-list a:hover .folder-icon, .connection-list a:has(img):hover, .folder-icon, .masonry-column img:hover {
+  border-color: var(--color-borders-hover);
+}
+.oc-list a:has(img), .folder-list .folder-icon, .folder-placeholder, .directory-header .folder-icon {
+  width: 200px;
+  height: 200px;
+}
+.oc-list.small a:has(img), .connection-list a:has(img), .connection-list div.portrait .icon, .folder-list.small .folder-icon, .folder-list.small .folder-placeholder {
+  width: 150px;
+  height: 150px;
+}
+.oc-list.extra-small a:has(img), .folder-list.extra-small .folder-icon, .folder-list.extra-small .folder-placeholder {
+  width: 100px;
+  height: 100px;
+}
+.card img, .oc-list img, .folder-list img, .directory-header .folder-icon img, .oc #profile .icon img {
+  max-width: 100%;
+  height: auto;
+}
+.folder-icon img {
+	background-color: #322f31;
+	border: 1px solid #706968;
+	border-radius: .25rem;
+	padding: .25rem;
+	transition: none;
+}
+.folder:hover, .folder:focus {
+  text-decoration: none;
+}
+.folder-placeholder, .folder-icon, .oc-list a:has(img) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.folder-placeholder, .folder-icon {
+  font-size: 4.5rem;
+}
+.folder-placeholder .open,
+a:hover .folder-placeholder .closed,
+a:focus .folder-placeholder .closed {
+  display: none;
+}
+a:hover .folder-placeholder .open,
+a:focus .folder-placeholder .open {
+  display: block;
+}
+
+#navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0;
+  padding: 1rem;
+  border-bottom: 4px solid var(--color-borders);
+  background: var(--color-navbar);
+  top: 0px;
+  z-index: 15;
+  position: sticky;
+  font-size: 1.2rem;
+}
+.title {
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+.nav .links a:not(:last-child)::after {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+  height: 100%;
+  width: 100%;
+  width: 1px;
+  background: var(--color-borders);
+  left: calc(100% + 1rem);
+}
+
+.nav a:link,
+.nav a:visited {
+  position: relative;
+  margin: 0 1rem;
+}
+.nav.up {
+  top: -100%;
+}
+
+/* Navigation grid */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  margin: auto 0 0;
+  padding: 1rem 0.5rem 0.75rem;
+  width: 100%;
+  flex-wrap: wrap;
+  background: var(--color-navbar);
+  border-top: 1px solid var(--color-borders);
+}
+
+.footer .links {
+  padding: 0.5rem 1rem 1.5rem;
+  white-space: nowrap;
+}
+
+.divider {
+  padding: 0 1rem;
+}
+/******************************************************************************
+END Glitch hello-app default styles
+******************************************************************************/
+
+/* Page structure */
+body {
+  font-family: var(--font-family);
+  background-color: var(--color-bg);
+  color: var(--color-text-main);
+  margin: 0;
+}
+#wrapper {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+.content {
+  width: calc(900px + 1rem);
+  padding: 0 0.5rem;
+  max-width: 100%;
+  margin: 1rem auto;
+  word-wrap: break-word;
+}
+
+/* Typography */
+p {
+  margin: 0 0 1rem 0;
+  line-height: 1.5em;
+  font-size: 1rem;
+}
+h1,
+h2,
+h3,
+h4,
+h5 {
+  margin: 0 0 .8rem;
+  font-family: var(--font-family-header);
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--color-text-main);
+}
+h1 {
+  margin-top: 1rem;
+  margin-bottom: 1.75rem;
+  font-size: 3rem;
+  color: var(--color-text-header);
+}
+h2 {
+  font-size: 2rem;
+}
+h3 {
+  font-size: 1.5rem;
+}
+h4 {
+  font-size: 1.2rem;
+}
+h5 {
+  font-size: 1.1rem;
+}
+small, .text_small {
+  font-size: 0.8rem;
+}
+
+ul li {
+  margin-bottom: 0.7rem;
+}
+
+/* Link styles */
+a,
+a.visited {
+  text-decoration: none;
+  color: var(--color-link);
+}
+a:hover {
+  color: var(--color-link-hover);
+  text-decoration: underline;
+}
+
+/* Title style adjustments */
+.title-lg {
+  color: var(--color-text-main);
+  font-family: HK Grotesk;
+  font-style: normal;
+  font-weight: bold;
+  line-height: 1.5;
+}
+.title-md {
+  font-size: 56px;
+}
+
+/* Layout: Home */
+.card {
+  background: var(--color-card);
+  border-radius: var(--border-radius);
+  border: var(--borders);
+  padding: 1rem 1.25rem;
+  margin: 0 auto 1.5rem;
+}
+.illo-container {
+  display: flex;
+  justify-content: flex-end;
+}
+.illustration {
+  max-width: 180px;
+  max-height: var(--image-max-width);
+  margin-top: 1rem;
+  margin-right: 2rem;
+  transform: rotate(16deg);
+}
+
+/* Post */
+.post {
+  place-items: normal;
+}
+.postTitle {
+  font-size: 4rem;
+  color: var(--color-text-main);
+  line-height: 1.1;
+  margin-bottom: 2rem;
+}
+.controls {
+  margin: 3rem 0 2rem;
+}
+
+/*ocs*/
+.breadcrumbs {
+  display: flex;
+  justify-content: space-between;
+}
+.breadcrumbs div:nth-child(2) {
+  text-align: right;
+}
+.oc .header, .directory-header {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.oc .header .text, .directory-header .text {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  max-width: calc(100% - 200px)
+}
+.directory-header .text h1 {
+  display: inline-flex;
+}
+.directory-header .text h1:only-child {
+  margin-bottom: 1rem;
+}
+.oc .header h1 {
+  margin: 0 0 1rem;
+  display: block;
+}
+.oc .header span {
+  display: block;
+}
+.content-title {
+  padding: 0 0 0.5rem;
+  border-bottom: 1px solid var(--color-borders);
+}
+.oc #profile .icon {
+  max-width: 200px;
+  width: 200px;
+  height: 200px;
+  padding: 0.2rem;
+  border: var(--borders);
+  border-radius: var(--border-radius);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#sidebar {
+  background: var(--color-sidebar-bg);
+  width: 200px;
+}
+.keypairs {
+  display: grid;
+	padding: 0;
+	grid-template-columns: repeat(2, 50%);
+  grid-gap: 0.5rem;
+}
+.key {
+  font-weight: bold;
+}
+.stat-table {
+	display: grid;
+	padding: 0;
+	text-align: center;
+	justify-content: space-evenly;
+	grid-template-columns: repeat(3, 33%);
+	justify-items: center;
+}
+.stat {
+	position: relative;
+	display: flex;
+	justify-content: center;
+	min-height: 50px;
+	align-items: center;
+	font-size: 2rem;
+	padding: 0.5em;
+	width: 150px;
+	margin: 3rem 0.25rem 2rem 0.25rem;
+	max-width: 98%;
+  background: var(--color-bg);
+  border-radius: var(--border-radius);
+  border: var(--borders);
+
+}
+.stat-label {
+	position: absolute;
+	bottom: -1.5rem;
+	font-size: 1.2rem;
+	font-weight: bold;
+	background: var(--color-navbar);
+	color: var(--color-text-main);
+  border-radius: var(--border-radius);
+  border: var(--borders);
+	padding: 0.2em 0.5em;
+}
+.stat-icon {
+	position: absolute;
+	top: -1.5em;
+	font-size: 1.5em;
+	background: var(--color-navbar);
+	color: var(--color-text-main);
+	padding: 0.2em 0.4em;
+	border-radius: var(--border-radius);
+  border: var(--borders);
+	font-size: 1.2rem;
+}
+/*pagination*/
+.pagination {
+  display: flex;
+  justify-content: center;
+  font-size: 2rem;
+}
+.pagination-item {
+  margin: 0 0.5em;
+}
+.pagination-item.disabled {
+  opacity: 0;
+}
+
+@media screen and (max-width: 600px) {
+  .oc .header, .directory-header {
+    flex-direction: column;
+  }
+  .oc .header .icon, .directory-header .folder-icon {
+    order: -1;
+    margin: auto;
+  }
+  .oc .header .text, .directory-header .text {
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
+.sr-only {
+	border: 0 !important;
+	clip: rect(1px, 1px, 1px, 1px) !important;
+	-webkit-clip-path: inset(50%) !important;
+    clip-path: inset(50%) !important;
+	height: 1px !important;
+	margin: -1px !important;
+	overflow: hidden !important;
+	padding: 0 !important;
+	position: absolute !important;
+	width: 1px !important;
+	white-space: nowrap !important;
+}
+
+/*lightbox shit*/
+.masonry-gallery {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  margin: 0;
+  list-style: none;
+}
+
+.masonry-column {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 1rem;
+  min-width: 0;
+  font-size: 1rem;
+}
+
+.masonry-column li {
+  margin: 0;
+}
+
+.masonry-column img {
+  display: block;
+  width: 100%;
+  margin: auto;
+  height: auto;
+  cursor: pointer;
+}
+/* Lightbox */
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: none;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.lightbox.is-open {
+  display: flex;
+}
+
+.lightbox-wrapper {
+	text-align: center;
+	max-width: 100%;
+	height: 100%;
+	left: 0;
+	top: 0;
+	padding: 1rem 0 0;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  outline: none;
+}
+.lightbox-wrapper::-webkit-scrollbar { 
+  display: none;
+}
+
+.lightbox-content-wrapper {
+  border-radius: 0.5rem;
+	margin: 0 0.5rem;
+	min-width: 20vw;
+  display: block;
+  max-height: 100%;
+}
+
+.lightbox-figure {
+  display: flex;
+  flex-direction: column;
+  width: auto;
+  max-width: 100%;
+  margin: 0;
+  text-align: center;
+}
+
+.lightbox-figure img {
+  display: block;
+  object-fit: contain;
+  margin: 0 auto;
+  /* change this to change max image size*/
+  max-height: 120vh;
+}
+/* add bg like th */
+.lightbox-figure .lightbox-image-wrap {
+  background: repeating-conic-gradient(#ddd 0 25%, #eee 0 50%) 
+      50% / 20px 20px
+}
+
+
+/* Caption stays inside the figure */
+.figcaption-inner {
+  padding: 0.75rem 0.5rem 0.5rem;
+  color: white;
+  background: #322f31;
+  margin: 0 0 1rem;
+}
+.lightbox-figure figcaption {
+  flex: 0 0 auto;
+  line-height: 1.4;
+  width: 100%;
+}
+.lightbox-figure figcaption #title {
+  margin: 0 0 0.5em 0;
+}
+
+/* Arrows */
+
+.lightbox-arrow {
+  z-index: 2;
+  border: 0;
+  padding: 0;
+  color: white;
+  background: none;
+  font-size: 3rem;
+  line-height: 1;
+  height: 100%;
+  width: 2.5rem;
+  cursor: pointer;
+  flex-grow: 1;
+}
+.lightbox-arrow i {
+  width: 100%;
+}
+
+.lightbox-prev {
+  left: 0;
+  padding-left: 0.5rem;
+}
+
+.lightbox-next {
+  right: 0;
+  padding-right: 0.5rem;
+}
+
+
+/* Close */
+
+.lightbox-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+
+  z-index: 3;
+
+  border: 0;
+  padding: 0;
+
+  background: none;
+  color: white;
+
+  font-size: 3rem;
+  line-height: 1;
+
+  cursor: pointer;
+}
