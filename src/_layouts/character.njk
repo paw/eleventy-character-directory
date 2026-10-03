@@ -10,15 +10,36 @@ permalink: "{%if character_slug %}{{character_slug}}/{% endif %}{{ page_url | sl
 
     <div class="header card">
       <div class="text">
-        <h1 class="name">{{name}}{% if show_character_ids %}<span class="id">(#{{id}})</span>{% endif %}</h1>
-        <div class="flex-end">
-        {%- if creator_name -%}
+        <h1 class="name">{{name}}{% if character_config.show_character_ids %}<span class="id">(#{{id}})</span>{% endif %}</h1>
+        {%- if subtitle -%}<h2 class="subtitle">{{subtitle}}</h1>{%- endif -%}
+        {%- if quote -%}
+        <div class="quote">
+          <div class="words">“{{quote.words}}”</div>
+          <div class="credit">{%- if quote.credit -%}― {{ quote.credit }}{%- endif -%}</div>
+        </div>
+        {%- endif -%}
+          
+        {%- if creator -%}
+        <div class="flex-end header-stats three">
+        {%- else -%}
+        <div class="flex-end header-stats">
+        {%- endif -%}
+        {%- if creator -%}
         <span class="creator">
-          <b>Creator:</b>&nbsp;{%- if creator_url -%}<a href="{{creator_url}}">{%- endif -%}{{creator_name}}{%- if creator_url -%}</a>{%- endif -%}
+          <b>Creator:</b>&nbsp;{%- if creator.url -%}<a href="{{ creator.url }}">{%- endif -%}{{creator.name}}{%- if creator.url -%}</a>{%- endif -%}
         </span>
         {%- endif -%}
         <span class="created"><b>Created:</b> {{ created | htmlDateString }}</span>
         <span class="updated"><b>Updated:</b> {{ updated | htmlDateString }}</span>
+        {% if songs and songs.length > 0 %}
+          <div class="songlist"><strong class="content-title sr-only">Playlist:</strong>
+            <ul class="songs">
+            {% for song in songs %}
+              <li class="song"><a href="{{song.url}}" target="_blank" title="{{song.artist}} – {{song.title}}"><i class="fa-solid fa-music" aria-hidden="true"></i></a></li>
+            {% endfor %}
+            </ul>
+          </div>
+        {% endif %} 
         </div>
       </div>
       <div class="icon"><img src="{{icon}}" alt="Icon of {{name}}"></div>
@@ -131,7 +152,10 @@ permalink: "{%if character_slug %}{{character_slug}}/{% endif %}{{ page_url | sl
         {%- for friend in friends -%}
           {%- for oc in collections.ocs -%}
             {% if oc.data.id == friend %}
-              <li><a href="{{oc.url}}"><img src="{{oc.data.icon}}" alt="{{oc.data.name}}"></a></li>
+              <li>
+                <a href="{{oc.url}}"><img src="{{oc.data.icon}}" alt="{{oc.data.name}}"></a>
+                {% if character_config.show_name_badges_on_profiles %}<a href="{{ oc.url }}" class="character-name-badge">{{ oc.data.name }}</a>{% endif %}
+              </li>
             {% endif %}
           {%- endfor -%}
         {%- endfor -%}
@@ -146,7 +170,10 @@ permalink: "{%if character_slug %}{{character_slug}}/{% endif %}{{ page_url | sl
       {%- for enemy in enemies -%}
           {%- for oc in collections.ocs -%}
             {% if oc.data.id == enemy %}
-              <li><a href="{{oc.url}}"><img src="{{oc.data.icon}}"></a></li>
+              <li>
+                <a href="{{oc.url}}" title="{{oc.data.name}}"><img src="{{oc.data.icon}}" alt="Icon of {{oc.data.name}}"></a>
+                {% if character_config.show_name_badges_on_profiles %}<a href="{{ oc.url }}" class="character-name-badge">{{ oc.data.name }}</a>{% endif %}
+              </li>
             {% endif %}
           {%- endfor -%}
         {%- endfor -%}
@@ -154,7 +181,7 @@ permalink: "{%if character_slug %}{{character_slug}}/{% endif %}{{ page_url | sl
     </div>
     {% endif %}
 
-    {% if connections and display_connections_on_profiles %}
+    {% if connections and character_config.display_connections_on_profiles %}
     <div class="card connections">
       <h3 class="content-title">Connections</h3>
       <ul class="connection-list">
@@ -162,8 +189,8 @@ permalink: "{%if character_slug %}{{character_slug}}/{% endif %}{{ page_url | sl
           {%- for oc in collections.ocs -%}
             {% if (oc.data.id == character) %}
               <li class="connection">
-                <div class="portrait"><div class="icon me"><img src="{{ icon }}"></div></div>
-                <div class="portrait"><div class="icon you"><a href="{{oc.url}}"><img src="{{oc.data.icon}}"></a></div></div>
+                <div class="portrait"><div class="icon me"><img src="{{ icon }}" alt="{{name}}"></div></div>
+                <div class="portrait"><div class="icon you"><a href="{{oc.url}}"><img src="{{oc.data.icon}}" alt="{{oc.data.name}}"></a></div></div>
                 <div class="connection-bubble left"><h3 class="name">{{name}}</h3>{{ opinion }}<i class="fa-solid fa-play tail" aria-hidden="true"></i></div>
                 <div class="connection-bubble right">
                   <h3 class="name">{{oc.data.name}}</h3>

@@ -24,7 +24,7 @@ permalink: "all/{% if pagination.pageNumber > 0 %}{{ pagination.pageNumber | plu
       {%- for oc in pagination.items -%}
         <li class="oc">
           <a href="{{ oc.url }}"><img src="{{ oc.data.icon }}" alt="{{ oc.data.name }}"></a>
-          {% if show_name_badges %}<a href="{{ oc.url }}" class="character-name-badge">{{ oc.data.name }}</a>{% endif %}
+          {% if character_config.show_name_badges_in_directory %}<a href="{{ oc.url }}" class="character-name-badge">{{ oc.data.name }}</a>{% endif %}
         </li>
       {%- endfor -%}
     </ul>

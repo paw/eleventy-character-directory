@@ -1,7 +1,4 @@
 ---
-site_title: "Site Title Here"
-site_title_icon: fa-solid fa-book-atlas
-
 # CUSTOMIZE SOME STUFF HERE
 
 limit: 5
@@ -21,17 +18,17 @@ character_slug: c
 <html lang="en">
   <head>
     {%if title %}
-    <title>{{ site_title }} - {{ title }}</title>
+    <title>{{ character_config.site_title }} - {{ title }}</title>
     {% elif name %}
-    <title>{{ site_title }} - {{ name }}</title>
+    <title>{{ character_config.site_title }} - {{ name }}</title>
     {% else %}
-    <title>{{ site_title }}</title>
+    <title>{{ character_config.site_title }}</title>
     {% endif %}
     <meta charset="utf-8" />
     <link rel="icon" href="https://glitch.com/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     {% if page_description %}<meta name="description" content="{{ description }}" />{% endif %}
-    <link rel="stylesheet" type="text/css" href="/public/css/global.css" />
+    <link rel="stylesheet" type="text/css" href="/public/css/{{character_config.main_css_file}}.css" />
     <script src="/public/js/main.js" ></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v7.3.1/css/all.css" crossorigin="anonymous">
   </head>
@@ -39,7 +36,7 @@ character_slug: c
   <main>
     
     <nav id="navbar" class="nav">
-        <span class="title"><i class="{{ site_title_icon }}" aria-hidden="true"></i> {{ site_title }}</span>
+        <span class="title">{%- if character_config.site_title_icon -%}<i class="{{ character_config.site_title_icon }}" aria-hidden="true"></i>&nbsp;{%- endif -%}{{ character_config.site_title | safe }}</span>
         <div class="links">
           <a href="/"><i class="fa-solid fa-house" aria-hidden="true"></i> Home</a>
           <a href="/{{ character_config.base_directory | slugify }}"><i class="fa-solid fa-users" aria-hidden="true"></i> Directory</a>

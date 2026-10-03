@@ -15,6 +15,7 @@ yes this started as a glitch project
   --border-radius: 3px;
   --borders: 1px solid var(--color-borders);
   --color-card: #3A3639;
+  --color-card-inner-section: #5a5354;
   --color-primary: #AFECE0;
   --color-primary-hover: #81c7b9;
   --color-primary-text: #000;
@@ -88,7 +89,6 @@ dialog {
 }
 .oc-list.large, .folder-list.large {
   grid-gap: 0.9rem;
-  --cols: 4;
 }
 .oc-list.small, .folder-list.small {
   grid-gap: 0.6rem;
@@ -113,46 +113,46 @@ dialog {
 @media screen and (max-width: 830px) {
   .oc-list, .folder-list {
     --cols: 3;
-  };
+  }
   .oc-list.small, .folder-list.small {
     --cols: 4;
-  };
+  }
   .oc-list.extra-small, .folder-list.extra-small {
     --cols: 5;
-  };
+  }
 }
 @media screen and (max-width: 670px) {
   .oc-list, .folder-list {
     --cols: 2;
-  };
+  }
   .oc-list.small, .folder-list.small {
     --cols: 3;
-  };
+  }
   .oc-list.extra-small, .folder-list.extra-small {
     --cols: 4;
-  };
+  }
 }
 @media screen and (max-width: 550px) {
   .oc-list, .folder-list {
     --cols: 1;
-  };
+  }
   .oc-list.small, .folder-list.small {
     --cols: 2;
-  };
+  }
   .oc-list.extra-small, .folder-list.extra-small {
     --cols: 3;
-  };
+  }
 }
 @media screen and (max-width: 400px) {
   .oc-list, .folder-list {
     --cols: 1;
-  };
+  }
   .oc-list.small, .folder-list.small {
     --cols: 1;
-  };
+  }
   .oc-list.extra-small, .folder-list.extra-small {
     --cols: 2;
-  };
+  }
 }
 .connection-list {
   list-style-type: none;
@@ -180,7 +180,7 @@ dialog {
   width: 150px;
 }
 .connection-bubble {
-  background: #5a5354;
+  background: var(--color-card-inner-section);
   border-radius: 0.5rem;
   position: relative;
   padding: 0.75rem;
@@ -189,7 +189,7 @@ dialog {
   line-height: 1.5em;
 }
 .connection-bubble .tail {
-  color: #5a5354;
+  color: var(--color-card-inner-section);
   position: absolute;
   z-index: -1;
   font-size: 2.5rem;
@@ -230,7 +230,57 @@ dialog {
     transform: rotate(-100deg) scaleY(0.8);
   }
 }
-
+.oc .header .header-stats {
+  display: grid;
+  grid-template-rows: 1.5rem 1rem;
+  grid-template-columns: auto;
+}
+.oc .header .header-stats:has(.songlist) {
+  grid-template-columns: auto;
+}
+.oc .header .header-stats.three {
+  grid-template-rows: 1.5rem 1.5rem 1rem;
+}
+.songlist {
+	margin: 0.5rem 0.5rem 0 auto;
+	display: flex;
+	grid-row: 1 / 3;
+	grid-column: 2 / 3;
+  align-self: flex-end;
+}
+.three .songlist {
+	grid-row: 1 / 4;
+}
+.songs {
+  margin: 0;
+  display: inline-flex;
+  list-style-type: none;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  padding: 0;
+}
+.song {
+	margin: 0.5rem 0.2rem 0;
+	padding: 0.3rem 0.5rem;
+	background: var(--color-card-inner-section);
+	border-radius: 0.4rem;
+	transition: 0.3s color;
+	font-size: 1.3rem;
+	height: 2.2rem;
+}
+.quote {
+  padding: 0 0.5rem 0.5rem;
+  margin: 1rem 0 0;
+}
+.quote .words {
+  font-style: italic;
+  font-size: 1.1rem;
+}
+.quote .credit {
+  text-align: right;
+  margin: 0.5rem 0.5rem 0 0;
+  font-weight: bold;
+}
 .card .oc-list, .card .folder-list {
   --parent-padding: 1.25rem;
 }
@@ -268,6 +318,9 @@ dialog {
   word-wrap: break-word;
   margin-top: 0.5rem;
 }
+.oc-list.extra-small .character-name-badge {
+  font-size: 0.8rem;
+}
 .oc .header .id {
   color: var(--color-text-main);
   font-size: 1rem;
@@ -284,7 +337,7 @@ dialog {
 	color: var(--color-primary-text);
   background-color: var(--color-primary-hover);
 }
-.oc-list a:hover img, .folder-list a:hover .folder-icon, .connection-list a:has(img):hover, .folder-icon, .masonry-column img:hover {
+.oc-list a:has(img):hover, .folder-list a:hover .folder-icon, .connection-list a:has(img):hover, .folder-icon, .masonry-column img:hover {
   border-color: var(--color-borders-hover);
 }
 .oc-list a:has(img), .folder-list .folder-icon, .folder-placeholder, .directory-header .folder-icon {
@@ -317,6 +370,7 @@ dialog {
   display: flex;
   justify-content: center;
   align-items: center;
+  align-self: center;
 }
 .folder-placeholder, .folder-icon {
   font-size: 4.5rem;
@@ -390,9 +444,6 @@ a:focus .folder-placeholder .open {
 .divider {
   padding: 0 1rem;
 }
-/******************************************************************************
-END Glitch hello-app default styles
-******************************************************************************/
 
 /* Page structure */
 body {
@@ -524,15 +575,18 @@ a:hover {
 }
 .oc .header, .directory-header {
   display: flex;
-  justify-content: space-between;
   padding-bottom: 1.5rem;
   margin-bottom: 1.5rem;
+}
+.oc .header:has(.icon), .directory-header:has(.folder-icon) {
+  justify-content: flex-end;
 }
 .oc .header .text, .directory-header .text {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  max-width: calc(100% - 200px)
+  max-width: calc(100% - 200px);
+  width: calc(100% - 200px);
 }
 .directory-header .text h1 {
   display: inline-flex;
@@ -541,7 +595,12 @@ a:hover {
   margin-bottom: 1rem;
 }
 .oc .header h1 {
-  margin: 0 0 1rem;
+  margin: 0 0 0.5rem;
+  display: block;
+}
+.oc .header .subtitle {
+  font-size: 1.3rem;
+  margin: 0 0 auto;
   display: block;
 }
 .oc .header span {
@@ -561,6 +620,7 @@ a:hover {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: auto;
 }
 #sidebar {
   background: var(--color-sidebar-bg);
@@ -646,6 +706,22 @@ a:hover {
     max-width: 100%;
     width: 100%;
   }
+  .oc .header .header-stats, .oc .header .header-stats.three, .oc .header .header-stats:has(.songlist)  {
+    grid-template-columns: 50% 50%;
+    margin-top: 1rem;
+  }
+  .oc .header .header-stats .songlist, .oc .header .header-stats.three .songlist {
+    grid-column: 1 / 3;
+    grid-row-start: 4;
+    align-self: center;
+    width: 100%;
+    justify-content: center;
+    margin: 0;
+    align-items: center;
+  }
+  .oc .header .header-stats .songlist {
+    grid-row-start: 3;
+  }
 }
 
 .sr-only {
@@ -660,6 +736,9 @@ a:hover {
 	position: absolute !important;
 	width: 1px !important;
 	white-space: nowrap !important;
+}
+.flex-end {
+  justify-self: flex-end;
 }
 
 /*lightbox shit*/

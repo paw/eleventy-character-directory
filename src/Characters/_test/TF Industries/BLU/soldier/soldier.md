@@ -9,8 +9,11 @@ name: Soldier
 page_url: screaming eagle
 
 icon: /public/image/soldier.jpg
-quote: If fighting is sure to result in victory, then you must fight!
-quote_attribution: The Soldier
+quote:
+    words: If fighting is sure to result in victory, then you must fight!
+    credit: The Soldier
+
+subtitle: Screamin' Eagle
 
 full-name: Jane Doe
 species: Human

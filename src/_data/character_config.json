@@ -10,11 +10,16 @@
     "show_recently_updated": true,
 
     "show_character_ids": false,
-    "show_name_badges": true,
-    "display_connections_on_profiles": false,
+    "show_name_badges_in_directory": true,
+    "show_name_badges_on_profiles": false,
+    "display_connections_on_profiles": true,
 
     "stories_slug": "s",
     "world_slug": "w",
     "tag_slug": "t",
-    "character_slug": "c"
+    "character_slug": "c",
+
+    "site_title" : "My Character Database",
+    "site_title_icon" : "fa-solid fa-book-atlas",
+    "main_css_file" : "global"
 }
