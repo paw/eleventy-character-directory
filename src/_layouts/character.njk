@@ -1,7 +1,7 @@
 ---
 layout: base.njk
 tags: oc
-permalink: "{%if character_slug %}{{character_slug}}/{% endif %}{{ page_url | slugify }}/"
+permalink: "{%- if character_slug -%}{{character_slug}}/{%- endif -%}{%- if page_url -%}{{ page_url | slugify }}{%- else -%}{{ id }}{%- endif -%}/"
 ---
 
 <div class="content oc" data-id="{{id}}">
@@ -42,7 +42,11 @@ permalink: "{%if character_slug %}{{character_slug}}/{% endif %}{{ page_url | sl
         {% endif %} 
         </div>
       </div>
-      <div class="icon"><img src="{{icon}}" alt="Icon of {{name}}"></div>
+      {%- if portrait -%}
+        <div class="portrait"><img src="{{portrait}}" alt="Portrait of {{name}}"></div>
+      {%- else -%}
+        <div class="icon"><img src="{{icon}}" alt="Icon of {{name}}"></div>
+      {%- endif -%}
     </div>
 
     <div class="backstory card">

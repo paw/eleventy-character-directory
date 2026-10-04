@@ -1,7 +1,6 @@
 ---
 layout: all_by_id.njk
 title: All Characters
-tags: navigation
 ---
 
 # All Characters

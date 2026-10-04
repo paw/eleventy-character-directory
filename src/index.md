@@ -1,8 +1,9 @@
 ---
 layout: home.njk
+title: Welcome to my Page
+icon: <i class="fa-regular fa-face-smile" aria-hidden="true"></i>
+show_title: true
 ---
-
-# My Ocs
 
 Eleventy-based character directory.
 

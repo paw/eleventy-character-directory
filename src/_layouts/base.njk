@@ -39,9 +39,9 @@ character_slug: c
         <span class="title">{%- if character_config.site_title_icon -%}<i class="{{ character_config.site_title_icon }}" aria-hidden="true"></i>&nbsp;{%- endif -%}{{ character_config.site_title | safe }}</span>
         <div class="links">
           <a href="/"><i class="fa-solid fa-house" aria-hidden="true"></i> Home</a>
-          <a href="/{{ character_config.base_directory | slugify }}"><i class="fa-solid fa-users" aria-hidden="true"></i> Directory</a>
+          <a href="/{{ character_config.base_directory | slugify }}"><i class="{{ character_config.base_directory_icon }}" aria-hidden="true"></i> {{ character_config.base_directory }}</a>
          {%- for link in collections.navigation -%}
-          <a href="{{link.url}}">{{link.data.title}}</a>
+          <a href="{{link.url}}">{% if link.data.icon %}{{ link.data.icon | safe }} {% endif %}{{link.data.title}}</a>
          {%- endfor -%}
         </div>
       </nav>

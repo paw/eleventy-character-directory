@@ -6,6 +6,7 @@ yes this started as a glitch project
 /* Our default values set as CSS variables */
 :root {
   --color-bg: #322F31;
+  --background: var(--color-bg);
   --color-navbar: #5A5354;
   --color-text-main: #fcfbf6;
   --color-text-header: #5ab5d1;
@@ -110,50 +111,6 @@ dialog {
   grid-template-columns: repeat(var(--cols), var(--width));
   justify-items: center;
 }
-@media screen and (max-width: 830px) {
-  .oc-list, .folder-list {
-    --cols: 3;
-  }
-  .oc-list.small, .folder-list.small {
-    --cols: 4;
-  }
-  .oc-list.extra-small, .folder-list.extra-small {
-    --cols: 5;
-  }
-}
-@media screen and (max-width: 670px) {
-  .oc-list, .folder-list {
-    --cols: 2;
-  }
-  .oc-list.small, .folder-list.small {
-    --cols: 3;
-  }
-  .oc-list.extra-small, .folder-list.extra-small {
-    --cols: 4;
-  }
-}
-@media screen and (max-width: 550px) {
-  .oc-list, .folder-list {
-    --cols: 1;
-  }
-  .oc-list.small, .folder-list.small {
-    --cols: 2;
-  }
-  .oc-list.extra-small, .folder-list.extra-small {
-    --cols: 3;
-  }
-}
-@media screen and (max-width: 400px) {
-  .oc-list, .folder-list {
-    --cols: 1;
-  }
-  .oc-list.small, .folder-list.small {
-    --cols: 1;
-  }
-  .oc-list.extra-small, .folder-list.extra-small {
-    --cols: 2;
-  }
-}
 .connection-list {
   list-style-type: none;
   padding: 0;
@@ -178,6 +135,9 @@ dialog {
   margin-left: auto;
   height: 150px;
   width: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .connection-bubble {
   background: var(--color-card-inner-section);
@@ -384,13 +344,76 @@ a:hover .folder-placeholder .open,
 a:focus .folder-placeholder .open {
   display: block;
 }
-
+@media screen and (max-width: 830px) {
+  .oc-list, .folder-list {
+    --cols: 3;
+  }
+  .oc-list.small, .folder-list.small {
+    --cols: 4;
+  }
+  .oc-list.extra-small, .folder-list.extra-small {
+    --cols: 5;
+  }
+}
+@media screen and (max-width: 670px) {
+  .oc-list, .folder-list {
+    --cols: 2;
+  }
+  .oc-list.small, .folder-list.small {
+    --cols: 3;
+  }
+  .oc-list.extra-small, .folder-list.extra-small {
+    --cols: 4;
+  }
+}
+@media screen and (max-width: 550px) {
+  .oc-list, .folder-list {
+    --cols: 1;
+  }
+  .card .oc-list.large {
+    --parent-padding: 0;
+  }
+  .oc-list.large li, .folder-list.large li, .oc-list.large a:has(img), .oc-list.large a:has(img) img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+  }
+  .oc-list.large a:has(img) {
+    height: auto;
+    padding: 2rem;
+  }
+  .oc-list.small, .folder-list.small {
+    --cols: 2;
+  }
+  .oc-list.extra-small, .folder-list.extra-small {
+    --cols: 3;
+  }
+}
+@media screen and (max-width: 400px) {
+  .oc-list, .folder-list {
+    --cols: 1;
+  }
+  .oc-list.small, .folder-list.small {
+    --cols: 1;
+  }
+  .card .oc-list.small {
+    --parent-padding: 0;
+  }
+  .oc-list.small li, .folder-list.small li, .oc-list.small a:has(img), .oc-list.small a:has(img) img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+  }
+  .oc-list.extra-small, .folder-list.extra-small {
+    --cols: 2;
+  }
+}
 #navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin: 0;
-  padding: 1rem;
+  padding: 0.75rem 0.5rem;
   border-bottom: 4px solid var(--color-borders);
   background: var(--color-navbar);
   top: 0px;
@@ -401,6 +424,12 @@ a:focus .folder-placeholder .open {
 .title {
   font-weight: bold;
   margin-right: 0.5rem;
+  white-space: pre;
+}
+.nav .links {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-end;
 }
 .nav .links a:not(:last-child)::after {
   content: '';

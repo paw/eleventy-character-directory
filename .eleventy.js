@@ -80,6 +80,7 @@ export default function (eleventyConfig) {
     // if we're good we can get gallery for all ocs :)
     for (const oc of ocs) {
       oc.data.gallery = getGallery(oc);
+      if (!oc.data.page_url) { oc.data.page_url = oc.data.id }
     }
     return ocs;
   });
@@ -245,6 +246,12 @@ export default function (eleventyConfig) {
               .toLowerCase() === "icon"
           ) {
             oc.data.icon = `/public/images/characters/${oc.data.id}/${outputName}`;
+          } else if (
+            path
+              .basename(image.name, path.extname(image.name))
+              .toLowerCase() === "portrait"
+          ) {
+            oc.data.portrait = `/public/images/characters/${oc.data.id}/${outputName}`;
           }
           destination = path.join(
             "output",
@@ -560,7 +567,7 @@ export default function (eleventyConfig) {
           tags[tag].push({
             name: oc.data.name,
             icon: oc.data.icon,
-            page_url: oc.data.page_url,
+            page_url: oc.data?.page_url ? oc.data.page_url : oc.data.id,
             updated: oc.data.updated,
           });
         }
@@ -589,7 +596,7 @@ export default function (eleventyConfig) {
           worlds[world].push({
             name: oc.data.name,
             icon: oc.data.icon,
-            page_url: oc.data.page_url,
+            page_url: oc.data?.page_url ? oc.data.page_url : oc.data.id,
             updated: oc.data.updated,
           });
         }

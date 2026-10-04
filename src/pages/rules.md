@@ -1,11 +1,10 @@
 ---
 layout: page.njk
 title: Rules
+icon: <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
 tags: navigation
-icon: fa-solid fa-circle-exclamation
 order: 3
+show_title: true
 ---
-
-# Rules
 
 - original character donut steel

@@ -1,5 +1,7 @@
 {
     "base_directory" : "Characters",
+    "base_directory_icon" : "fa-solid fa-box-archive",
+
     "ocs_per_directory_page": 4,
     "show_empty_directories": true,
     "sort_characters_by": "id",

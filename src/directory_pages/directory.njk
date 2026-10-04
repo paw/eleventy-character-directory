@@ -1,6 +1,8 @@
 ---
 layout: base.njk
 
+icon: fa-solid fa-box-archive
+
 pagination:
     data: collections.characterDirectoryPages
     size: 1
@@ -38,7 +40,7 @@ permalink: "{{ page.directory.url }}{% if page.page > 1 %}/{{ page.page }}/{% en
     <div class="text">
         <h1>
         {% if page.directory.path == "" %}
-            <i class="fa-solid fa-users" aria-hidden="true"></i>&nbsp;{{ character_config.base_directory }}
+            <i class="{{ character_config.base_directory_icon }}" aria-hidden="true"></i>&nbsp;{{ character_config.base_directory }}
         {% else %}
             <i class="fa-solid fa-folder" aria-hidden="true"></i>&nbsp;{{ page.directory.name }}
         {% endif %}
