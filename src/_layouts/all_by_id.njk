@@ -5,6 +5,7 @@ pagination:
   size: 4
   reverse: false
 permalink: "all/{% if pagination.pageNumber > 0 %}{{ pagination.pageNumber | plus: 1 }}/{% endif %}"
+selected_index: 0
 ---
 
 <div class="content">
@@ -18,7 +19,19 @@ permalink: "all/{% if pagination.pageNumber > 0 %}{{ pagination.pageNumber | plu
 </div>
 <div><a href="/{{ character_config.base_directory | slugify }}/"><i class="fa-solid fa-folder"></i> View Folders</a></div>
 </nav>
-  <section class="card">{{ content | safe }}</section>
+  <section class="card">
+    {%- if show_title -%}
+      <h1>{%- if icon -%}{{icon | safe }}&nbsp;{%- endif -%}{{ title }}</h1>
+    {%- endif -%}
+    <div id="character-sort-dropdown">
+      <label for="sort">View by:</label>
+      <select id="sort" name="sort">
+        <option value="/all" {%- if selected_index == 0 -%}selected{%- endif -%}>ID (Ascending)</option>
+        <option value="/created" {%- if selected_index == 1 -%}selected{%- endif -%}>Created (Newest)</option>
+        <option value="/updated"{%- if selected_index == 2 -%}selected{%- endif -%}>Updated (Recent)</option>
+      </select>
+    </div>
+{{ content | safe }}</section>
   <section class="card">
     <ul class="oc-list large">
       {%- for oc in pagination.items -%}

@@ -14,7 +14,7 @@ const md = markdownIt({
 export default function (eleventyConfig) {
   // get character config
 
-  function get_character_config() {
+  function getCharacterConfig() {
       return JSON.parse(
           fs.readFileSync(
               "./src/_data/character_config.json",
@@ -22,7 +22,7 @@ export default function (eleventyConfig) {
           )
       );
   }
-  const character_config = get_character_config();
+  const character_config = getCharacterConfig();
   // resolve character directory
   const charactersDir = path.resolve(process.cwd(), `src/${character_config.base_directory}`);
   // make sure it exists, if not end the process
@@ -42,6 +42,7 @@ export default function (eleventyConfig) {
   eleventyConfig.setInputDirectory("src");
 
   // ignore folder descriptions & README files
+  eleventyConfig.ignores.add(`src/worlds`);
   eleventyConfig.ignores.add(`src/${character_config.base_directory}/**/folder.md`);
   eleventyConfig.ignores.add(`src/${character_config.base_directory}/**/README.md`);
 
@@ -174,7 +175,7 @@ export default function (eleventyConfig) {
     // storing slugified path urls for breadcrumbs
     const pathParts = [];
     let urlPath = "";
-    const character_config = get_character_config();
+    const character_config = getCharacterConfig();
 
     if (relativePath !== "") {
       for (const part of relativePath.split("/")) {
@@ -332,7 +333,7 @@ export default function (eleventyConfig) {
     "characterDirectoryPages",
     function (collection) {
       const ocs = validateCharacters(collection.getFilteredByTag("oc"));
-      const character_config = get_character_config();
+      const character_config = getCharacterConfig();
 
       const root = scanDirectory(charactersDir, "", ocs);
       const charactersPerPage = character_config.ocs_per_directory_page;
@@ -541,7 +542,10 @@ export default function (eleventyConfig) {
   });
 
   eleventyConfig.addCollection("oc_taglist", function (collection) {
-    return taglist;
+    const tags = buildGroupedOCs(collection.getFilteredByTag("oc"),"tags");
+    const ordered = Object.values(tags).map(tag => (tag.name)).sort();
+    console.log(ordered)
+    return ordered;
   });
 
   function toTitleCase(str) {
@@ -551,100 +555,148 @@ export default function (eleventyConfig) {
     );
   }
 
-  // world builder helper function
-  function buildCollectionHelper(coll, dataset) {
-    // make an object to hold flattened result
+  // world & tag builder helper function
+  function buildGroupedOCs(coll, dataset) {
+    // make an object to hold flattened result, we call it tags here but this is generic to handle both tags and worlds
     const tags = {};
+    const character_config = getCharacterConfig();
 
     // iterate over ocs
     for (const oc of coll) {
       // ocs are only included in directory listings if specified
       if (oc.data.show_in_directory == true) {
         for (const tag of oc.data[dataset] || []) {
-          if (!tags[tag]) {
-            tags[tag] = [];
+          if (tag != "oc" && tag != "all") {
+            const key_val = tag.trim().toLowerCase();
+            if (!tags[key_val]) {
+              tags[key_val] = {
+                name: tag,
+                ocs: []
+              };
+            } else {
+              oc.data[dataset][tag] = tags[key_val].name
+            }
+            tags[key_val].ocs.push({
+              name: oc.data.name,
+              icon: oc.data.icon,
+              page_url: oc.data?.page_url ?? oc.data.id,
+              updated: oc.data.updated,
+              created: oc.data.created,
+              id: oc.data.id,
+            });
           }
-          tags[tag].push({
-            name: oc.data.name,
-            icon: oc.data.icon,
-            page_url: oc.data?.page_url ? oc.data.page_url : oc.data.id,
-            updated: oc.data.updated,
-          });
         }
       }
     }
 
     for (const tag of Object.keys(tags)) {
-      tags[tag].sort((a, b) => {
-        return new Date(b.updated) - new Date(a.updated);
+      tags[tag].ocs.sort((a, b) => {
+        if (character_config.tag_and_world_sort_type == "created") {
+          return new Date(b.created) - new Date(a.created);
+        } else if (character_config.tag_and_world_sort_type == "updated") {
+          return new Date(a.updated) - new Date(b.updated);
+        } else if (character_config.tag_and_world_sort_type == "id") {
+          return a.id - b.id;
+        } else {
+          throw new Error(`Invalid value for config value: tag_and_world_sort_type`)
+        }
       });
     }
-
     return tags;
   }
 
-  // world builder helper function
-  function buildWorldData(coll) {
-    const worlds = {};
 
-    for (const oc of coll) {
-      if (oc.data.show_in_directory == true) {
-        for (const world of oc.data.worlds || []) {
-          if (!worlds[world]) {
-            worlds[world] = [];
-          }
-          worlds[world].push({
-            name: oc.data.name,
-            icon: oc.data.icon,
-            page_url: oc.data?.page_url ? oc.data.page_url : oc.data.id,
-            updated: oc.data.updated,
-          });
-        }
-      }
-    }
-
-    for (const world of Object.keys(worlds)) {
-      worlds[world].sort((a, b) => {
-        return new Date(b.updated) - new Date(a.updated);
-      });
-    }
-
-    return worlds;
-  }
   eleventyConfig.addCollection("oc_worlds", function (collection) {
-    const worlds = buildCollectionHelper(
+    const worlds = buildGroupedOCs(
       collection.getFilteredByTag("oc"),
       "worlds",
     );
-    return Object.keys(worlds).map((name) => ({
-      name,
-    }));
+    return getWorldMetadata(worlds);
   });
 
-  eleventyConfig.addCollection("oc_world_pages", function (collection) {
-    const worlds = buildCollectionHelper(
-      collection.getFilteredByTag("oc"),
-      "worlds",
-    );
-    const character_config = get_character_config();
-    const charactersPerPage = character_config.ocs_per_directory_page;
+  function readWorldDescription(directory,filename) {
+    const source = fs.readFileSync(path.join(directory,filename), "utf8").trim();
+    const match = source.match(/^---\s*\n([\s\S]*?)\n---\s*\n?([\s\S]*)$/);
 
-    // Turn each world into individual pages
+    if (!match) {
+      throw new Error(`Must have YAML data in World file: ${path.join(directory,filename)}`)
+    }
+
+    const content = match[2];
+    const data = parseYaml(match[1]);
+
+    if (!data?.name) {
+      throw new Error(`Must have a World Name specified in file: ${path.join(directory,filename)}`)
+    }
+
+    return {
+      name: data.name,
+      data,
+      content,
+      content_html: md.render(content)
+    };
+  }
+
+  function getWorldMetadata(worlds) {
+    // make sure worlds exists
+    const directory = path.join("src","worlds");
+    if (!fs.existsSync(directory)) {
+      throw new Error (`src/worlds directory must exist even if empty.`)
+    }
+    // try to read the files and sort out the markdown files
+    const entries = fs.readdirSync(directory, { withFileTypes: true,}).filter(
+      (entry) =>
+        entry.isFile() && path.extname(entry.name).toLowerCase() === ".md",
+    );
+    const world_description_files = [];
+    // reading world description, will get the name from the YAML frontmatter header
+    for (const file of entries) {
+      world_description_files.push(readWorldDescription(directory,file.name));
+    }
+    // mapping the description files to the world description content
+    const world_descriptions = new Map(
+      world_description_files.map(world => [world.name.toLowerCase(), world])
+    );
+    const final_worlds = {};
+    // build new list of worlds to work with that contains the optional description
+    for (const [name, world] of Object.entries(worlds)) {
+      const description = world_descriptions.get(name.toLowerCase());
+      final_worlds[name] = {
+        name: description?.name ?? name,
+        ocs: world.ocs,
+        description: description?.content ?? null,
+        description_html: description?.content_html ?? null,
+        data: description?.data ?? {}
+      };
+    }
+    return final_worlds;
+  }
+
+  eleventyConfig.addCollection("oc_world_pages", function (collection) {
+    const character_config = getCharacterConfig(),
+          charactersPerPage = character_config.ocs_per_directory_page,
+          worlds = buildGroupedOCs(
+            collection.getFilteredByTag("oc"),
+            "worlds",
+          );
+    const final_worlds = getWorldMetadata(worlds);
+
+    // go thru worlds and return a bunch of pages that we will have 11ty paginate over.
+    // next/prev page links are based on page and total page count
     const result = [];
 
-    for (const [name, ocs] of Object.entries(worlds)) {
-      const pageCount = Math.ceil(ocs.length / charactersPerPage);
+    for (const world of Object.values(final_worlds)) {
+      const pageCount = Math.ceil(world.ocs.length / charactersPerPage);
 
       for (let page = 0; page < pageCount; page++) {
         result.push({
-          name,
-          ocs: ocs.slice(page * charactersPerPage, (page + 1) * charactersPerPage),
+          ...world, // include all of world
+          ocs: world.ocs.slice(page * charactersPerPage, (page + 1) * charactersPerPage),
           page: page + 1,
           pageCount,
         });
       }
     }
-
     return result;
   });
 

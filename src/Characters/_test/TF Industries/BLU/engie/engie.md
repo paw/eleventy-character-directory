@@ -13,7 +13,7 @@ icon: /public/image/engie.jpg
 full-name: Pyro
 species: Eladrin
 worlds: ["2fort","Dustbowl","Upward"]
-tags: ["tf2","genius"]
+tags: ["TF2","genius"]
 
 ---
 

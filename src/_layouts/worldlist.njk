@@ -11,7 +11,7 @@ permalink: "/{{ title | slugify }}/"
   <div class="content">
     {{ content | safe }}
     <ul>
-      {%- for world in collections.oc_worlds  | sort(false, false, world) -%}
+      {%- for world in collections.oc_worlds  | sort(false, false, world.name) -%}
       <li><a href="/world/{{world.name | slugify}}">{{world.name}}</a></li>
       {%- endfor -%}
     </ul>

@@ -2,13 +2,14 @@
     "base_directory" : "Characters",
     "base_directory_icon" : "fa-solid fa-box-archive",
 
-    "ocs_per_directory_page": 4,
+    "ocs_per_directory_page": 8,
     "show_empty_directories": true,
-    "sort_characters_by": "id",
+    "all_characters_default_sort_type": "updated",
+    "tag_and_world_sort_type": "id",
 
     "ocs_per_homepage_row" : 5,
-    "show_featured": false,
-    "show_recently_created": true,
+    "show_featured": true,
+    "show_recently_created": false,
     "show_recently_updated": true,
 
     "show_character_ids": false,
@@ -16,10 +17,10 @@
     "show_name_badges_on_profiles": false,
     "display_connections_on_profiles": true,
 
-    "stories_slug": "s",
-    "world_slug": "w",
-    "tag_slug": "t",
-    "character_slug": "c",
+    "stories_slug": "story",
+    "world_slug": "world",
+    "tag_slug": "tagged",
+    "character_slug": "oc",
 
     "site_title" : "My Character Database",
     "site_title_icon" : "fa-solid fa-book-atlas",

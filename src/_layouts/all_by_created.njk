@@ -5,6 +5,7 @@ pagination:
   size: 4
   reverse: false
 permalink: "created/{% if pagination.pageNumber > 0 %}{{ pagination.pageNumber | plus: 1 }}/{% endif %}"
+selected_index: 1
 ---
 
 {{ content | safe }}

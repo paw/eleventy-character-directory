@@ -37,7 +37,7 @@ stats:
 
 # all of these are optional, leave array empty or delete to skip
 worlds:
-    - wikipedia
+    - wIkIpEdIa
 tags:
     - object
     - cute

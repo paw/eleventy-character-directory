@@ -3,20 +3,19 @@ layout: base.njk
 permalink: "/{{ title | slugify }}/"
 ---
 
-{# Template for the Tag Directory #}
-{# Lists tags in alphabetical order #}
-
-<div class="wrapper home">
-  <div class="content">
+<div class="content">
+  <section class="card">
+    {%- if show_title -%}
+      <h1>{%- if icon -%}{{icon | safe }}&nbsp;{%- endif -%}{{ title }}</h1>
+    {%- endif -%}
     {{ content | safe }}
-    <ul>
-      {%- for tag in collections.oc_taglist | sort(false, false, tag) -%}
-      <li><a href="/tagged/{{tag | slugify}}">{{tag}}</a></li>
+  </section>
+  <section class="card">
+    <div id="tags">
+      <ul>
+      {%- for tag in collections.oc_taglist -%}
+        <li><a href="/{% if character_config.tag_slug %}{{character_config.tag_slug}}/{% endif %}{{tag | slugify}}">#{{tag}}</a></li>
       {%- endfor -%}
     </ul>
-  </div>
+  </section>
 </div>
-
-<script type="text/javascript">
-
-</script>

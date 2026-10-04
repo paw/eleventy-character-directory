@@ -5,8 +5,8 @@ icon: <i class="fa-regular fa-face-smile" aria-hidden="true"></i>
 show_title: true
 ---
 
-Eleventy-based character directory.
+An eleventy-based character directory starter.
 
 - Database-free, folders are based directly on file structure.
 - Uses Eleventy to generate static pages that you can host on places like Neocities, Nekoweb, and GitHub Pages.
-- See **README** for full details.
+- See the **README** for full details.

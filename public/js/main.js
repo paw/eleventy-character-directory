@@ -68,4 +68,9 @@ function onScroll() {
 document.addEventListener("DOMContentLoaded", function () {
   navbar = document.getElementById("navbar");
   window.addEventListener("scroll", onScrollThrottled, { passive: true });
+  document.querySelector("#sort")?.addEventListener("change", (event) => {
+    if (event.target.value) {
+      window.location.href = event.target.value;
+    }
+  });
 });

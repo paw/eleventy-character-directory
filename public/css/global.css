@@ -266,6 +266,15 @@ dialog {
   max-width: 100%;
   height: auto;
 }
+#tags ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  grid-gap: 0.5rem;
+  justify-content: center;
+}
 .character-name-badge, .folder-name, #tags a, #worlds a {
 	background-color: var(--color-primary);
 	background-image: none;
@@ -277,6 +286,9 @@ dialog {
   text-align:center;
   word-wrap: break-word;
   margin-top: 0.5rem;
+}
+#tags a {
+  white-space: pre;
 }
 .oc-list.extra-small .character-name-badge {
   font-size: 0.8rem;
@@ -651,6 +663,11 @@ a:hover {
   align-items: center;
   margin-top: auto;
 }
+.oc #profile .portrait {
+  max-width: 300px;
+  min-width: 200px;
+  min-height: 200px;
+}
 #sidebar {
   background: var(--color-sidebar-bg);
   width: 200px;
@@ -727,7 +744,7 @@ a:hover {
   .oc .header, .directory-header {
     flex-direction: column;
   }
-  .oc .header .icon, .directory-header .folder-icon {
+  .oc .header .icon, .oc .header .portrait, .directory-header .folder-icon {
     order: -1;
     margin: auto;
   }

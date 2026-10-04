@@ -2,11 +2,11 @@
 layout: base.njk
 templateClass: tmpl-home
 pagination:
-  data: collections.oc_tags
+  data: collections.oc_taglist
   size: 1
   alias: tag
   filter: ["oc","all"]
-permalink: "{% if tag_slug %}{{tag_slug}}/{% endif %}{{ tag | slugify }}/{% if tag.page > 1 %}{{ tag.page }}/{% endif %}"
+permalink: "{% if character_config.tag_slug %}{{character_config.tag_slug}}/{% endif %}{{ tag | slugify }}/{% if tag.page > 1 %}{{ tag.page }}/{% endif %}"
 ---
 
 <div class="wrapper">

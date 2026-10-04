@@ -1,0 +1,58 @@
+---
+layout: base.njk
+
+pagination:
+  data: collections.oc_world_pages
+  size: 1
+  alias: world
+
+permalink: "{% if character_config.world_slug %}{{character_config.world_slug}}/{% endif %}{{ world.name.toLowerCase() | slugify }}/{% if world.page > 1 %}{{ world.page }}/{% endif %}"
+---
+
+<div class="content">
+  <section class="card">
+  <h1>World: {{ world.name }}</h1>
+  {%- if world.description -%}{{ world.description_html | safe }}{%- endif -%}
+  </section>
+  <section class="card">
+    <ul class="oc-list small">
+    {% for oc in world.ocs %}
+        <li class="oc"><a href="/oc/{{ oc.page_url | slugify }}" title="{{ oc.name }} (Updated: {{ oc.updated | htmlDateString }})"><img src="{{ oc.icon }}" alt="{{ oc.name }}"></a></li>
+    {% endfor %}
+    </ul>
+  </section>
+    {% if world.pageCount > 1 %}
+
+
+<nav
+    class="pagination card"
+    aria-label="Character pagination"
+>
+
+    {% if world.page > 1 %}
+        <a class="pagination-item" href="{{ pagination.previousPageHref | url }}" title="Previous Page"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></a>
+    {% else %}
+        <span class="pagination-item disabled"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></span>
+    {% endif %}
+
+
+    <span class="pagination-current">
+
+        Page
+        {{ world.page }}
+        of
+        {{ world.pageCount }}
+
+    </span>
+
+    {% if world.page < world.pageCount %}
+        <a class="pagination-item" href="{{ pagination.nextPageHref | url }}" title="Next Page"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+    {% else %}
+        <span class="pagination-item disabled"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+    {% endif %}
+
+</nav>
+
+
+{% endif %}
+</div>

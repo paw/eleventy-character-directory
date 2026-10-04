@@ -8,6 +8,8 @@ updated: 2025-03-21
 name: Spy
 page_url: meet the spy
 
+worlds:
+    - doublecross
 tags: ["tf2","invisible"]
 
 connections:
