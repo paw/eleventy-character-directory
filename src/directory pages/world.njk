@@ -17,7 +17,10 @@ permalink: "{% if character_config.world_slug %}{{character_config.world_slug}}/
   <section class="card">
     <ul class="oc-list small">
     {% for oc in world.ocs %}
-        <li class="oc"><a href="/oc/{{ oc.page_url | slugify }}" title="{{ oc.name }} (Updated: {{ oc.updated | htmlDateString }})"><img src="{{ oc.icon }}" alt="{{ oc.name }}"></a></li>
+        <li class="oc">
+            <a href="{{ oc.page_url }}"{%- if not character_config.show_name_badges_in_directory -%} data-tippy-content="{{oc.name}} (Updated: {{oc.updated | htmlDateString}})"{%- endif -%}><img src="{{ oc.icon }}" alt="{{ oc.name }}"></a>
+            {% if character_config.show_name_badges_in_directory %}<a href="{{ oc.page_url }}" class="character-name-badge" data-tippy-content="Updated: {{oc.updated | htmlDateString}}">{{ oc.name }}</a>{% endif %}
+        </li>
     {% endfor %}
     </ul>
   </section>

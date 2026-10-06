@@ -1,0 +1,61 @@
+---
+layout: base.njk
+
+pagination:
+  data: collections.oc_tag_pages
+  size: 1
+  alias: tag
+
+permalink: "{% if character_config.tag_slug %}{{character_config.tag_slug}}/{% endif %}{{ tag.name.toLowerCase() | slugify }}/{% if tag.page > 1 %}{{ tag.page }}/{% endif %}"
+---
+
+<div class="content">
+  <section class="card">
+  <h1>#{{ tag.name }}</h1>
+  {%- if tag.description -%}{{ tag.description_html | safe }}{%- endif -%}
+  </section>
+  <section class="card">
+    <ul class="oc-list small">
+    {% for oc in tag.ocs %}
+        <li class="oc">
+            <a href="{{ oc.page_url }}"  data-tippy-content="{%- if not character_config.show_name_badges_in_directory -%}{{oc.name}} (Updated: {{oc.updated | htmlDateString}}){%-else-%}Updated: {{oc.updated | htmlDateString}}{%- endif -%}"><img src="{{ oc.icon }}" alt="{{ oc.name }}"></a>
+            {% if character_config.show_name_badges_in_directory %}<a href="{{ oc.page_url }}" class="character-name-badge">{{ oc.name }}</a>{% endif %}
+        </li>
+    {% endfor %}
+    </ul>
+  </section>
+    {% if tag.pageCount > 1 %}
+
+
+<nav
+    class="pagination card"
+    aria-label="Character pagination"
+>
+
+    {% if tag.page > 1 %}
+        <a class="pagination-item" href="{{ pagination.previousPageHref | url }}" title="Previous Page"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></a>
+    {% else %}
+        <span class="pagination-item disabled"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></span>
+    {% endif %}
+
+
+    <span class="pagination-current">
+
+        Page
+        {{ tag.page }}
+        of
+        {{ tag.pageCount }}
+
+    </span>
+
+    {% if tag.page < tag.pageCount %}
+        <a class="pagination-item" href="{{ pagination.nextPageHref | url }}" title="Next Page"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+    {% else %}
+        <span class="pagination-item disabled"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+    {% endif %}
+
+</nav>
+
+
+{% endif %}
+</div>

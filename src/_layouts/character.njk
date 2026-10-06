@@ -35,7 +35,7 @@ permalink: "{%- if character_config.character_slug -%}{{ character_config.charac
           <div class="songlist"><strong class="content-title sr-only">Playlist:</strong>
             <ul class="songs">
             {% for song in songs %}
-              <li class="song"><a href="{{song.url}}" target="_blank" title="{{song.artist}} – {{song.title}}"><i class="fa-solid fa-music" aria-hidden="true"></i></a></li>
+              <li class="song"><a href="{{song.url}}" target="_blank" data-tippy-content="{{song.artist}} – {{song.title}}"><i class="fa-solid fa-music" aria-hidden="true"></i></a></li>
             {% endfor %}
             </ul>
           </div>
@@ -65,7 +65,7 @@ permalink: "{%- if character_config.character_slug -%}{{ character_config.charac
     </div>
     {% endif %}
 
-    {% if stats %}
+    {% if stats and stats.STR and stats.DEX and stats.CON and stats.INT and stats.WIS and stats.CHA %}
 <div class="card">
 <h3 class="content-title">Attributes</h3>
   <div class="stat-table">
@@ -157,7 +157,7 @@ permalink: "{%- if character_config.character_slug -%}{{ character_config.charac
           {%- for oc in collections.ocs -%}
             {% if oc.data.id == friend %}
               <li>
-                <a href="{{oc.url}}"><img src="{{oc.data.icon}}" alt="{{oc.data.name}}"></a>
+                <a href="{{oc.url}}"{%- if not character_config.show_name_badges_on_profiles -%} data-tippy-content="{{oc.data.name}}"{%- endif -%}><img src="{{oc.data.icon}}" alt="{{oc.data.name}}"></a>
                 {% if character_config.show_name_badges_on_profiles %}<a href="{{ oc.url }}" class="character-name-badge">{{ oc.data.name }}</a>{% endif %}
               </li>
             {% endif %}
@@ -175,7 +175,7 @@ permalink: "{%- if character_config.character_slug -%}{{ character_config.charac
           {%- for oc in collections.ocs -%}
             {% if oc.data.id == enemy %}
               <li>
-                <a href="{{oc.url}}" title="{{oc.data.name}}"><img src="{{oc.data.icon}}" alt="Icon of {{oc.data.name}}"></a>
+                <a href="{{oc.url}}"{%- if not character_config.show_name_badges_on_profiles -%} data-tippy-content="{{oc.data.name}}"{%- endif -%}><img src="{{oc.data.icon}}" alt="Icon of {{oc.data.name}}"></a>
                 {% if character_config.show_name_badges_on_profiles %}<a href="{{ oc.url }}" class="character-name-badge">{{ oc.data.name }}</a>{% endif %}
               </li>
             {% endif %}
@@ -195,9 +195,9 @@ permalink: "{%- if character_config.character_slug -%}{{ character_config.charac
               <li class="connection">
                 <div class="portrait"><div class="icon me"><img src="{{ icon }}" alt="{{name}}"></div></div>
                 <div class="portrait"><div class="icon you"><a href="{{oc.url}}"><img src="{{oc.data.icon}}" alt="{{oc.data.name}}"></a></div></div>
-                <div class="connection-bubble left"><h3 class="name">{{name}}</h3>{{ opinion }}<i class="fa-solid fa-play tail" aria-hidden="true"></i></div>
+                <div class="connection-bubble left"><h3 class="name">{{name}}<span class="sr-only"> says:</span></h3>{{ opinion }}<i class="fa-solid fa-play tail" aria-hidden="true"></i></div>
                 <div class="connection-bubble right">
-                  <h3 class="name">{{oc.data.name}}</h3>
+                  <h3 class="name">{{oc.data.name}}<span class="sr-only"> says:</span></h3>
                   {% if oc.data.connections is defined and oc.data.connections and id in oc.data.connections %}
                   {{ oc.data.connections[id] }}
                   {% else %}
@@ -253,7 +253,7 @@ permalink: "{%- if character_config.character_slug -%}{{ character_config.charac
       <ul class="masonry-gallery" id="gallery">
         {% for image in gallery %}
           <li>
-          <img src="{%if image.thumb_url != null %}{{image.thumb_url}}{% else %}{{image.full_url}}{% endif %}" class="lightbox-thumb" data-full="{{image.full_url}}" data-title="{{image.title | safe}}" data-caption="{{image.description | safe}}" data-index="{{ loop.index0 }}" alt="{{image.alt}}" aria-role="button" title="Click for full image." tabindex="0">
+          <img src="{%if image.thumb_url != null %}{{image.thumb_url}}{% else %}{{image.full_url}}{% endif %}" class="lightbox-thumb" data-full="{{image.full_url}}" data-data-tippy-content="{{image.title | safe}}" data-title="{{image.title | safe}}" data-caption="{{image.description | safe}}" data-index="{{ loop.index0 }}" alt="{{image.alt}}" aria-role="button" data-tippy-content="View Full Image" tabindex="0">
           </li>
         {% endfor %}
       </ul>

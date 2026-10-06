@@ -8,9 +8,9 @@ show_in_directory: true
 id: 25
 name: Baby Globe
 
-# used for ordering purposes
-created: January 15, 2026
-updated: April 7, 2026
+# used for ordering purposes, store dates in YYYY-MM-DD format
+created: 2026-01-15
+updated: 2026-07-04
 
 # MUST be unique
 page_url: baby globe
@@ -26,7 +26,7 @@ basic_info:
     Species: Globe
 
 # renders as a dnd-style stat block like roll 20 for dnd characters :+)
-# delete if you don't want this on the page
+# delete, leave blank, or comment out if you don't want this on the page
 stats:
     STR: 6
     DEX: 10

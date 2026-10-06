@@ -22,7 +22,7 @@ basic_info:
     Voice Actor: <a href="google.com">Nathan Vetterlein</a>
 
 stats:
-    STR: 10
+    STR: 
     DEX: 10
     CON: 10
     INT: 10
@@ -31,8 +31,8 @@ stats:
 
 worlds: ["Upward","2fort"]
 tags: ["tf2"]
-friends: ["Sniper","Medic","Heavy"]
-enemies: ["Spy","Heavy"]
+friends: [7,8,5]
+enemies: [9,5]
 gallery: [
   {
     'title': "Title Your Image",

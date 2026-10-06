@@ -1,9 +1,5 @@
 ---
 layout: base.njk
-pagination:
-  data: collections.ocs_ordered_by_id
-  size: 4
-  reverse: false
 permalink: "all/{% if pagination.pageNumber > 0 %}{{ pagination.pageNumber | plus: 1 }}/{% endif %}"
 selected_index: 0
 ---

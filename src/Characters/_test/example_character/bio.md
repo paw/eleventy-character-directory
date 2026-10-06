@@ -12,6 +12,10 @@ name: Baby Globe
 created: 2026-02-15
 updated: 2026-04-07
 
+creator:
+    name: Jonathan Ferreira
+    url: https://diff.wikimedia.org/2026/01/15/meet-the-wikimedian-whose-casual-sketch-inspired-wikipedias-25th-birthday-mascot/
+
 # MUST be unique
 page_url: baby globe
 

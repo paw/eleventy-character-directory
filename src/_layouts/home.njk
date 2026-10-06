@@ -19,8 +19,11 @@ title: "Home"
           Featured
         </h3>
         <ul class="oc-list small">
-          {%- for oc in collections.featured_ocs | limit(character_config.ocs_per_homepage_row) -%}
-            <li class="oc"><a href="{{ oc.url }}" title="{{ oc.data.name }}"><img src="{{ oc.data.icon }}"></a></li>
+          {%- for oc in collections.ocs | featured | limit(character_config.ocs_per_homepage_row) -%}
+            <li class="oc">
+              <a href="{{ oc.url }}" {%- if not character_config.show_name_badges_on_homepage -%} data-tippy-content="{{oc.data.name}}"{%- endif -%}><img src="{{ oc.data.icon }}"></a>
+              {% if character_config.show_name_badges_on_homepage %}<a href="{{ oc.url }}" class="character-name-badge">{{ oc.data.name }}</a>{% endif %}
+            </li>
           {%- endfor -%}
         </ul>
       </section>
@@ -32,8 +35,11 @@ title: "Home"
           Recently Created
         </h3>
         <ul class="oc-list small">
-          {%- for oc in collections.oc_tags_by_created[ 'oc' ] | limit(character_config.ocs_per_homepage_row) -%}
-            <li class="oc"><a href="{{ oc.url }}" title="{{ oc.data.name }}"><img src="{{ oc.data.icon }}"></a></li>
+          {%- for oc in collections.ocs | created | limit(character_config.ocs_per_homepage_row) -%}
+            <li class="oc">
+              <a href="{{ oc.url }}" {%- if not character_config.show_name_badges_on_homepage -%} data-tippy-content="{{oc.data.name}}"{%- endif -%}><img src="{{ oc.data.icon }}"></a>
+              {% if character_config.show_name_badges_on_homepage %}<a href="{{ oc.url }}" class="character-name-badge">{{ oc.data.name }}</a>{% endif %}
+            </li>
           {%- endfor -%}
         </ul>
       </section>
@@ -45,8 +51,11 @@ title: "Home"
           Recently Updated
         </h3>
         <ul class="oc-list small">
-        {%- for oc in collections.oc_tags[ 'oc' ] | limit(character_config.ocs_per_homepage_row) -%}
-          <li class="oc"><a href="{{ oc.url }}" title="{{ oc.data.name }}"><img src="{{ oc.data.icon }}"></a></li>  
+        {%- for oc in collections.ocs | updated | limit(character_config.ocs_per_homepage_row) -%}
+          <li class="oc">
+            <a href="{{ oc.url }}" {%- if not character_config.show_name_badges_on_homepage -%} data-tippy-content="{{oc.data.name}}"{%- endif -%}><img src="{{ oc.data.icon }}"></a>
+            {% if character_config.show_name_badges_on_homepage %}<a href="{{ oc.url }}" class="character-name-badge">{{ oc.data.name }}</a>{% endif %}
+          </li>  
         {%- endfor -%}
         </ul>
       </section>

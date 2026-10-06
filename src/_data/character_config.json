@@ -2,7 +2,7 @@
     "base_directory" : "Characters",
     "base_directory_icon" : "fa-solid fa-box-archive",
 
-    "ocs_per_directory_page": 8,
+    "ocs_per_directory_page": 20,
     "show_empty_directories": true,
     "all_characters_default_sort_type": "updated",
     "tag_and_world_sort_type": "id",
@@ -11,10 +11,11 @@
     "show_featured": true,
     "show_recently_created": false,
     "show_recently_updated": true,
+    "show_name_badges_on_homepage": false,
 
     "show_character_ids": false,
     "show_name_badges_in_directory": true,
-    "show_name_badges_on_profiles": false,
+    "show_name_badges_on_profiles": true,
     "display_connections_on_profiles": true,
 
     "stories_slug": "story",

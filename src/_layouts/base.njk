@@ -3,13 +3,6 @@
 
 limit: 5
 
-
-# permalink generation settings
-stories_slug: s
-world_slug: w
-tag_slug: t
-character_slug: c
-
 ---
 
 {# This is the base template for the site–other templates extend this one #}
@@ -31,12 +24,16 @@ character_slug: c
     <link rel="stylesheet" type="text/css" href="/public/css/{{character_config.main_css_file}}.css" />
     <script src="/public/js/main.js" ></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v7.3.1/css/all.css" crossorigin="anonymous">
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
+    <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/perspective.css"/>
   </head>
   <body>
   <main>
     
     <nav id="navbar" class="nav">
         <span class="title">{%- if character_config.site_title_icon -%}<i class="{{ character_config.site_title_icon }}" aria-hidden="true"></i>&nbsp;{%- endif -%}{{ character_config.site_title | safe }}</span>
+        <button class="toggle" data-menu="closed" aria-label="Show Site Navigation"><i class="fa-solid fa-bars closed"></i><i class="fa-solid fa-xmark open"></i></button>
         <div class="links">
           <a href="/"><i class="fa-solid fa-house" aria-hidden="true"></i> Home</a>
           <a href="/{{ character_config.base_directory | slugify }}"><i class="{{ character_config.base_directory_icon }}" aria-hidden="true"></i> {{ character_config.base_directory }}</a>

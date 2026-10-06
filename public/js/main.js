@@ -73,4 +73,21 @@ document.addEventListener("DOMContentLoaded", function () {
       window.location.href = event.target.value;
     }
   });
+  document.querySelector(".nav .toggle").addEventListener("click", (event) => {
+    if (document.querySelector(".nav .toggle").getAttribute("data-menu") === "closed") {
+      document.querySelector(".nav .toggle").setAttribute("data-menu","open");
+      document.querySelector(".nav .links").classList.add("open");
+      document.body.classList.add("no-scroll");
+    } else {
+      document.querySelector(".nav .toggle").setAttribute("data-menu","closed");
+      document.querySelector(".nav .links").classList.remove("open");
+      document.body.classList.remove("no-scroll");
+    }
+  });
+  tippy('[data-tippy-content]', {
+  content: (reference) => reference.getAttribute('title'),
+    theme: 'tooltips',
+    animation: 'perspective',
+    inertia: true
+  });
 });

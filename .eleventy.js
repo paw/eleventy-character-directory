@@ -1,7 +1,7 @@
-import { DateTime } from "luxon";
 import path from "node:path";
 import fs from "node:fs";
 import markdownIt from "markdown-it";
+import { getCharacterConfig } from "./src/_lib/character_config.js";
 import { parse as parseYaml } from "yaml";
 
 // needed to convert folder description md files into markdown usable on the pages
@@ -13,15 +13,6 @@ const md = markdownIt({
 // MAIN
 export default function (eleventyConfig) {
   // get character config
-
-  function getCharacterConfig() {
-      return JSON.parse(
-          fs.readFileSync(
-              "./src/_data/character_config.json",
-              "utf8"
-          )
-      );
-  }
   const character_config = getCharacterConfig();
   // resolve character directory
   const charactersDir = path.resolve(process.cwd(), `src/${character_config.base_directory}`);
@@ -68,13 +59,31 @@ export default function (eleventyConfig) {
     });
   }
   // date filter
-  eleventyConfig.addFilter("htmlDateString", (dateObj) => {
-    return DateTime.fromJSDate(dateObj, { zone: "utc" }).toFormat("yyyy-LL-dd");
+  eleventyConfig.addFilter("htmlDateString", dateObj => {
+    const date = new Date(dateObj);
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric"
+    });
   });
   // limit filter
   eleventyConfig.addNunjucksFilter("limit", (arr, limit) =>
     arr.slice(0, limit),
   );
+
+  // oc filters
+  eleventyConfig.addFilter("featured", ocs => {
+    return ocs
+      .filter(oc => oc.data.show_in_directory === true)
+      .filter(oc => oc.data.featured === true);
+  });
+  eleventyConfig.addFilter("created", ocs => {
+    return ocs.filter(oc => oc.data.show_in_directory === true).sort((a, b) => b.data.created - a.data.created);
+  });
+  eleventyConfig.addFilter("updated", ocs => {
+    return ocs.filter(oc => oc.data.show_in_directory === true).sort((a, b) => b.data.updated - a.data.updated);
+  });
 
   eleventyConfig.addCollection("ocs", function (collection) {
     const ocs = validateCharacters(collection.getFilteredByTag("oc"));
@@ -100,13 +109,23 @@ export default function (eleventyConfig) {
       // error for invalid IDs
       if (!Number.isInteger(id)) {
         errors.push(
-          `OC ID must be an integer in ${oc.inputPath}: "${oc.data.id}"`,
+          `OC ${oc.data.name} ID must be an integer in ${oc.inputPath}: "${oc.data.id}"`,
+        );
+      }
+      if (!oc.data.created) {
+        errors.push(
+          `OC ${oc.data.name} missing created date ${oc.inputPath}: "${oc.data.created}"`,
+        );
+      }
+      if (!oc.data.updated) {
+        errors.push(
+          `OC ${oc.data.name} missing updated date ${oc.inputPath}: "${oc.data.updated}"`,
         );
       }
       // error if we don't include show_in_directory
       if (typeof oc.data.show_in_directory != "boolean") {
         errors.push(
-          `OC must have the show_in_directory field and it MUST be unquoted and either true or false:\n\t\t${oc.inputPath}\n\t\tvalue: "${oc.data.show_in_directory}"`,
+          `OC must have the show_in_directory field and it MUST be unquoted value as either true or false:\n\t\t${oc.inputPath}\n\t\tvalue: "${oc.data.show_in_directory}"`,
         );
       }
       // error for duplicate ids because the unique ids are important for connections/file renaming
@@ -130,6 +149,17 @@ export default function (eleventyConfig) {
         );
       } else {
         urls.set(url);
+      }
+      // dates must be YYYY-MM-DD
+      if (typeof oc.data.created != "object") {
+        errors.push(
+          `Invalid date for created date for #${oc.data.id}: ${oc.data.name}: value ${oc.data.created}, Expected YYYY-MM-DD.`
+        );
+      }
+      if (typeof oc.data.updated != "object") {
+        errors.push(
+          `Invalid date for updated date for #${oc.data.id}: ${oc.data.name}. value ${oc.data.updated}, Expected YYYY-MM-DD.`
+        );
       }
     }
     if (errors.length > 0) {
@@ -459,14 +489,12 @@ export default function (eleventyConfig) {
       }
     }
   }
-
   eleventyConfig.addCollection("ocs_ordered_by_id", function (collection) {
     return collection
       .getFilteredByTag("oc")
       .filter((oc) => oc.data.show_in_directory === true)
       .sort((a, b) => a.data.id - b.data.id);
   });
-
   eleventyConfig.addCollection("featured_ocs", function (collection) {
     let ocs = collection
       .getFilteredByTag("oc")
@@ -477,86 +505,13 @@ export default function (eleventyConfig) {
     return ocs;
   });
 
-  // TODO: fix this ancient mess
-  function get_ocs(coll, array) {
-    var tagarr = {};
-    for (let i = 0; i < coll.length; i++) {
-      console.log(i + " " + coll[i].data.name + " - " + coll[i].data.tags);
-      if (coll[i].data.show_in_directory == true) {
-        // we only add these to the collection if they're supposed to be show in the directory
-        for (let k = 0; k < coll[i].data.tags.length; k++) {
-          let the_tag = coll[i].data.tags[k].toLowerCase();
-          if (!tagarr[the_tag]) {
-            // if tag doesn't exist we will create a key for it
-            //console.log("tag " + coll[i].data.tags[k] + " doesn't exist, creating tag and adding " + coll[i].data.name);
-
-            tagarr[the_tag] = [coll[i]];
-
-            //console.log("added tag " + the_tag);
-          } else {
-            //otherwise we add the oc data to the existing tag
-            //console.log("tag " + coll[i].data.tags[k] + " already exists, adding " + coll[i].data.name + "to tag");
-            tagarr[the_tag].push(coll[i]);
-          }
-        }
-      }
-    }
-    //console.log("FINAL OBJ:");
-    if (array != null) {
-      var cnt = 1;
-      for (const [key, value] of Object.entries(tagarr)) {
-        console.log(`tag #${cnt} : ${key} with ${tagarr[key].length} ocs`);
-        if (!(key === "oc") && !array.includes(key)) {
-          array.push(key);
-        }
-        cnt++;
-      }
-    }
-    return tagarr;
-  }
-
-  const taglist = [];
-
-  eleventyConfig.addCollection("oc_tags", function (collection) {
-    // making a special object collection of tags
-    const coll = collection
-      .getFilteredByTag("oc")
-      .sort((a, b) => b.data.updated - a.data.updated);
-    return get_ocs(coll, taglist); // only passing the array in once here because we don't want to collect tag info more than once
-  });
-
-  eleventyConfig.addCollection("oc_tags_by_created", function (collection) {
-    // making a special object collection of tags
-    const coll = collection
-      .getFilteredByTag("oc")
-      .sort((a, b) => b.data.created - a.data.created);
-    return get_ocs(coll, null);
-  });
-
-  eleventyConfig.addCollection("oc_tags_by_id", function (collection) {
-    // making a special object collection of tags
-    const coll = collection
-      .getFilteredByTag("oc")
-      .sort((a, b) => a.data.id - b.data.id);
-    return get_ocs(coll, null);
-  });
-
   eleventyConfig.addCollection("oc_taglist", function (collection) {
     const tags = buildGroupedOCs(collection.getFilteredByTag("oc"),"tags");
-    const ordered = Object.values(tags).map(tag => (tag.name)).sort();
-    console.log(ordered)
-    return ordered;
+    return Object.values(tags).map(tag => (tag.name)).sort();
   });
 
-  function toTitleCase(str) {
-    return str.replace(
-      /\w\S*/g,
-      (text) => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase(),
-    );
-  }
-
   // world & tag builder helper function
-  function buildGroupedOCs(coll, dataset) {
+  function buildGroupedOCs(coll, dataset, alt = null) {
     // make an object to hold flattened result, we call it tags here but this is generic to handle both tags and worlds
     const tags = {};
     const character_config = getCharacterConfig();
@@ -566,7 +521,7 @@ export default function (eleventyConfig) {
       // ocs are only included in directory listings if specified
       if (oc.data.show_in_directory == true) {
         for (const tag of oc.data[dataset] || []) {
-          if (tag != "oc" && tag != "all") {
+          if (tag !== "oc" && tag !== "all") {
             const key_val = tag.trim().toLowerCase();
             if (!tags[key_val]) {
               tags[key_val] = {
@@ -579,7 +534,7 @@ export default function (eleventyConfig) {
             tags[key_val].ocs.push({
               name: oc.data.name,
               icon: oc.data.icon,
-              page_url: oc.data?.page_url ?? oc.data.id,
+              page_url: oc.url,
               updated: oc.data.updated,
               created: oc.data.created,
               id: oc.data.id,
@@ -591,11 +546,11 @@ export default function (eleventyConfig) {
 
     for (const tag of Object.keys(tags)) {
       tags[tag].ocs.sort((a, b) => {
-        if (character_config.tag_and_world_sort_type == "created") {
-          return new Date(b.created) - new Date(a.created);
-        } else if (character_config.tag_and_world_sort_type == "updated") {
-          return new Date(a.updated) - new Date(b.updated);
-        } else if (character_config.tag_and_world_sort_type == "id") {
+        if (character_config.tag_and_world_sort_type === "created") {
+          return b.created - a.created;
+        } else if (character_config.tag_and_world_sort_type === "updated" || alt === "updated") {
+          return b.updated - a.updated;
+        } else if (character_config.tag_and_world_sort_type === "id" || alt === "id") {
           return a.id - b.id;
         } else {
           throw new Error(`Invalid value for config value: tag_and_world_sort_type`)
@@ -612,6 +567,14 @@ export default function (eleventyConfig) {
       "worlds",
     );
     return getWorldMetadata(worlds);
+  });
+  eleventyConfig.addCollection("oc_worldlist", function (collection) {
+    const worlds = buildGroupedOCs(
+      collection.getFilteredByTag("oc"),
+      "worlds",
+    );
+    const final_worlds = getWorldMetadata(worlds);
+    return Object.values(final_worlds).sort((a, b) => a.name.localeCompare(b.name));
   });
 
   function readWorldDescription(directory,filename) {
@@ -643,7 +606,7 @@ export default function (eleventyConfig) {
     if (!fs.existsSync(directory)) {
       throw new Error (`src/worlds directory must exist even if empty.`)
     }
-    // try to read the files and sort out the markdown files
+    // read files and grab the markdowns
     const entries = fs.readdirSync(directory, { withFileTypes: true,}).filter(
       (entry) =>
         entry.isFile() && path.extname(entry.name).toLowerCase() === ".md",
@@ -681,8 +644,8 @@ export default function (eleventyConfig) {
           );
     const final_worlds = getWorldMetadata(worlds);
 
-    // go thru worlds and return a bunch of pages that we will have 11ty paginate over.
-    // next/prev page links are based on page and total page count
+    // go thru all worlds and return a flat list of pages that we will have the built-in pagination generate pages for
+    // next/prev page links in the template are based on page and total page count
     const result = [];
 
     for (const world of Object.values(final_worlds)) {
@@ -700,22 +663,42 @@ export default function (eleventyConfig) {
     return result;
   });
 
+  eleventyConfig.addCollection("oc_tag_pages", function (collection) {
+    const character_config = getCharacterConfig(),
+          charactersPerPage = character_config.ocs_per_directory_page,
+          tags = buildGroupedOCs(
+            collection.getFilteredByTag("oc"),
+            "tags",
+            "updated"
+          );
+    // go thru all worlds and return a flat list of pages that we will have the built-in pagination generate pages for
+    // next/prev page links in the template are based on page and total page count
+    const result = [];
+
+    for (const tag of Object.values(tags)) {
+      const pageCount = Math.ceil(tag.ocs.length / charactersPerPage);
+
+      for (let page = 0; page < pageCount; page++) {
+        result.push({
+          ...tag, // include all of world
+          ocs: tag.ocs.slice(page * charactersPerPage, (page + 1) * charactersPerPage),
+          page: page + 1,
+          pageCount,
+        });
+      }
+    }
+    return result;
+  });
+
   eleventyConfig.addCollection("navigation", function (collection) {
     // making a special object collection of tags
-    const coll = collection
+    return collection
       .getFilteredByTag("navigation")
       .sort((a, b) => a.data.order - b.data.order);
-    const nav = [];
-
-    // loop over all pages tagged navigation. will be added to
-    for (let i = 0; i < coll.length; i++) {
-      console.log(i + " " + coll[i].data.title + " - " + coll[i].url);
-      nav.push(coll[i]);
-    }
-    return nav;
   });
 
   eleventyConfig.on("eleventy.after", async () => {
+    // copying over added images here :)
     let image;
     while ((image = images_to_copy.pop())) {
       const { source, destination } = image;

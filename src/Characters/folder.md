@@ -2,4 +2,4 @@
 - **icon.png** is the naming convention for the file you want to make a character or folder icon.
 - you can name character container folders and the inner markdown file whatever you want, but:
     - there can only be 1 markdown file per container
-    - the character's permalink is controlled by the **page_url** value of the frontmatter (it will be slugified if you use spaces, fyi)
+    - the character's permalink is controlled by the **page_url** value of the frontmatter (it will be slugified if you use spaces, fyi), and falls back to their ID if that is missing
