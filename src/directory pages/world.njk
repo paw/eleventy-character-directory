@@ -18,8 +18,8 @@ permalink: "{% if character_config.world_slug %}{{character_config.world_slug}}/
     <ul class="oc-list small">
     {% for oc in world.ocs %}
         <li class="oc">
-            <a href="{{ oc.page_url }}"{%- if not character_config.show_name_badges_in_directory -%} data-tippy-content="{{oc.name}} (Updated: {{oc.updated | htmlDateString}})"{%- endif -%}><img src="{{ oc.icon }}" alt="{{ oc.name }}"></a>
-            {% if character_config.show_name_badges_in_directory %}<a href="{{ oc.page_url }}" class="character-name-badge" data-tippy-content="Updated: {{oc.updated | htmlDateString}}">{{ oc.name }}</a>{% endif %}
+            <a href="{{ oc.page_url }}" data-tippy-content="{%- if not character_config.show_name_badges_in_directory -%}{{oc.name}} (Updated: {{oc.updated | htmlDateString}}){%-else-%}Updated: {{oc.updated | htmlDateString}}{%- endif -%}"><img src="{{ oc.icon }}" alt="{{ oc.name }}"></a>
+            {% if character_config.show_name_badges_in_directory %}<a href="{{ oc.page_url }}" class="character-name-badge">{{ oc.name }}</a>{% endif %}
         </li>
     {% endfor %}
     </ul>
