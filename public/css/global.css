@@ -36,6 +36,7 @@ yes this started as a glitch project
 .text-center { text-align: center }
 .text-right { text-align: right }
 .text-justify { text-align: justify }
+.block { display: block; }
 
 select, input {
 	background-clip: padding-box;
@@ -52,6 +53,10 @@ select:focus {
 	border-color: var(--color-borders-hover);
 	color: var(--color-input-focus-text);
 	outline: 0;
+}
+hr {
+  border: 0;
+  border-top: 1px solid var(--color-borders);
 }
 
 /* Basic page style resets */
@@ -188,14 +193,15 @@ select:focus {
 }
 .oc .header .header-stats {
   display: grid;
-  grid-template-rows: 1.5rem 1rem;
+  grid-template-rows: auto auto;
   grid-template-columns: auto;
+  grid-gap: 0.2rem;
 }
 .oc .header .header-stats:has(.songlist) {
   grid-template-columns: auto;
 }
 .oc .header .header-stats.three {
-  grid-template-rows: 1.5rem 1.5rem 1rem;
+  grid-template-rows: auto auto auto;
 }
 .songlist {
 	margin: 0.5rem 0.5rem 0 auto;
@@ -215,6 +221,9 @@ select:focus {
   justify-content: space-evenly;
   padding: 0;
 }
+.song {
+  margin-bottom: 0;
+}
 .song a {
 	margin: 0.5rem 0.2rem 0;
 	padding: 0.3rem 0.5rem;
@@ -223,6 +232,7 @@ select:focus {
 	transition: 0.3s color;
 	font-size: 1.3rem;
 	height: 2.2rem;
+  display: inline-block;
 }
 .quote {
   padding: 0 0.5rem 0.5rem;
@@ -262,7 +272,7 @@ select:focus {
   max-width: 100%;
   height: auto;
 }
-#tags ul {
+#tags ul, .oc-list-text {
   list-style-type: none;
   padding: 0;
   margin: 0;
@@ -271,11 +281,26 @@ select:focus {
   grid-gap: 0.5rem;
   justify-content: center;
 }
+.oc-list-text {
+  display: inline-flex;
+}
 #worlds ul {
   display: grid;
   grid-template-columns: 33% 33% 33%;
+  list-style-type: none;
 }
-.character-name-badge, .folder-name, #tags a, #worlds a {
+#worlds li {
+  padding-left: 1rem;
+  position: relative;
+}
+#worlds li::before {
+  content: '•'/'';
+  position: absolute;
+  font-size: 2rem;
+  left: 0;
+  top: 0.25rem;
+}
+.character-name-badge, .folder-name, #tags a, #worlds a, .oc-list-text a {
 	background-color: var(--color-primary);
 	background-image: none;
 	border-color: var(--color-borders);
@@ -287,8 +312,42 @@ select:focus {
   word-wrap: break-word;
   margin-top: 0.5rem;
 }
-#tags a {
+#worlds a {
+  display: inline-block;
+}
+#stories .story-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+#stories .title {
+  margin: 0 0.2rem 0;
+  display: inline-block;
+  font-size: 1.2rem;
+}
+#stories .summary, #story .summary  {
+  display: block;
+  margin: 0.5rem 0.5rem 2rem;
+}
+#story .summary span {
+  font-style: italic;
+}
+#story .summary {
+  margin: 1rem 0.5rem
+}
+#story .title {
+  text-align: center;
+  margin-bottom: 0;
+}
+#story .author {
+  font-size: 1.3rem;
+  color: var(--color-text-main);
+  margin: 0.5rem 0.2rem;
+}
+#tags a, #worlds a {
   white-space: pre;
+  margin-bottom: 0.2rem;
 }
 .oc-list.extra-small .character-name-badge {
   font-size: 0.8rem;
@@ -304,7 +363,7 @@ select:focus {
 .oc-list.large .character-name-badge {
   max-width: 200px;
 }
-.character-name-badge:hover, #tags a:hover, #worlds a:hover {
+.character-name-badge:hover, #tags a:hover, #worlds a:hover, .oc-list-text a:hover {
   text-decoration: none;
 	color: var(--color-primary-text);
   background-color: var(--color-primary-hover);
@@ -400,6 +459,9 @@ a:focus .folder-placeholder .open {
   .oc-list.extra-small, .folder-list.extra-small {
     --cols: 3;
   }
+  #worlds ul {
+    grid-template-columns: 50% 50%;
+  }
 }
 @media screen and (max-width: 400px) {
   .oc-list, .folder-list {
@@ -418,6 +480,9 @@ a:focus .folder-placeholder .open {
   }
   .oc-list.extra-small, .folder-list.extra-small {
     --cols: 2;
+  }
+  #worlds ul {
+    grid-template-columns: 100%;
   }
 }
 #navbar {
@@ -565,7 +630,7 @@ body {
 
 /* Typography */
 p {
-  margin: 0 0 1rem 0;
+  margin: 1rem 0;
   line-height: 1.5em;
   font-size: 1rem;
 }

@@ -17,19 +17,8 @@ connections:
 
 ---
 
-## Backstory
+You can also have secret characters! These characters will not show up in the directory, tags, or worlds pages.
 
-character backstory goes here **Markdown supported**.
-
-Optional Values you can remove:
-- full-name
-- species
-- stats
-- setting
-- gallery
-
-should not show in directory
-
-### Section
-
-**You can have however many sections you want.** The Gallery will appear at the bottom of the page.
+However, they will be visible when they are:
+- Added as a friend/enemy or under connections in another character's frontmatter
+- Listed as a featured character in a story

@@ -10,20 +10,11 @@
 ### Planned
 
 - stories (src/stories)
-  - directory of stories
-  - link between next/prev stories
-  - mark characters as in story in frontmatter
-  - option to show the stories on the character's page
-- worlds
-  - create a page for the world in /worlds/ to give it a description, or leave blank to generate the world
-  - characters in worlds by id (or name?) are defined on the characters' page
-  - edit characterValidator to make sure that the worlds are valid
-  - right now: worlds are created by stripping out the world tags from oc objects, can lead to issues with duplicate worlds due to cAsE etc. no ability to add desc/other data. need to rework this and make the worlds folder the source of truth for valid worlds
-- tags
-  - tag pages need custom page gen to paginate both the tags and its characters. tags don't really matter.
+  - link between next/prev stories (?)
+  - option to show the stories on the character's page (?)
+  - validation for date frontmatter
 - characters
   - add option to hide connections on profile and add external connections page like toyhouse?
-  - add validation for created/updated or have a fallback that isn't displayed if missing
 - companion YAML generator for frontmatter
   - load frontmatter for ocs into fields or manually fill out fields
   - export frontmatter formatting for YAML
@@ -47,14 +38,26 @@
 - characters
   - internal validation for frontmatter values
   - unique ids for connections/friends/enemies
-  - optional connections (like toyhouse links)
+  - created/updated must exist and be in the format YYYY-MM-DD, will display as Short month Day, Full Year
+  - optional connections (functions like toyhouse links)
   - optional simple friends/enemies lists
   - fully customizable optional basic info fields
   - optional dnd-style stat block
   - icon automatically pulled from icon.png
+  - optional name an image portrait.png to use that in the character page header instead of the character's icon
   - masonry gallery with image metadata handled by a yaml file
   - optional list of songs
   - optional quote
   - optional subtitle under name
   - optionally show character ids
+- worlds
+  - worlds are added to characters by name in the frontmatter. ocs are automatically collected and sorted into world groups for pagination. worlds are automatically created as long as one oc is in the world.
+  - the first instance of the world encountered during collection creation defines the case of the world name. To enforce a specific case or add a description to the world, create a file in src/worlds/
+  - added a world directory
+- tags
+  - tags are added to characters in their frontmatter. ocs are automatically collected and sorted into tag groups for pagination
+  - added a tag directory
+- stories
+  - added a story directory
+  - mark characters as in story in frontmatter
 - copies image files over from src directory folders to appropriate places related to character id in output/public/images

@@ -19,7 +19,8 @@ full-name: Jane Doe
 species: Human
 worlds: ["2fort","Doublecross","Upward","Egypt"]
 tags: ["bucket","tf2"]
-gallery:
+connections:
+  25: "I got three words for you: U, S, A!"
 
 ---
 

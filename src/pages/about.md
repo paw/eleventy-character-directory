@@ -3,7 +3,7 @@ layout: page.njk
 title: About
 tags: navigation
 icon: <i class="fa-solid fa-comment-dots" aria-hidden="true"></i>
-order: 4
+order: 5
 show_title: true
 ---
 

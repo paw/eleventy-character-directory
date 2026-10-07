@@ -173,6 +173,7 @@ export default function (eleventyConfig) {
   function is_image(filename) {
     return valid_image_types.includes(path.extname(filename).toLowerCase());
   }
+  
   function findIcon(directory) {
     const entry = fs
       .readdirSync(directory, {
@@ -417,19 +418,15 @@ export default function (eleventyConfig) {
 
     // EDIT HERE WITH THE CODE FROM THE NEXT STEPS PAGE TO REVERSE CHRONOLOGICAL ORDER
     // (inspired by https://github.com/11ty/eleventy/issues/898#issuecomment-581738415)
-    const coll = collection.getFilteredByTag("story");
+    const stories = collection.getFilteredByTag("internal-tag-story")
+      .filter((story) => story.data.show_in_directory === true)
+      .sort((a, b) => b.data.date - a.data.date);
 
-    // From: https://github.com/11ty/eleventy/issues/529#issuecomment-568257426
-    // Adds {{ prevPost.url }} {{ prevPost.data.title }}, etc, to our njks templates
-    /*for (let i = 0; i < coll.length; i++) {
-          const prevPost = coll[i - 1];
-          const nextPost = coll[i + 1];
-    
-          coll[i].data["prevPost"] = prevPost;
-          coll[i].data["nextPost"] = nextPost;
-        }*/
+    for (const story of stories) {
+      story.data.oc_data = collection.getFilteredByTag("oc").filter(oc => story.data.characters?.includes(oc.data.id)).sort((a, b) => a.data.id - b.data.id);
+    }
 
-    return coll;
+    return stories;
   });
 
   eleventyConfig.addCollection("ocs_ordered_by_updated", function (collection) {

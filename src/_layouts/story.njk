@@ -1,0 +1,46 @@
+---
+layout: base.njk
+tags: internal-tag-story
+permalink: "{%- if character_config.story_slug -%}{{character_config.story_slug}}/{%- endif -%}{{ title | slugify }}/"
+---
+
+
+<div class="content">
+  <article id="story" class="card">
+    <h1 class="title content-title">{{ title }}{%- if author.name -%}<div class="author">&nbsp;by&nbsp;{%- if author.url -%}<a href="{{author.url}}">{%- endif %}{{author.name}}{%- if author.url -%}</a></div>{%- endif %}{%- endif -%}</h1>
+    <p><b>Posted:</b>&nbsp;{{date | htmlDateString}}
+    <br/>
+    <b>Characters:</b>&nbsp;
+    {%- for oc in oc_data -%}
+        <a href="{{oc.url}}" class="oc">{{oc.data.name}}</a>{% if not loop.last %}, {% endif %}
+    {%- endfor -%}
+    {%- if warnings -%}
+      <br><b>Content Warnings:</b>&nbsp;
+          {%- for warning in warnings -%}
+              <span class="warning">{{warning}}</span>{% if not loop.last %}, {% endif %}
+          {%- endfor -%}
+      {%- endif -%}
+    </p>
+    {%- if summary -%}
+    <hr/>
+    <p class="summary"><span>{{summary}}</span></p>
+    {%- endif -%}
+    <hr/>
+    {{ content | safe }}
+  </article>
+  <section class="controls">
+    {# The previous and next post data is added in .eleventy.js #}
+    {% if prevPost.url %}
+      <p>
+        <strong>Previous post</strong>: 
+        <a class="previous" href="{{ prevPost.url }}">{{ prevPost.data.title }}</a>
+      </p>
+    {% endif %}
+    {% if nextPost.url %}
+      <p>
+        <strong>Next post</strong>: 
+        <a class="next" href="{{ nextPost.url }}">{{ nextPost.data.title }}</a>
+      </p>
+    {% endif %}
+  </section>
+</div>

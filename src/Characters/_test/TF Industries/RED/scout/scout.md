@@ -33,14 +33,8 @@ worlds: ["Upward","2fort"]
 tags: ["tf2"]
 friends: [7,8,5]
 enemies: [9,5]
-gallery: [
-  {
-    'title': "Title Your Image",
-    'thumb': 'thumbnail url',
-    'full': 'full res url',
-    'desc': "description. will be show in modal."
-  }
-]
+connections:
+  25: "Frickin' unbelievable."
 ---
 
 Born and raised in Boston, Massachusetts, USA, the Scout is a fast-running scrapper with a baseball bat and a snarky, in-your-face attitude. He is the fastest and most mobile mercenary on the battlefield unassisted. Scout's Double Jump helps him outmaneuver slower opponents like the Heavy and navigate the terrain while dodging oncoming bullets and projectiles. Carrying a Scattergun, Pistol, and Bat, he is an ideal class for aggressive fighting and flanking. Scout excels at hit-and-run tactics that sap away enemy health as his high mobility allows him to get in, do damage, and escape before being noticed. His ability to run in and out of contested hot spots quickly enables him to turn the tide of battle before the enemy team can even take notice. However, Scout possesses the lowest default health pool (alongside the Engineer, Sniper, and Spy), leaving him vulnerable on the front line.

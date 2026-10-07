@@ -6,3 +6,4 @@ web_modules
 /src/Characters/*
 !/src/Characters/_test/
 !/src/Characters/folder.md
+!/src/Characters/example_character/

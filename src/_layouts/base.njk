@@ -38,7 +38,7 @@ limit: 5
           <a href="/"><i class="fa-solid fa-house" aria-hidden="true"></i> Home</a>
           <a href="/{{ character_config.base_directory | slugify }}"><i class="{{ character_config.base_directory_icon }}" aria-hidden="true"></i> {{ character_config.base_directory }}</a>
          {%- for link in collections.navigation -%}
-          <a href="{{link.url}}">{% if link.data.icon %}{{ link.data.icon | safe }} {% endif %}{{link.data.title}}</a>
+          {% if link.data.permalink != false %}<a href="{{link.url}}">{% if link.data.icon %}{{ link.data.icon | safe }} {% endif %}{{link.data.title}}</a>{% endif %}
          {%- endfor -%}
         </div>
       </nav>
