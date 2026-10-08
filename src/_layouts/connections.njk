@@ -1,0 +1,48 @@
+---
+layout: base.njk
+permalink: "{{title | slugify}}/{% if pagination.pageNumber > 0 %}{{ pagination.pageNumber | plus: 1 }}/{% endif %}"
+---
+
+<div class="content">
+  <section class="card">
+    {%- if show_title -%}
+      <h1>{%- if icon -%}{{icon | safe }}&nbsp;{%- endif -%}{{ title }}</h1>
+    {%- endif -%}
+    {{ content | safe }}
+  </section>
+  <section id="connections" class="card connections">
+        <ul class="connection-list">
+        {%- for relationship in pagination.items -%}
+            <li class="connection">
+                <div class="portrait"><div class="icon you"><a href="{{relationship.char1.url}}"><img src="{{ relationship.char1.data.icon }}" alt="{{relationship.char1.data.name}}"></a></div></div>
+                <div class="portrait"><div class="icon you"><a href="{{relationship.char2.url}}"><img src="{{relationship.char2.data.icon}}" alt="{{relationship.char2.data.name}}"></a></div></div>
+                <div class="connection-bubble left"><h3 class="name">{{relationship.char1.data.name}}<span class="sr-only"> says:</span></h3>
+                    {{ relationship.opinion1 }}
+                <i class="fa-solid fa-play tail" aria-hidden="true"></i></div>
+                <div class="connection-bubble right">
+                <h3 class="name">{{relationship.char2.data.name}}<span class="sr-only"> says:</span></h3>
+                    {{ relationship.opinion2 }}
+                <i class="fa-solid fa-play tail" aria-hidden="true"></i>
+                </div>
+            </li>
+        {%- endfor -%}
+        </ul>
+  </section>
+  {% if pagination.pageLinks.length > 1 %}
+    <nav class="pagination card">
+      {% if pagination.previousPageLink %}
+        <a class="pagination-item" href="{{ pagination.previousPageHref | url }}" title="Previous Page"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></a>
+      {% else %}
+        <span class="pagination-item disabled"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></span>
+      {% endif %}
+      <span>
+        Page {{ pagination.pageNumber + 1 }} of {{ pagination.pages.length }}
+      </span>
+      {% if pagination.nextPageLink %}
+        <a class="pagination-item" href="{{ pagination.nextPageHref | url }}" title="Next Page"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+      {% else %}
+        <span class="pagination-item disabled"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+      {% endif %}
+    </nav>
+  {% endif %}
+</div>

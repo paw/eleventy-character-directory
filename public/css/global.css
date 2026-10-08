@@ -262,6 +262,8 @@ hr {
   display: flex;
   flex-direction: column;
   margin: 0;
+  align-items: center;
+  justify-content: center;
 }
 .oc-list a:has(img), .connection-list .you a:has(img), .connection-list .icon.me, .folder-list .folder-icon, .directory-header .folder-icon, .folder-placeholder, .masonry-column img {
   padding: 0.2rem;

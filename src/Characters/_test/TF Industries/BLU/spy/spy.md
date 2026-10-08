@@ -17,8 +17,8 @@ connections:
 
 ---
 
-You can also have secret characters! These characters will not show up in the directory, tags, or worlds pages.
+You can also have secret characters! These characters will not show up in the directory, tags, or worlds pages and any connections to/from them will not show across the site.
 
-However, they will be visible when they are:
-- Added as a friend/enemy or under connections in another character's frontmatter
+However, they **will** be visible when they are:
+- Added as a friend/enemy in another character's frontmatter
 - Listed as a featured character in a story

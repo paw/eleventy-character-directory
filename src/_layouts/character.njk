@@ -147,7 +147,7 @@ permalink: "{%- if character_config.character_slug -%}{{ character_config.charac
 
   </div>
 
-  <div id="connections">
+  <div id="relationships">
 
     {% if friends and friends.length > 0 %}
     <div class="card friends">
@@ -185,20 +185,30 @@ permalink: "{%- if character_config.character_slug -%}{{ character_config.charac
     </div>
     {% endif %}
 
-    {% if connections and character_config.display_connections_on_profiles %}
+    {% if connections and show_in_directory and character_config.display_connections_on_profiles %}
     <div class="card connections">
       <h3 class="content-title">Connections</h3>
       <ul class="connection-list">
-        {%- for character, opinion in connections -%}
-          {%- for oc in collections.ocs -%}
-            {% if (oc.data.id == character) %}
+          {%- for relationship in collections.connections -%}
+            {% if (relationship.char1.data.id === id or relationship.char2.data.id === id) %}
+              {% if relationship.char1.data.id !== id %}
+                  {% set oc = relationship.char1 %}
+              {% else %}
+                  {% set oc = relationship.char2 %}
+              {% endif %}
               <li class="connection">
                 <div class="portrait"><div class="icon me"><img src="{{ icon }}" alt="{{name}}"></div></div>
                 <div class="portrait"><div class="icon you"><a href="{{oc.url}}"><img src="{{oc.data.icon}}" alt="{{oc.data.name}}"></a></div></div>
-                <div class="connection-bubble left"><h3 class="name">{{name}}<span class="sr-only"> says:</span></h3>{{ opinion }}<i class="fa-solid fa-play tail" aria-hidden="true"></i></div>
+                <div class="connection-bubble left"><h3 class="name">{{name}}<span class="sr-only"> says:</span></h3>
+                  {% if oc.data.id in connections %}
+                    {{ connections[oc.data.id] }}
+                  {% else %}
+                  ...
+                  {% endif %}
+                  <i class="fa-solid fa-play tail" aria-hidden="true"></i></div>
                 <div class="connection-bubble right">
                   <h3 class="name">{{oc.data.name}}<span class="sr-only"> says:</span></h3>
-                  {% if oc.data.connections is defined and oc.data.connections and id in oc.data.connections %}
+                  {% if oc.data.connections and id in oc.data.connections %}
                   {{ oc.data.connections[id] }}
                   {% else %}
                   ...
@@ -208,7 +218,6 @@ permalink: "{%- if character_config.character_slug -%}{{ character_config.charac
               </li>
             {% endif %}
           {%- endfor -%}
-        {%- endfor -%}
         </ul>
     </div>
     {% endif %}

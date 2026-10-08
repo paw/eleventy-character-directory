@@ -2,19 +2,14 @@
 
 ## Bug Fixes
 
-- the views of all characters are not working with ocs_per_directory_page right now because they're using built-in pagination, need to add custom page gen for this
 - CSS lightbox issue with scrolling with mousewheel only working when hovering directly over the image container.
 
 ## Features
 
 ### Planned
 
-- stories (src/stories)
-  - link between next/prev stories (?)
-  - option to show the stories on the character's page (?)
+- stories
   - validation for date frontmatter
-- characters
-  - add option to hide connections on profile and add external connections page like toyhouse?
 - companion YAML generator for frontmatter
   - load frontmatter for ocs into fields or manually fill out fields
   - export frontmatter formatting for YAML
@@ -28,8 +23,12 @@
 
 ### Maybe
 
-- at least one other premade theme, this one based on polaroids (?)
-
+- at least one other premade theme, this one based on polaroids (?)- characters
+- split the character into multiple pages instead of one giant page
+- stories
+  - link between next/prev stories (?)
+  - option to show the stories on the character's page (?)
+  
 # DONE ✅
 
 - JSON file to control various settings
@@ -50,6 +49,7 @@
   - optional quote
   - optional subtitle under name
   - optionally show character ids
+  - can hide/show connections on profile
 - worlds
   - worlds are added to characters by name in the frontmatter. ocs are automatically collected and sorted into world groups for pagination. worlds are automatically created as long as one oc is in the world.
   - the first instance of the world encountered during collection creation defines the case of the world name. To enforce a specific case or add a description to the world, create a file in src/worlds/
@@ -60,4 +60,7 @@
 - stories
   - added a story directory
   - mark characters as in story in frontmatter
+- connections
+  - added a page to show all character connections
+  - connections now mutually show on both character's page even if connection is one-sided
 - copies image files over from src directory folders to appropriate places related to character id in output/public/images

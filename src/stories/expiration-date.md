@@ -16,7 +16,7 @@ warnings:
   - Death
 
 worlds: ["2fort"]
-characters: [1,2,3,4,5,6,7,8]
+characters: [1,2,3,4,5,6,7,8,9]
 ---
 
 As the Heavy, Scout, and Soldier return from a mission to capture a briefcase, Miss Pauling video calls them to ask how the mission went. She is slightly irritated that they left witnesses that she has to take care of for them. After arriving back at the base, Scout tries to ask her out, but he is unable to think of anything to say to her.

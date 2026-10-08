@@ -84,7 +84,6 @@ export default function (eleventyConfig) {
   eleventyConfig.addFilter("updated", ocs => {
     return ocs.filter(oc => oc.data.show_in_directory === true).sort((a, b) => b.data.updated - a.data.updated);
   });
-
   eleventyConfig.addCollection("ocs", function (collection) {
     const ocs = validateCharacters(collection.getFilteredByTag("oc"));
     // if we're good we can get gallery for all ocs :)
@@ -358,6 +357,48 @@ export default function (eleventyConfig) {
       return result;
     }
   }
+
+  eleventyConfig.addCollection("connections", function(collection) {
+    // connections page
+    const ocs = validateCharacters(collection.getFilteredByTag("oc").filter(oc => oc.data.show_in_directory === true)),
+          recorded_pairs = new Set(),
+          final_connections = [];
+
+    for (const oc of ocs) {
+
+      // check for undef/null
+      if (!oc.data?.connections) {
+        continue;
+      }
+
+      for (const [other_oc, my_opinion] of Object.entries(oc.data.connections)) {
+
+        // format pairs as 1-2, 3-4, etc...
+        const pair = [oc.data.id, Number(other_oc)].sort((a, b) => a - b).join("-");
+        
+        // skip if we've already logged this combo
+        if (recorded_pairs.has(pair)) {
+          continue;
+        }
+        // log the pair as seen
+        recorded_pairs.add(pair);
+
+        // get the other oc's opinion
+        const other_opinion = ocs.find(oc => oc.data.id === Number(other_oc))?.data.connections[oc.data.id];
+
+        // save the relationship
+        final_connections.push({
+          char1: oc,
+          char2: ocs.find(oc => oc.data.id === Number(other_oc)),
+          opinion1: my_opinion,
+          opinion2: other_opinion ?? "...",
+          mutual: my_opinion !== undefined && other_opinion !== undefined
+        })
+      }
+    }
+    // return our final flattened list of paired opinions
+    return final_connections;
+  });
 
   // flattening the directories and making one fat collection to use w/ pagination
   eleventyConfig.addCollection(

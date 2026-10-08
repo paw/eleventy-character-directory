@@ -18,6 +18,7 @@
     "show_name_badges_on_profiles": true,
     "display_connections_on_profiles": true,
     "stories_per_page": 10,
+    "connections_per_page": 10,
 
     "story_slug": "story",
     "world_slug": "world",
