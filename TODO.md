@@ -3,11 +3,15 @@
 ## Bug Fixes
 
 - CSS lightbox issue with scrolling with mousewheel only working when hovering directly over the image container.
+- address edge case where files with differing names can normalize to same conflicting slug (eg. 'My-File.png' and 'my file.png')
+- address edge case where character.njk md file can still generate an oc when not in a container
 
 ## Features
 
 ### Planned
 
+- directory
+  - add last updated date tooltip to directory character links
 - stories
   - validation for date frontmatter
 - companion YAML generator for frontmatter
@@ -30,7 +34,8 @@
   
 # DONE ✅
 
-- JSON file to control various settings
+- JSON file in _data controls various settings
+- prevent accidental inclusion of random md files in characters dir from generating pages
 - Folders on site generated from file structure on disk
 - characters are containerized in leaves of the file structure tree: one .md file per folder, deepest folder in chain becomes a character if there's valid md in it. otherwise it's treated as an empty folder
 - characters

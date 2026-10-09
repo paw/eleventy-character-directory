@@ -13,7 +13,7 @@ permalink: "/{{ title | slugify }}/"
   <section class="card">
     <div id="tags">
       <ul>
-      {%- for tag in collections.oc_taglist -%}
+      {%- for tag in collections.ocTagsList -%}
         <li><a href="/{% if character_config.tag_slug %}{{character_config.tag_slug}}/{% endif %}{{tag | slugify}}">#{{tag}}</a></li>
       {%- endfor -%}
     </ul>

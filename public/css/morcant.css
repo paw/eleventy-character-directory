@@ -4,3 +4,6 @@
   --color-text-header: red;
   --color-primary: yellow;
 }
+.portrait img {
+  min-height: 400px;
+}

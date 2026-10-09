@@ -452,7 +452,6 @@ a:focus .folder-placeholder .open {
   .oc-list.large li, .folder-list.large li, .oc-list.large a:has(img), .oc-list.large a:has(img) img {
     width: 100%;
     height: auto;
-    aspect-ratio: 1 / 1;
   }
   .oc-list.large a:has(img) {
     height: auto;
@@ -481,7 +480,6 @@ a:focus .folder-placeholder .open {
   .oc-list.small li, .folder-list.small li, .oc-list.small a:has(img), .oc-list.small a:has(img) img {
     width: 100%;
     height: auto;
-    aspect-ratio: 1 / 1;
   }
   .oc-list.extra-small, .folder-list.extra-small {
     --cols: 2;
@@ -512,6 +510,7 @@ a:focus .folder-placeholder .open {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: flex-end;
+  line-height: 2rem;
 }
 .nav .links a:not(:last-child)::after {
   content: '';

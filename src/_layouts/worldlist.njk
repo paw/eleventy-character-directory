@@ -13,7 +13,7 @@ permalink: "/{{ title | slugify }}/"
   <section class="card">
     <div id="worlds">
       <ul>
-      {%- for world in collections.oc_worldlist -%}
+      {%- for world in collections.ocWorldsList -%}
         <li><a href="/{% if character_config.world_slug %}{{character_config.world_slug}}/{% endif %}{{world.name | slugify}}">{{world.name}}</a> ({{world.ocs.length}} Character{%- if world.ocs.length > 1 -%}s{%-endif-%})</li>
       {%- endfor -%}
     </ul>

@@ -2,6 +2,7 @@ import path from "node:path";
 import fs from "node:fs";
 import markdownIt from "markdown-it";
 import { getCharacterConfig } from "./src/_lib/character_config.js";
+import { prettyText } from "./src/_lib/pretty_text.js";
 import { parse as parseYaml } from "yaml";
 
 // needed to convert folder description md files into markdown usable on the pages
@@ -13,18 +14,18 @@ const md = markdownIt({
 // MAIN
 export default function (eleventyConfig) {
   // get character config
-  const character_config = getCharacterConfig();
+  const characterConfig = getCharacterConfig();
   // resolve character directory
-  const charactersDir = path.resolve(process.cwd(), `src/${character_config.base_directory}`);
+  const charactersDirectory = path.resolve(process.cwd(), `src/${characterConfig.base_directory}`);
   // make sure it exists, if not end the process
-  if (!fs.existsSync(charactersDir)) {
-    throw new Error(`Characters directory not found (must match config): ${charactersDir}`);
+  if (!fs.existsSync(charactersDirectory)) {
+    throw new Error(`Characters directory not found (must match config): ${charactersDirectory}`);
   }
 
   // skip when building for now
   eleventyConfig.setUseGitIgnore(false);
   // watch for config file changes
-  eleventyConfig.addWatchTarget("./src/_data/");
+  eleventyConfig.addWatchTarget("./src/_data/character_config.json");
 
   // setup directory stuff
   eleventyConfig.setIncludesDirectory("_includes");
@@ -34,8 +35,6 @@ export default function (eleventyConfig) {
 
   // ignore folder descriptions & README files
   eleventyConfig.ignores.add(`src/worlds`);
-  eleventyConfig.ignores.add(`src/${character_config.base_directory}/**/folder.md`);
-  eleventyConfig.ignores.add(`src/${character_config.base_directory}/**/README.md`);
 
   // we will NOT be automatically pulling in static assets here
   // anything stored in the characters folder will be copied over programatically
@@ -46,14 +45,15 @@ export default function (eleventyConfig) {
 
 
   // include slugifier access for our later functions
-  const slugify = eleventyConfig.getFilter("slugify");
+  const Slugify = eleventyConfig.getFilter("slugify");
 
   // stuff for moving over folder & character images later
-  const images_to_copy = [];
-  const valid_image_types = [".png", ".jpg", ".jpeg", ".webp", ".gif", ".avif"];
+  const imagesToCopy = [],
+        imagesToCopySeen = new Map(),
+        validImageTypes = [".png", ".jpg", ".jpeg", ".webp", ".gif", ".avif"];
 
-  function queue_image(source, destination) {
-    images_to_copy.push({
+  function queueImage(source, destination) {
+    imagesToCopy.push({
       source,
       destination,
     });
@@ -72,7 +72,7 @@ export default function (eleventyConfig) {
     arr.slice(0, limit),
   );
 
-  // oc filters
+  // oc filters for homepage
   eleventyConfig.addFilter("featured", ocs => {
     return ocs
       .filter(oc => oc.data.show_in_directory === true)
@@ -100,10 +100,17 @@ export default function (eleventyConfig) {
       urls = new Map(),
       errors = [];
 
+    // keep list of all ocs to handle invalid connections
+    const ocsById = new Map(
+      ocs.map((oc) => [oc.data.id, oc]),
+    );
+
     // checking for duplicate IDs/URLs
     for (const oc of ocs) {
-      let id = Number(oc.data.id),
-        url = oc.url;
+
+      oc.data.id = Number(oc.data.id);
+      const id = oc.data.id,
+            url = oc.url;
 
       // error for invalid IDs
       if (!Number.isInteger(id)) {
@@ -147,7 +154,7 @@ export default function (eleventyConfig) {
           `\t\t${oc.inputPath}`,
         );
       } else {
-        urls.set(url);
+        urls.set(url, oc);
       }
       // dates must be YYYY-MM-DD
       if (typeof oc.data.created != "object") {
@@ -160,17 +167,60 @@ export default function (eleventyConfig) {
           `Invalid date for updated date for #${oc.data.id}: ${oc.data.name}. value ${oc.data.updated}, Expected YYYY-MM-DD.`
         );
       }
+      if (oc.data?.friends) {
+        const hiddenFriends = [];
+        oc.data.friends.forEach(otherOc => {
+
+          if (!ocsById.get(Number(otherOc))) {
+            errors.push(
+              `Oc ${oc.data.name} #${oc.data.id} has an invalid friend: ${otherOc}`
+            );
+          } else if (!ocsById.get(Number(otherOc)).data.show_in_directory) { 
+            hiddenFriends.push(`- ${ocsById.get(Number(otherOc)).data.name} #${ocsById.get(Number(otherOc)).data.id}`)
+          }
+        })
+        if (hiddenFriends.length > 0) {
+          console.warn('- ',prettyText(`Oc ${oc.data.name} #${oc.data.id} has one or more hidden friends. Make sure this was on purpose before you publish!\n\tHidden Characters:\n\t${hiddenFriends.join("\n\t")}`,{ color : 'yellow'}))
+        }
+      }
+      if (oc.data?.enemies) {
+        const hiddenEnemies = [];
+        oc.data.enemies.forEach(otherOc => {
+          if (!ocsById.get(Number(otherOc))) {
+            errors.push(
+              `Oc ${oc.data.name} #${oc.data.id} has an invalid enemy: ${otherOc}`
+            );
+          } else if (!ocsById.get(Number(otherOc)).data.show_in_directory) { 
+            hiddenEnemies.push(`- ${ocsById.get(Number(otherOc)).data.name} #${ocsById.get(Number(otherOc)).data.id}`)
+          }
+        })
+
+        if (hiddenEnemies.length > 0) {
+          console.warn('- ',prettyText(`Oc ${oc.data.name} #${oc.data.id} has one or more hidden enemies. Make sure this was on purpose before you publish!\n\tHidden Characters:\n\t${hiddenEnemies.join("\n\t")}`,{ color : 'yellow'}))
+        }
+      }
+      if (oc.data?.connections) {
+        for (const otherOc of Object.keys(oc.data.connections)) {
+          // skip connections
+          if (!ocsById.get(Number(otherOc))) {
+            errors.push(
+              `Oc ${oc.data.name} #${oc.data.id} has connection to invalid oc ${otherOc}`
+            );
+          }
+        }
+      }
     }
     if (errors.length > 0) {
-      console.error("OC validation failed!");
-      throw new Error(`OC Errors:\n\t- ${errors.join("\n\t- ")}`);
+      console.error(prettyText("Character Validation Failed!", { color: 'black', bg: 'red', bold: true, bright: true}));
+      throw new Error(`\n${prettyText('OC Errors:')}\n\t- ${errors.join("\n\t- ")}`);
     }
+    console.log(prettyText("Character Validation Succeeded!", { color: 'black', bg: 'green', bold: true, bright: true}));
     return ocs;
   }
 
   // HELPER FUNCTIONS
-  function is_image(filename) {
-    return valid_image_types.includes(path.extname(filename).toLowerCase());
+  function isImage(filename) {
+    return validImageTypes.includes(path.extname(filename).toLowerCase());
   }
 
   function findIcon(directory) {
@@ -183,7 +233,7 @@ export default function (eleventyConfig) {
           entry.isFile() &&
           path.basename(entry.name, path.extname(entry.name)).toLowerCase() ===
           "icon" &&
-          is_image(entry.name),
+          isImage(entry.name),
       );
     return entry ? entry.name : null;
   }
@@ -205,11 +255,11 @@ export default function (eleventyConfig) {
     // storing slugified path urls for breadcrumbs
     const pathParts = [];
     let urlPath = "";
-    const character_config = getCharacterConfig();
+    const characterConfig = getCharacterConfig();
 
     if (relativePath !== "") {
       for (const part of relativePath.split("/")) {
-        const slug = slugify(part);
+        const slug = Slugify(part);
 
         urlPath = urlPath ? `${urlPath}/${slug}` : slug;
 
@@ -233,24 +283,23 @@ export default function (eleventyConfig) {
     // we exclude the root directory from this logic since characters are allowed to be unsorted
     if (relativePath !== "" && directories.length === 0 && !empty) {
       // find the oc markdown file
-      const markdown = entries.filter(
+      const markdownFiles = entries.filter(
         (entry) =>
           entry.isFile() && path.extname(entry.name).toLowerCase() === ".md",
       );
-      const empty = entries.filter((entry) => entry.isFile());
 
       // ERROR CHECKING
       // do not allow multiple markdown files since 11ty will generate junk pages for md files that don't have permalink: false in their frontmatter
-      if (markdown.length == 0 && !empty) {
-        throw new Error(`No markdown files in the OC container: ${directory}`);
-      } else if (markdown.length > 1 && !empty) {
+      if (markdownFiles.length !== 1) {
         throw new Error(
-          `Too many markdown files in the OC container: ${directory}`,
+          markdownFiles.length === 0
+            ? `No markdown file in OC container: ${directory}`
+            : `Multiple markdown files in OC container: ${directory}`,
         );
-      } else if (!empty) {
       }
+
       // validate it against the ocs collection
-      const inputPath = path.resolve(directory, markdown[0].name);
+      const inputPath = path.resolve(directory, markdownFiles[0].name);
       let oc = ocs.find((item) => path.resolve(item.inputPath) === inputPath);
       if (!oc) {
         throw new Error(
@@ -259,7 +308,7 @@ export default function (eleventyConfig) {
       } else {
         // get images inside the directory and copy over to correct places in output/public
         const images = entries.filter(
-          (entry) => entry.isFile() && is_image(entry.name),
+          (entry) => entry.isFile() && isImage(entry.name),
         );
         // placeholder icon
         oc.data.icon = "/public/images/characters/p/placeholder.png";
@@ -269,7 +318,7 @@ export default function (eleventyConfig) {
           const source = path.join(directory, image.name),
             parsed = path.parse(image.name);
           let destination,
-            outputName = slugify(parsed.name) + parsed.ext;
+            outputName = Slugify(parsed.name) + parsed.ext;
           // icon.png becomes the character's icon
           if (
             path
@@ -293,7 +342,7 @@ export default function (eleventyConfig) {
             outputName,
           );
           // queue up the image for copying later
-          queue_image(source, destination);
+          queueImage(source, destination);
         }
         // return different data based on whether or not the oc should be shown in directory or not
         if (oc.data.show_in_directory == false) {
@@ -311,13 +360,13 @@ export default function (eleventyConfig) {
       // it's a folder so build a normal directory object
       const icon = findIcon(directory);
       const result = {
-        name: relativePath === "" ? character_config.base_directory : path.basename(relativePath),
+        name: relativePath === "" ? characterConfig.base_directory : path.basename(relativePath),
         path: relativePath,
         pathParts,
-        url: relativePath === "" ? `/${slugify(character_config.base_directory)}/` : `/${slugify(character_config.base_directory)}/${urlPath}/`,
-        icon: findIcon(directory),
+        url: relativePath === "" ? `/${Slugify(characterConfig.base_directory)}/` : `/${Slugify(characterConfig.base_directory)}/${urlPath}/`,
+        icon: icon,
         icon_url: icon
-          ? `${slugify(relativePath || "directory")}_${icon}`
+          ? `${Slugify(relativePath || "directory")}_${icon}`
           : null,
         description: getDescription(directory),
         children: [],
@@ -334,7 +383,7 @@ export default function (eleventyConfig) {
             "folders",
             result.icon_url,
           );
-        queue_image(source, destination);
+        queueImage(source, destination);
       }
 
       // recursively trace directory tree
@@ -360,9 +409,13 @@ export default function (eleventyConfig) {
 
   eleventyConfig.addCollection("connections", function (collection) {
     // connections page
-    const ocs = validateCharacters(collection.getFilteredByTag("oc").filter(oc => oc.data.show_in_directory === true)),
-      recorded_pairs = new Set(),
-      final_connections = [];
+    const ocs = collection.getFilteredByTag("oc").filter(oc => oc.data.show_in_directory === true),
+      recordedPairs = new Set(),
+      finalConnections = [];
+
+    const ocsById = new Map(
+      ocs.map((oc) => [oc.data.id, oc]),
+    );
 
     for (const oc of ocs) {
 
@@ -371,44 +424,44 @@ export default function (eleventyConfig) {
         continue;
       }
 
-      for (const [other_oc, my_opinion] of Object.entries(oc.data.connections)) {
+      for (const [otherOc, myOpinionOfThem] of Object.entries(oc.data.connections)) {
 
         // format pairs as 1-2, 3-4, etc...
-        const pair = [oc.data.id, Number(other_oc)].sort((a, b) => a - b).join("-");
+        const pair = [oc.data.id, Number(otherOc)].sort((a, b) => a - b).join("-");
 
         // skip if we've already logged this combo
-        if (recorded_pairs.has(pair)) {
+        if (recordedPairs.has(pair)) {
           continue;
         }
         // log the pair as seen
-        recorded_pairs.add(pair);
+        recordedPairs.add(pair);
 
-        // get the other oc's opinion
-        const other_opinion = ocs.find(oc => oc.data.id === Number(other_oc))?.data.connections[oc.data.id];
+        // get the other oc's opinion, might be undefined but that's okay because we address it later
+        const theirOpinionOfMe = ocsById.get(Number(otherOc))?.data.connections[oc.data.id];
 
         // save the relationship
-        final_connections.push({
+        finalConnections.push({
           char1: oc,
-          char2: ocs.find(oc => oc.data.id === Number(other_oc)),
-          opinion1: my_opinion,
-          opinion2: other_opinion ?? "...",
-          mutual: my_opinion !== undefined && other_opinion !== undefined
+          char2: ocs.find(oc => oc.data.id === Number(otherOc)),
+          opinion1: myOpinionOfThem,
+          opinion2: theirOpinionOfMe ?? "...",
+          mutual: myOpinionOfThem !== undefined && theirOpinionOfMe !== undefined
         })
       }
     }
     // return our final flattened list of paired opinions
-    return final_connections;
+    return finalConnections;
   });
 
-  // flattening the directories and making one fat collection to use w/ pagination
+  // flattening the directories into an array to use w/ pagination
   eleventyConfig.addCollection(
     "characterDirectoryPages",
     function (collection) {
-      const ocs = validateCharacters(collection.getFilteredByTag("oc"));
-      const character_config = getCharacterConfig();
+      const ocs = collection.getFilteredByTag("oc");
+      const characterConfig = getCharacterConfig();
 
-      const root = scanDirectory(charactersDir, "", ocs);
-      const charactersPerPage = character_config.ocs_per_directory_page;
+      const root = scanDirectory(charactersDirectory, "", ocs);
+      const ocsPerPage = characterConfig.ocs_per_directory_page;
       const directories = [];
 
       function flatten(directory) {
@@ -427,20 +480,20 @@ export default function (eleventyConfig) {
         // minimum 1 page
         const pageCount = Math.max(
           1,
-          Math.ceil(files.length / charactersPerPage),
+          Math.ceil(files.length / ocsPerPage),
         );
 
         // make pages
         for (let page = 1; page <= pageCount; page++) {
-          const start = (page - 1) * charactersPerPage;
-          const end = start + charactersPerPage;
+          const start = (page - 1) * ocsPerPage;
+          const end = start + ocsPerPage;
 
           pages.push({
             directory, // directory
             characters: files.slice(start, end), // characters to paginate
             page,
-            pageCount,
-            pageSize: charactersPerPage,
+            pageCount: pageCount,
+            pageSize: ocsPerPage,
             totalCharacters: files.length,
             startCharacter: files.length === 0 ? 0 : start + 1,
             endCharacter: Math.min(end, files.length),
@@ -459,19 +512,28 @@ export default function (eleventyConfig) {
 
     for (const story of stories) {
       story.data.oc_data = collection.getFilteredByTag("oc").filter(oc => story.data.characters?.includes(oc.data.id)).sort((a, b) => a.data.id - b.data.id);
+      const hiddenCharacters = [];
+      story.data.oc_data.forEach(oc => {
+        if (oc.data.show_in_directory === false) {
+          hiddenCharacters.push(`- ${oc.data.name} #${oc.data.id}`)
+        }
+      })
+      if (hiddenCharacters.length > 0) {
+        console.warn('- ',prettyText(`Story "${story.data.title}" has hidden characters included in the featured ocs. Make sure this was on purpose before you publish!\n\tHidden Characters:\n\t${hiddenCharacters.join(`\n\t`)}`,{ color : 'yellow'}))
+      }
     }
 
     return stories;
   });
 
-  eleventyConfig.addCollection("ocs_ordered_by_updated", function (collection) {
+  eleventyConfig.addCollection("ocsByUpdatedDate", function (collection) {
     return collection
       .getFilteredByTag("oc")
       .filter((oc) => oc.data.show_in_directory === true)
       .sort((a, b) => b.data.updated - a.data.updated);
   });
 
-  eleventyConfig.addCollection("ocs_ordered_by_created", function (collection) {
+  eleventyConfig.addCollection("ocsByCreationDate", function (collection) {
     return collection
       .getFilteredByTag("oc")
       .filter((oc) => oc.data.show_in_directory === true)
@@ -480,26 +542,16 @@ export default function (eleventyConfig) {
 
   function getGallery(oc) {
     // get the directory
-    const ocDirectory = path.dirname(path.resolve(oc.inputPath));
+    const ocContainerDir = path.dirname(path.resolve(oc.inputPath));
     // try to find gallery file
-    const galleryPath = path.join(ocDirectory, "gallery.yaml");
+    const galleryFile = path.join(ocContainerDir, "gallery.yaml");
 
-    if (!fs.existsSync(galleryPath)) {
-      console.warn(`No gallery file found for: ${oc.data.name} #${oc.data.id}`);
+    if (!fs.existsSync(galleryFile)) {
+      console.warn('- ',prettyText(`No gallery file found for: ${oc.data.name} #${oc.data.id}`,{ color: 'grey' }));
       return null;
     } else {
       try {
-        const yaml = fs.readFileSync(galleryPath, "utf8");
-
-        const data = parseYaml(yaml);
-
-        if (data?.skip && data.skip == true) {
-          console.warn(
-            `Gallery file says to skip for: ${oc.data.name} #${oc.data.id}`,
-          );
-          return null;
-        }
-
+        const data = parseYaml(fs.readFileSync(galleryFile, "utf8"));
         let images = Array.isArray(data?.images) ? data.images : [];
 
         for (const img of images) {
@@ -507,11 +559,11 @@ export default function (eleventyConfig) {
           const thumbnail =
             img.thumbnail != null ? path.parse(img.thumbnail) : null;
 
-          img.full_url = `/public/images/characters/${oc.data.id}/${slugify(full.name)}${full.ext}`;
+          img.full_url = `/public/images/characters/${oc.data.id}/${Slugify(full.name)}${full.ext}`;
           img.thumb_url =
             thumbnail == null
               ? null
-              : `/public/images/characters/${oc.data.id}/${slugify(thumbnail.name)}${thumbnail.ext}`;
+              : `/public/images/characters/${oc.data.id}/${Slugify(thumbnail.name)}${thumbnail.ext}`;
         }
         return images;
       } catch (error) {
@@ -521,23 +573,14 @@ export default function (eleventyConfig) {
       }
     }
   }
-  eleventyConfig.addCollection("ocs_ordered_by_id", function (collection) {
+  eleventyConfig.addCollection("ocsById", function (collection) {
     return collection
       .getFilteredByTag("oc")
       .filter((oc) => oc.data.show_in_directory === true)
       .sort((a, b) => a.data.id - b.data.id);
   });
-  eleventyConfig.addCollection("featured_ocs", function (collection) {
-    let ocs = collection
-      .getFilteredByTag("oc")
-      .filter(
-        (oc) => oc.data.show_in_directory === true && oc.data.featured === true,
-      )
-      .sort((a, b) => a.data.id - b.data.id);
-    return ocs;
-  });
 
-  eleventyConfig.addCollection("oc_taglist", function (collection) {
+  eleventyConfig.addCollection("ocTagsList", function (collection) {
     const tags = buildGroupedOCs(collection.getFilteredByTag("oc"), "tags");
     return Object.values(tags).map(tag => (tag.name)).sort();
   });
@@ -558,15 +601,20 @@ export default function (eleventyConfig) {
         // push page only if at least 1 of friends/enemies or connections exists and they should show in directory
         if ((oc.data?.friends?.length > 0) ||
           (oc.data?.enemies?.length > 0) ||
-          (oc.data?.connections && oc.data.show_in_directory)) {
+          (Object.keys(oc.data.connections ?? {}).length > 0 && oc.data.show_in_directory)) {
           pages.push({
             oc,
             section: "relationships",
             permalink: `${oc.url}relationships/`
           });
         }
-        // push gallery gen only if the oc has a gallery
-        if (oc.data.gallery) {
+        // get the directory
+        const ocContainerDir = path.dirname(path.resolve(oc.inputPath));
+        // try to find gallery file
+        const galleryFile = path.join(ocContainerDir, "gallery.yaml");
+
+        // push gallery gen only if the oc has a gallery file present
+        if (fs.existsSync(galleryFile)) {
           pages.push({
             oc,
             section: "gallery",
@@ -582,25 +630,30 @@ export default function (eleventyConfig) {
   // world & tag builder helper function
   function buildGroupedOCs(coll, dataset, alt = null) {
     // make an object to hold flattened result, we call it tags here but this is generic to handle both tags and worlds
-    const tags = {};
-    const character_config = getCharacterConfig();
+    const categories = {};
+    const characterConfig = getCharacterConfig();
 
     // iterate over ocs
     for (const oc of coll) {
       // ocs are only included in directory listings if specified
       if (oc.data.show_in_directory == true) {
-        for (const tag of oc.data[dataset] || []) {
-          if (tag !== "oc" && tag !== "all") {
-            const key_val = tag.trim().toLowerCase();
-            if (!tags[key_val]) {
-              tags[key_val] = {
-                name: tag,
+
+        for (const category of oc.data[dataset] || []) {
+          // we do not want all or oc to be part of our collection when using this for tag building
+          if (category !== "oc" && category !== "all") {
+            const keyValue = category.trim().toLowerCase();
+            if (!categories[keyValue]) {
+              categories[keyValue] = {
+                name: category,
                 ocs: []
               };
             } else {
-              oc.data[dataset][tag] = tags[key_val].name
+              const index = oc.data[dataset].indexOf(category);
+              if (index !== -1) {
+                  oc.data[dataset][index] = categories[keyValue].name;
+              }
             }
-            tags[key_val].ocs.push({
+            categories[keyValue].ocs.push({
               name: oc.data.name,
               icon: oc.data.icon,
               page_url: oc.url,
@@ -613,37 +666,38 @@ export default function (eleventyConfig) {
       }
     }
 
-    for (const tag of Object.keys(tags)) {
-      tags[tag].ocs.sort((a, b) => {
-        if (character_config.tag_and_world_sort_type === "created") {
+    for (const key of Object.keys(categories)) {
+      categories[key].ocs.sort((a, b) => {
+        const sortType = alt ?? characterConfig.tag_and_world_sort_type;
+        if (sortType === "created") {
           return b.created - a.created;
-        } else if (character_config.tag_and_world_sort_type === "updated" || alt === "updated") {
+        } else if (sortType === "updated") {
           return b.updated - a.updated;
-        } else if (character_config.tag_and_world_sort_type === "id" || alt === "id") {
+        } else if (sortType === "id") {
           return a.id - b.id;
         } else {
-          throw new Error(`Invalid value for config value: tag_and_world_sort_type`)
+          throw new Error(`Invalid value for config value tag_and_world_sort_type: ${characterConfig.tag_and_world_sort_type}`)
         }
       });
     }
-    return tags;
+    return categories;
   }
 
 
-  eleventyConfig.addCollection("oc_worlds", function (collection) {
+  eleventyConfig.addCollection("ocWorlds", function (collection) {
     const worlds = buildGroupedOCs(
       collection.getFilteredByTag("oc"),
       "worlds",
     );
     return getWorldMetadata(worlds);
   });
-  eleventyConfig.addCollection("oc_worldlist", function (collection) {
+  eleventyConfig.addCollection("ocWorldsList", function (collection) {
     const worlds = buildGroupedOCs(
       collection.getFilteredByTag("oc"),
       "worlds",
     );
-    const final_worlds = getWorldMetadata(worlds);
-    return Object.values(final_worlds).sort((a, b) => a.name.localeCompare(b.name));
+    const finalWorldList = getWorldMetadata(worlds);
+    return Object.values(finalWorldList).sort((a, b) => a.name.localeCompare(b.name));
   });
 
   function readWorldDescription(directory, filename) {
@@ -680,20 +734,20 @@ export default function (eleventyConfig) {
       (entry) =>
         entry.isFile() && path.extname(entry.name).toLowerCase() === ".md",
     );
-    const world_description_files = [];
+    const worldMetadataFiles = [];
     // reading world description, will get the name from the YAML frontmatter header
     for (const file of entries) {
-      world_description_files.push(readWorldDescription(directory, file.name));
+      worldMetadataFiles.push(readWorldDescription(directory, file.name));
     }
     // mapping the description files to the world description content
-    const world_descriptions = new Map(
-      world_description_files.map(world => [world.name.toLowerCase(), world])
+    const worldMetadata = new Map(
+      worldMetadataFiles.map(world => [world.name.toLowerCase(), world])
     );
-    const final_worlds = {};
+    const finalWorldsList = {};
     // build new list of worlds to work with that contains the optional description
     for (const [name, world] of Object.entries(worlds)) {
-      const description = world_descriptions.get(name.toLowerCase());
-      final_worlds[name] = {
+      const description = worldMetadata.get(name.toLowerCase());
+      finalWorldsList[name] = {
         name: description?.name ?? name,
         ocs: world.ocs,
         description: description?.content ?? null,
@@ -701,23 +755,23 @@ export default function (eleventyConfig) {
         data: description?.data ?? {}
       };
     }
-    return final_worlds;
+    return finalWorldsList;
   }
 
-  eleventyConfig.addCollection("oc_world_pages", function (collection) {
-    const character_config = getCharacterConfig(),
-      charactersPerPage = character_config.ocs_per_directory_page,
+  eleventyConfig.addCollection("ocWorldPages", function (collection) {
+    const characterConfig = getCharacterConfig(),
+      charactersPerPage = characterConfig.ocs_per_directory_page,
       worlds = buildGroupedOCs(
         collection.getFilteredByTag("oc"),
         "worlds",
       );
-    const final_worlds = getWorldMetadata(worlds);
+    const finalWorldsList = getWorldMetadata(worlds);
 
     // go thru all worlds and return a flat list of pages that we will have the built-in pagination generate pages for
     // next/prev page links in the template are based on page and total page count
     const result = [];
 
-    for (const world of Object.values(final_worlds)) {
+    for (const world of Object.values(finalWorldsList)) {
       const pageCount = Math.ceil(world.ocs.length / charactersPerPage);
 
       for (let page = 0; page < pageCount; page++) {
@@ -732,9 +786,9 @@ export default function (eleventyConfig) {
     return result;
   });
 
-  eleventyConfig.addCollection("oc_tag_pages", function (collection) {
-    const character_config = getCharacterConfig(),
-      charactersPerPage = character_config.ocs_per_directory_page,
+  eleventyConfig.addCollection("ocTagPages", function (collection) {
+    const characterConfig = getCharacterConfig(),
+      charactersPerPage = characterConfig.ocs_per_directory_page,
       tags = buildGroupedOCs(
         collection.getFilteredByTag("oc"),
         "tags",
@@ -769,7 +823,7 @@ export default function (eleventyConfig) {
   eleventyConfig.on("eleventy.after", async () => {
     // copying over added images here :)
     let image;
-    while ((image = images_to_copy.pop())) {
+    while ((image = imagesToCopy.pop())) {
       const { source, destination } = image;
 
       fs.mkdirSync(path.dirname(destination), {

@@ -7,7 +7,7 @@ export default function() {
 
   return {
     pagination: {
-      data: "collections.ocs_ordered_by_created",
+      data: "collections.ocsByCreationDate",
       size: config.ocs_per_directory_page,
       reverse: false
     }

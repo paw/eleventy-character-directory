@@ -17,7 +17,7 @@ permalink: "{%- if character_config.character_slug -%}{{ character_config.charac
     <div class="header card">
       <div class="text">
         <h1 class="name">{{name}}{% if character_config.show_character_ids %}<span class="id">(#{{id}})</span>{% endif %}</h1>
-        {%- if subtitle -%}<h2 class="subtitle">{{subtitle}}</h1>{%- endif -%}
+        {%- if subtitle -%}<h2 class="subtitle">{{subtitle | safe}}</h1>{%- endif -%}
         {%- if quote -%}
         <div class="quote">
           <div class="words">“{{quote.words}}”</div>
@@ -169,9 +169,9 @@ permalink: "{%- if character_config.character_slug -%}{{ character_config.charac
     {%- if worlds and worlds.length > 0 -%}
     <div class="card">
     <h3 class="content-title">Worlds</h3>
-      {%- set final_worlds = collections.oc_worlds -%}
+      {%- set all_worlds = collections.ocWorlds -%}
       {%- for world in worlds -%}
-        <a href="/{% if character_config.world_slug %}{{character_config.world_slug}}/{% endif %}{{final_worlds[world | lower].name | slugify }}">{{ final_worlds[world | lower].name }}</a>&nbsp;
+        <a href="/{% if character_config.world_slug %}{{character_config.world_slug}}/{% endif %}{{all_worlds[world | lower].name | slugify }}">{{ all_worlds[world | lower].name }}</a>&nbsp;
       {%- endfor -%}
     </div>
     {%- endif -%}
