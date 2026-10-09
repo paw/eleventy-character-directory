@@ -323,6 +323,9 @@ hr {
   align-items: center;
   margin-bottom: 0.5rem;
 }
+#stories .story-header .date {
+  text-align: right;
+}
 #stories .title {
   margin: 0 0.2rem 0;
   display: inline-block;
