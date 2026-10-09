@@ -15,6 +15,8 @@ tags: ["tf2","invisible"]
 connections:
     1: "\"You died as you lived: running away!\""
 
+enemies: [8]
+
 ---
 
 You can also have secret characters! These characters will not show up in the directory, tags, or worlds pages and any connections to/from them will not show across the site.

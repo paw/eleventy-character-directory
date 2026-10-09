@@ -1,0 +1,68 @@
+---
+layout: base.njk
+
+pagination:
+    data: collections.characterSubpages
+    size: 1
+    alias: page
+
+permalink: "{{ page.permalink }}"
+---
+
+<div class="content oc" data-id="{{page.oc.data.id}}">
+
+<div id="profile">
+    <div class="header card">
+      <div class="text">
+        <h1 class="name">{{page.oc.data.name}}{% if character_config.show_character_ids %}<span class="id">(#{{page.oc.data.id}})</span>{% endif %}</h1>
+        {%- if page.oc.data.subtitle -%}<h2 class="subtitle">{{page.oc.data.subtitle}}</h1>{%- endif -%}
+        {%- if page.oc.data.quote -%}
+        <div class="quote">
+          <div class="words">“{{page.oc.data.quote.words}}”</div>
+          <div class="credit">{%- if quote.credit -%}― {{ page.oc.data.quote.credit }}{%- endif -%}</div>
+        </div>
+        {%- endif -%}
+          
+        {%- if page.oc.data.creator -%}
+        <div class="flex-end header-stats three">
+        {%- else -%}
+        <div class="flex-end header-stats">
+        {%- endif -%}
+        {%- if page.oc.data.creator -%}
+        <span class="creator">
+          <b>Creator:</b>&nbsp;{%- if page.oc.data.creator.url -%}<a href="{{ page.oc.data.creator.url }}">{%- endif -%}{{page.oc.data.creator.name}}{%- if page.oc.data.creator.url -%}</a>{%- endif -%}
+        </span>
+        {%- endif -%}
+        <span class="created"><b>Created:</b> {{ page.oc.data.created | htmlDateString }}</span>
+        <span class="updated"><b>Updated:</b> {{ page.oc.data.updated | htmlDateString }}</span>
+        {% if page.oc.data.songs and page.oc.data.songs.length > 0 %}
+          <div class="songlist"><strong class="content-title sr-only">Playlist:</strong>
+            <ul class="songs">
+            {% for song in page.oc.data.songs %}
+              <li class="song"><a href="{{song.url}}" target="_blank" data-tippy-content="{{song.artist}} – {{song.title}}"><i class="fa-solid fa-music" aria-hidden="true"></i></a></li>
+            {% endfor %}
+            </ul>
+          </div>
+        {% endif %} 
+        </div>
+      </div>
+      {%- if page.oc.data.portrait -%}
+        <div class="portrait"><img src="{{page.oc.data.portrait}}" alt="Portrait of {{name}}"></div>
+      {%- else -%}
+        <div class="icon"><img src="{{page.oc.data.icon}}" alt="Icon of {{name}}"></div>
+      {%- endif -%}
+    </div>
+</div>
+  
+{% if page.section == "gallery" %}
+    {% include "../_layouts/character_subpages/gallery.njk" %}
+{% elif page.section == "relationships" %}
+    {% include "../_layouts/character_subpages/connections.njk" %}
+{% endif %}
+
+</div>
+  
+<script type="text/javascript" src="/public/js/lightbox.js"></script>
+{% if page.oc.data.custom_css %}
+<link rel="stylesheet" type="text/css" href="/public/css/{{page.oc.data.custom_css}}.css" />
+{% endif %}

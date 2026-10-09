@@ -1,0 +1,30 @@
+
+:root {
+  --color-bg: #292B2D;
+  --color-navbar: #42484A;
+  --color-text-main: #F0F0E8;
+  --color-text-header: #68C9DE;
+  --color-borders: rgba(220, 240, 240, 0.14);
+  --color-borders-hover: rgba(220, 240, 240, 0.30);
+  --color-sidebar-bg: #363A3C;
+  --border-radius: 3px;
+  --borders: 1px solid var(--color-borders);
+  --color-card: #303436;
+  --color-card-inner-section: #42484A;
+  --color-input: #242729;
+  --color-input-text: #B8C5C4;
+  --color-input-focus-text: #F0F0E8;
+  --color-primary: #A8E8CE;
+  --color-primary-hover: #78CBB0;
+  --color-primary-text: #172522;
+  --color-link: #68C9DE;
+  --color-link-hover: #A0E5F2;
+}
+
+body {
+    background: var(--color-bg) url('/public/images/backgrounds/victorbg.png');
+    background-size: contain;
+    background-position: bottom right;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}

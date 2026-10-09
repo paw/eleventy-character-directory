@@ -11,7 +11,7 @@ permalink: "{% if character_config.world_slug %}{{character_config.world_slug}}/
 
 <div class="content">
   <section class="card">
-  <h1>World: {{ world.name }}</h1>
+  <h1><i class="fa-solid fa-earth-europe" aria-hidden="true"></i> {{ world.name }}</h1>
   {%- if world.description -%}{{ world.description_html | safe }}{%- endif -%}
   </section>
   <section class="card">

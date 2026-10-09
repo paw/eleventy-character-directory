@@ -390,7 +390,7 @@ hr {
 }
 .card img, .oc-list img, .folder-list img, .directory-header .folder-icon img, .oc #profile .icon img {
   max-width: 100%;
-  height: auto;
+  max-height: 100%;
 }
 .folder-icon img {
 	background-color: #322f31;
@@ -795,6 +795,41 @@ a:hover {
   min-width: 200px;
   min-height: 200px;
 }
+.subpages ul {
+	padding: 0;
+	margin: 0;
+	list-style-type: none;
+	display: grid;
+	grid-template-columns: auto auto auto;
+	text-align: center;
+}
+.subpages [aria-current="page"] {
+  font-weight: bold;
+  background-color: var(--color-primary);
+  color: var(--color-primary-text);
+}
+.subpages .disabled {
+	pointer-events: none;
+	cursor: not-allowed;
+	opacity: 0.5;
+  color: var(--color-text-main)
+}
+.subpages li {
+  margin: 0;
+}
+.subpages li span, .subpages li a {
+  padding: 1rem;
+  margin: 0;
+  display: block;
+}
+.subpages {
+  overflow: hidden;
+  padding: 0;
+}
+.subpages li:nth-child(even) {
+  border-left: 1px solid var(--color-borders);
+  border-right: 1px solid var(--color-borders);
+}
 #sidebar {
   background: var(--color-sidebar-bg);
   width: 200px;
@@ -922,6 +957,21 @@ a:hover {
   padding: 0.5rem;
   margin: 0;
   list-style: none;
+}
+
+.masonry-gallery img {
+  pointer-events: none;
+  opacity: 0;
+  transition: 0.3s opacity;
+}
+.masonry-gallery:not(.loaded) img {
+  width: 10px;
+  height: 10px;
+}
+.masonry-gallery.loaded img {
+  pointer-events: all;
+  opacity: 1;
+  transition: 0.3s opacity;
 }
 
 .masonry-column {

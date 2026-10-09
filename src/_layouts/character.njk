@@ -4,6 +4,12 @@ tags: oc
 permalink: "{%- if character_config.character_slug -%}{{ character_config.character_slug}}/{%- endif -%}{%- if page_url -%}{{ page_url | slugify }}{%- else -%}{{ id }}{%- endif -%}/"
 ---
 
+{% if multi_page_layout is defined %}
+  {% set effective_multi_page_layout = multi_page_layout %}
+{% else %}
+  {% set effective_multi_page_layout = character_config.multi_page_layout %}
+{% endif %}
+
 <div class="content oc" data-id="{{id}}">
 
   <div id="profile">
@@ -48,6 +54,19 @@ permalink: "{%- if character_config.character_slug -%}{{ character_config.charac
         <div class="icon"><img src="{{icon}}" alt="Icon of {{name}}"></div>
       {%- endif -%}
     </div>
+</div>
+
+{% if effective_multi_page_layout %}
+<nav class="card subpages" aria-label="Character Sub-Pages">
+<ul>
+<li><span class="active" aria-current="page">Overview</span></li>
+<li>{%- if (friends and friends.length > 0) or (enemies and enemies.length > 0) or (connections) %}<a href="./relationships">Relationships</a>{%- else -%}<span class="disabled" aria-disabled="true">Relationships</span>{%- endif -%}</li>
+<li>{%- if gallery -%}<a href="./gallery">Gallery</a>{%- else -%}<span class="disabled" aria-disabled="true">Gallery</span>{%- endif -%}</li>
+</ul>
+</nav>
+{%- endif -%}
+
+<div id="overview">
 
     <div class="backstory card">
     <h3 class="content-title">Profile</h3>
@@ -145,8 +164,37 @@ permalink: "{%- if character_config.character_slug -%}{{ character_config.charac
   </div>
 {% endif %}
 
+<div id="worlds">
+
+    {%- if worlds and worlds.length > 0 -%}
+    <div class="card">
+    <h3 class="content-title">Worlds</h3>
+      {%- set final_worlds = collections.oc_worlds -%}
+      {%- for world in worlds -%}
+        <a href="/{% if character_config.world_slug %}{{character_config.world_slug}}/{% endif %}{{final_worlds[world | lower].name | slugify }}">{{ final_worlds[world | lower].name }}</a>&nbsp;
+      {%- endfor -%}
+    </div>
+    {%- endif -%}
+
   </div>
 
+  <div id="tags">
+    
+    {%- if tags and tags.length > 0 -%}
+    <div class="card">
+    <h3 class="content-title">Tags</h3>
+      {%- for tag in tags -%}
+        {%- if (tag != "oc") -%}
+          <a href="/{% if character_config.tag_slug %}{{character_config.tag_slug}}/{% endif %}{{tag | slugify }}">#{{tag}}</a>&nbsp;
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+    {%- endif -%}
+
+  </div>
+
+  </div>
+  {% if not effective_multi_page_layout %}
   <div id="relationships">
 
     {% if friends and friends.length > 0 %}
@@ -223,35 +271,6 @@ permalink: "{%- if character_config.character_slug -%}{{ character_config.charac
     {% endif %}
 
   </div>
-
-  <div id="worlds">
-
-    {%- if worlds and worlds.length -%}
-    <div class="card">
-    <h3 class="content-title">Worlds</h3>
-      {%- set final_worlds = collections.oc_worlds -%}
-      {%- for world in worlds -%}
-        <a href="/{% if character_config.world_slug %}{{character_config.world_slug}}/{% endif %}{{final_worlds[world | lower].name | slugify }}">{{ final_worlds[world | lower].name }}</a>&nbsp;
-      {%- endfor -%}
-    </div>
-    {%- endif -%}
-
-  </div>
-
-  <div id="tags">
-    
-    {%- if tags and tags.length -%}
-    <div class="card">
-    <h3 class="content-title">Tags</h3>
-      {%- for tag in tags -%}
-        {%- if (tag != "oc") -%}
-          <a href="/{% if character_config.tag_slug %}{{character_config.tag_slug}}/{% endif %}{{tag | slugify }}">#{{tag.toLowerCase()}}</a>&nbsp;
-        {%- endif -%}
-      {%- endfor -%}
-    </div>
-    {%- endif -%}
-
-  </div>
     
   <div id="gallery-wrapper">
     {% if gallery %}
@@ -289,9 +308,9 @@ permalink: "{%- if character_config.character_slug -%}{{ character_config.charac
     {% endif %}
     </div>
   </div>
-    
+  {%- endif -%}
 </div>
-  
+
 <script type="text/javascript" src="/public/js/lightbox.js"></script>
 {% if custom_css %}
 <link rel="stylesheet" type="text/css" href="/public/css/{{custom_css}}.css" />

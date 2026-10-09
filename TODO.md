@@ -24,7 +24,6 @@
 ### Maybe
 
 - at least one other premade theme, this one based on polaroids (?)- characters
-- split the character into multiple pages instead of one giant page
 - stories
   - link between next/prev stories (?)
   - option to show the stories on the character's page (?)
@@ -35,6 +34,7 @@
 - Folders on site generated from file structure on disk
 - characters are containerized in leaves of the file structure tree: one .md file per folder, deepest folder in chain becomes a character if there's valid md in it. otherwise it's treated as an empty folder
 - characters
+  - single or multi-page layout options, controlled globally in the config and with per-character overrides
   - internal validation for frontmatter values
   - unique ids for connections/friends/enemies
   - created/updated must exist and be in the format YYYY-MM-DD, will display as Short month Day, Full Year

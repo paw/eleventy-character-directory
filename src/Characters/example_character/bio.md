@@ -62,7 +62,9 @@ enemies: [9]
 # store your css in public/css and don't include an extension
 custom_css: file_name_no_extension
 
-# the image gallery is controlled by gallery.yaml
+# need to have this in the frontmatter if you want the gallery to generate
+gallery: true
+# the image gallery's metadata is controlled by gallery.yaml
 ---
 
 Baby Globe is Wikipedia's 25th anniversary mascot. It was featured as a temporary birthday mascot of Wikipedia's 25th anniversary celebration. For a duration of time, Baby Globe would appear on select pages as an Easter Egg. The feature was available on a total of 27 Wikipedias across different languages. Baby Globe returned in May for the 25th Birthday Reading Challenge.

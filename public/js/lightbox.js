@@ -144,6 +144,7 @@ if (gallery) {
 
       shortestColumn.appendChild(item);
     });
+    gallery.classList.add("loaded");
   }
 
   // Wait until all images have loaded
