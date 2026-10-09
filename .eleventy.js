@@ -43,7 +43,7 @@ export default function (eleventyConfig) {
   eleventyConfig.setTemplateFormats(["html", "njk", "md"]);
   // ...because that's being directly copied to our output
   eleventyConfig.addPassthroughCopy("public");
-  
+
 
   // include slugifier access for our later functions
   const slugify = eleventyConfig.getFilter("slugify");
@@ -132,8 +132,8 @@ export default function (eleventyConfig) {
         const other = ids.get(id);
         errors.push(
           `Duplicate OC ID: ${id}\n` +
-            `\t\t${other.inputPath}\n` +
-            `\t\t${oc.inputPath}`,
+          `\t\t${other.inputPath}\n` +
+          `\t\t${oc.inputPath}`,
         );
       } else {
         ids.set(id, oc);
@@ -143,8 +143,8 @@ export default function (eleventyConfig) {
         const other = urls.get(url);
         errors.push(
           `Duplicate OC URL: ${url}\n` +
-            `\t\t${other.inputPath}\n` +
-            `\t\t${oc.inputPath}`,
+          `\t\t${other.inputPath}\n` +
+          `\t\t${oc.inputPath}`,
         );
       } else {
         urls.set(url);
@@ -172,7 +172,7 @@ export default function (eleventyConfig) {
   function is_image(filename) {
     return valid_image_types.includes(path.extname(filename).toLowerCase());
   }
-  
+
   function findIcon(directory) {
     const entry = fs
       .readdirSync(directory, {
@@ -182,7 +182,7 @@ export default function (eleventyConfig) {
         (entry) =>
           entry.isFile() &&
           path.basename(entry.name, path.extname(entry.name)).toLowerCase() ===
-            "icon" &&
+          "icon" &&
           is_image(entry.name),
       );
     return entry ? entry.name : null;
@@ -358,11 +358,11 @@ export default function (eleventyConfig) {
     }
   }
 
-  eleventyConfig.addCollection("connections", function(collection) {
+  eleventyConfig.addCollection("connections", function (collection) {
     // connections page
     const ocs = validateCharacters(collection.getFilteredByTag("oc").filter(oc => oc.data.show_in_directory === true)),
-          recorded_pairs = new Set(),
-          final_connections = [];
+      recorded_pairs = new Set(),
+      final_connections = [];
 
     for (const oc of ocs) {
 
@@ -375,7 +375,7 @@ export default function (eleventyConfig) {
 
         // format pairs as 1-2, 3-4, etc...
         const pair = [oc.data.id, Number(other_oc)].sort((a, b) => a - b).join("-");
-        
+
         // skip if we've already logged this combo
         if (recorded_pairs.has(pair)) {
           continue;
@@ -451,14 +451,8 @@ export default function (eleventyConfig) {
     },
   );
 
-  // TODO: fix this, this is from 11ty blog starter (?)
   eleventyConfig.addCollection("stories", function (collection) {
-    /* The posts collection includes all posts that list 'posts' in the front matter 'tags'
-           - https://www.11ty.dev/docs/collections/
-        */
 
-    // EDIT HERE WITH THE CODE FROM THE NEXT STEPS PAGE TO REVERSE CHRONOLOGICAL ORDER
-    // (inspired by https://github.com/11ty/eleventy/issues/898#issuecomment-581738415)
     const stories = collection.getFilteredByTag("internal-tag-story")
       .filter((story) => story.data.show_in_directory === true)
       .sort((a, b) => b.data.date - a.data.date);
@@ -544,8 +538,45 @@ export default function (eleventyConfig) {
   });
 
   eleventyConfig.addCollection("oc_taglist", function (collection) {
-    const tags = buildGroupedOCs(collection.getFilteredByTag("oc"),"tags");
+    const tags = buildGroupedOCs(collection.getFilteredByTag("oc"), "tags");
     return Object.values(tags).map(tag => (tag.name)).sort();
+  });
+
+  eleventyConfig.addCollection("characterSubpages", function (collection) {
+    const ocs = collection.getFilteredByTag("oc");
+    const pages = [];
+    const character_config = getCharacterConfig();
+
+    for (const oc of ocs) {
+
+      // use character override value if defined otherwise use global config setting
+      const multiPageLayout = oc.data.multi_page_layout ?? character_config.multi_page_layout;
+
+      // if config says use multi layout or the oc override is true, process pages
+      if (multiPageLayout) {
+
+        // push page only if at least 1 of friends/enemies or connections exists and they should show in directory
+        if ((oc.data?.friends?.length > 0) ||
+          (oc.data?.enemies?.length > 0) ||
+          (oc.data?.connections && oc.data.show_in_directory)) {
+          pages.push({
+            oc,
+            section: "relationships",
+            permalink: `${oc.url}relationships/`
+          });
+        }
+        // push gallery gen only if the oc has a gallery
+        if (oc.data.gallery) {
+          pages.push({
+            oc,
+            section: "gallery",
+            permalink: `${oc.url}gallery/`
+          });
+        }
+      }
+    }
+
+    return pages;
   });
 
   // world & tag builder helper function
@@ -615,19 +646,19 @@ export default function (eleventyConfig) {
     return Object.values(final_worlds).sort((a, b) => a.name.localeCompare(b.name));
   });
 
-  function readWorldDescription(directory,filename) {
-    const source = fs.readFileSync(path.join(directory,filename), "utf8").trim();
+  function readWorldDescription(directory, filename) {
+    const source = fs.readFileSync(path.join(directory, filename), "utf8").trim();
     const match = source.match(/^---\s*\n([\s\S]*?)\n---\s*\n?([\s\S]*)$/);
 
     if (!match) {
-      throw new Error(`Must have YAML data in World file: ${path.join(directory,filename)}`)
+      throw new Error(`Must have YAML data in World file: ${path.join(directory, filename)}`)
     }
 
     const content = match[2];
     const data = parseYaml(match[1]);
 
     if (!data?.name) {
-      throw new Error(`Must have a World Name specified in file: ${path.join(directory,filename)}`)
+      throw new Error(`Must have a World Name specified in file: ${path.join(directory, filename)}`)
     }
 
     return {
@@ -640,19 +671,19 @@ export default function (eleventyConfig) {
 
   function getWorldMetadata(worlds) {
     // make sure worlds exists
-    const directory = path.join("src","worlds");
+    const directory = path.join("src", "worlds");
     if (!fs.existsSync(directory)) {
-      throw new Error (`src/worlds directory must exist even if empty.`)
+      throw new Error(`src/worlds directory must exist even if empty.`)
     }
     // read files and grab the markdowns
-    const entries = fs.readdirSync(directory, { withFileTypes: true,}).filter(
+    const entries = fs.readdirSync(directory, { withFileTypes: true, }).filter(
       (entry) =>
         entry.isFile() && path.extname(entry.name).toLowerCase() === ".md",
     );
     const world_description_files = [];
     // reading world description, will get the name from the YAML frontmatter header
     for (const file of entries) {
-      world_description_files.push(readWorldDescription(directory,file.name));
+      world_description_files.push(readWorldDescription(directory, file.name));
     }
     // mapping the description files to the world description content
     const world_descriptions = new Map(
@@ -675,11 +706,11 @@ export default function (eleventyConfig) {
 
   eleventyConfig.addCollection("oc_world_pages", function (collection) {
     const character_config = getCharacterConfig(),
-          charactersPerPage = character_config.ocs_per_directory_page,
-          worlds = buildGroupedOCs(
-            collection.getFilteredByTag("oc"),
-            "worlds",
-          );
+      charactersPerPage = character_config.ocs_per_directory_page,
+      worlds = buildGroupedOCs(
+        collection.getFilteredByTag("oc"),
+        "worlds",
+      );
     const final_worlds = getWorldMetadata(worlds);
 
     // go thru all worlds and return a flat list of pages that we will have the built-in pagination generate pages for
@@ -703,12 +734,12 @@ export default function (eleventyConfig) {
 
   eleventyConfig.addCollection("oc_tag_pages", function (collection) {
     const character_config = getCharacterConfig(),
-          charactersPerPage = character_config.ocs_per_directory_page,
-          tags = buildGroupedOCs(
-            collection.getFilteredByTag("oc"),
-            "tags",
-            "updated"
-          );
+      charactersPerPage = character_config.ocs_per_directory_page,
+      tags = buildGroupedOCs(
+        collection.getFilteredByTag("oc"),
+        "tags",
+        "updated"
+      );
     // go thru all worlds and return a flat list of pages that we will have the built-in pagination generate pages for
     // next/prev page links in the template are based on page and total page count
     const result = [];

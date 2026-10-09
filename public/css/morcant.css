@@ -1,6 +1,6 @@
 :root {
-  --color-bg2: #000000;
-  --color-text-main2: #f1f1f1;
-  --color-text-header2: red;
-  --color-primary2: yellow;
+  --color-bg: #000000;
+  --color-text-main: #f1f1f1;
+  --color-text-header: red;
+  --color-primary: yellow;
 }

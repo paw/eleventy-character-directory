@@ -1,0 +1,84 @@
+<nav class="card subpages" aria-label="Character Sub-Pages">
+<ul>
+<li><a href="../">Overview</a></span></li>
+<li><span class="active" aria-current="page">Relationships</span></li>
+<li>{%- if page.oc.data.gallery -%}<a href="../gallery">Gallery</a>{%- else -%}<span class="disabled" aria-disabled="true">Gallery</span>{%- endif -%}</li>
+</ul>
+</nav>
+
+<div id="relationships">
+
+    {% if page.oc.data.friends and page.oc.data.friends.length > 0 %}
+    <div class="card friends">
+      <h3 class="content-title">Friends</h3>
+      <ul class="oc-list extra-small">
+        {%- for friend in page.oc.data.friends -%}
+          {%- for oc in collections.ocs -%}
+            {% if oc.data.id == friend %}
+              <li>
+                <a href="{{oc.url}}"{%- if not character_config.show_name_badges_on_profiles -%} data-tippy-content="{{oc.data.name}}"{%- endif -%}><img src="{{oc.data.icon}}" alt="{{oc.data.name}}"></a>
+                {% if character_config.show_name_badges_on_profiles %}<a href="{{ oc.url }}" class="character-name-badge">{{ oc.data.name }}</a>{% endif %}
+              </li>
+            {% endif %}
+          {%- endfor -%}
+        {%- endfor -%}
+        </ul>
+    </div>
+    {% endif %}
+    
+    {% if page.oc.data.enemies and page.oc.data.enemies.length > 0 %}
+    <div class="enemies card">
+      <h3 class="content-title">Enemies</h3>
+      <ul class="oc-list extra-small">
+      {%- for enemy in page.oc.data.enemies -%}
+          {%- for oc in collections.ocs -%}
+            {% if oc.data.id == enemy %}
+              <li>
+                <a href="{{oc.url}}"{%- if not character_config.show_name_badges_on_profiles -%} data-tippy-content="{{oc.data.name}}"{%- endif -%}><img src="{{oc.data.icon}}" alt="Icon of {{oc.data.name}}"></a>
+                {% if character_config.show_name_badges_on_profiles %}<a href="{{ oc.url }}" class="character-name-badge">{{ oc.data.name }}</a>{% endif %}
+              </li>
+            {% endif %}
+          {%- endfor -%}
+        {%- endfor -%}
+      </ul>
+    </div>
+    {% endif %}
+
+    {% if page.oc.data.connections is defined and page.oc.data.show_in_directory and character_config.display_connections_on_profiles %}
+    <div class="card connections">
+      <h3 class="content-title">Connections</h3>
+      <ul class="connection-list">
+          {%- for relationship in collections.connections -%}
+            {% if (relationship.char1.data.id === page.oc.data.id or relationship.char2.data.id === page.oc.data.id) %}
+              {% if relationship.char1.data.id !== page.oc.data.id %}
+                  {% set oc = relationship.char1 %}
+              {% else %}
+                  {% set oc = relationship.char2 %}
+              {% endif %}
+              <li class="connection">
+                <div class="portrait"><div class="icon me"><img src="{{ page.oc.data.icon }}" alt="{{page.oc.data.name}}"></div></div>
+                <div class="portrait"><div class="icon you"><a href="{{oc.url}}"><img src="{{oc.data.icon}}" alt="{{oc.data.name}}"></a></div></div>
+                <div class="connection-bubble left"><h3 class="name">{{name}}<span class="sr-only"> says:</span></h3>
+                  {% if oc.data.id in page.oc.data.connections %}
+                    {{ page.oc.data.connections[oc.data.id] }}
+                  {% else %}
+                  ...
+                  {% endif %}
+                  <i class="fa-solid fa-play tail" aria-hidden="true"></i></div>
+                <div class="connection-bubble right">
+                  <h3 class="name">{{oc.data.name}}<span class="sr-only"> says:</span></h3>
+                  {% if oc.data.connections and page.oc.data.id in oc.data.connections %}
+                  {{ oc.data.connections[page.oc.data.id] }}
+                  {% else %}
+                  ...
+                  {% endif %}
+                  <i class="fa-solid fa-play tail" aria-hidden="true"></i>
+                </div>
+              </li>
+            {% endif %}
+          {%- endfor -%}
+        </ul>
+    </div>
+    {% endif %}
+
+  </div>
