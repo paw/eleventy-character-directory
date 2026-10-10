@@ -1,0 +1,9 @@
+images:
+# copy and paste this over and over
+    - full: main_image.png
+      thumbnail: optional_thumbnail.png
+      title: Title
+      description: Description
+      alt: Descriptive Alt Text
+      credit: Optional Credit
+      credit_url: URL

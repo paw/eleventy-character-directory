@@ -35,6 +35,8 @@
 - stories
   - link between next/prev stories (?)
   - option to show the stories on the character's page (?)
+- characters
+  - automatically copy over a css file placed in the directory instead of making you specify a css file in the frontmatter (?)
   
 # DONE ✅
 

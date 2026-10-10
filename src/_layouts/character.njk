@@ -179,8 +179,7 @@ permalink: "{%- if character_config.character_slug -%}{{ character_config.charac
   </div>
 
   <div id="tags">
-
-    {%- if tags and tags.length > 0 -%}
+    {%- if tags and tags.length > 1 -%}
     <div class="card">
     <h3 class="content-title">Tags</h3>
       {%- for tag in tags -%}

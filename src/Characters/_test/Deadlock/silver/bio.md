@@ -58,4 +58,4 @@ Silver is a Hero in Deadlock, making her living tracking down lowlifes, but toda
 
 Lilah Silver has been a werewolf for as long as she can remember, insisting that she has her Lycanthropy under control. Despite her successes as a bounty hunter, Silver struggles with alcohol, smoking, financial, and personal troubles on a daily basis, driving her to seek the Patron's help to "thrive".
 
-Silver is unique among heroes in having two distinct sets of abilities—one for her human form and one for her werewolf form—which automatically swap when her Lycan Curse transforms her. 
+Silver is unique among heroes in having two distinct sets of abilities—one for her human form and one for her werewolf form—which automatically swap when her Lycan Curse transforms her.

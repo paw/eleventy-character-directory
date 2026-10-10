@@ -113,9 +113,9 @@ export default function (eleventyConfig) {
             url = oc.url;
 
       // error for invalid IDs
-      if (!Number.isInteger(id)) {
+      if (!Number.isInteger(id) || Number(id) <= 0) {
         errors.push(
-          `OC ${oc.data.name} ID must be an integer in ${oc.inputPath}: "${oc.data.id}"`,
+          `OC ${oc.data.name} ID must be a positive integer in ${oc.inputPath}: "${oc.data.id}"`,
         );
       }
       if (!oc.data.created) {
@@ -175,7 +175,7 @@ export default function (eleventyConfig) {
             errors.push(
               `Oc ${oc.data.name} #${oc.data.id} has an invalid friend: ${otherOc}`
             );
-          } else if (!ocsById.get(Number(otherOc)).data.show_in_directory) { 
+          } else if (!ocsById.get(Number(otherOc)).data.show_in_directory) {
             hiddenFriends.push(`- ${ocsById.get(Number(otherOc)).data.name} #${ocsById.get(Number(otherOc)).data.id}`)
           }
         })
@@ -190,7 +190,7 @@ export default function (eleventyConfig) {
             errors.push(
               `Oc ${oc.data.name} #${oc.data.id} has an invalid enemy: ${otherOc}`
             );
-          } else if (!ocsById.get(Number(otherOc)).data.show_in_directory) { 
+          } else if (!ocsById.get(Number(otherOc)).data.show_in_directory) {
             hiddenEnemies.push(`- ${ocsById.get(Number(otherOc)).data.name} #${ocsById.get(Number(otherOc)).data.id}`)
           }
         })
