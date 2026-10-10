@@ -6,10 +6,14 @@
 - address edge case where files with differing names can normalize to same conflicting slug (eg. 'My-File.png' and 'my file.png')
 - address edge case where character.njk md file can still generate an oc when not in a container
 
-## Features
+## Features/Tasks
 
 ### Planned
 
+- documentation lol
+- final templates with inline comments for:
+  - character
+  - world
 - directory
   - add last updated date tooltip to directory character links
 - stories

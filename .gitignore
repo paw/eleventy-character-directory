@@ -3,6 +3,7 @@ node_modules
 web_modules
 .cache
 .directory
+.vscode
 /src/Characters/*
 !/src/Characters/_test/
 !/src/Characters/folder.md

@@ -24,7 +24,7 @@ permalink: "{%- if character_config.character_slug -%}{{ character_config.charac
           <div class="credit">{%- if quote.credit -%}― {{ quote.credit }}{%- endif -%}</div>
         </div>
         {%- endif -%}
-          
+
         {%- if creator -%}
         <div class="flex-end header-stats three">
         {%- else -%}
@@ -45,7 +45,7 @@ permalink: "{%- if character_config.character_slug -%}{{ character_config.charac
             {% endfor %}
             </ul>
           </div>
-        {% endif %} 
+        {% endif %}
         </div>
       </div>
       {%- if portrait -%}
@@ -99,7 +99,7 @@ permalink: "{%- if character_config.character_slug -%}{{ character_config.charac
       <i class="fa-solid fa-dumbbell" aria-hidden="true"></i>
       </span>
     </div>
-    
+
     <div class="stat dex">
       <strong class="stat-label">
         <span aria-hidden="true">DEX</span><span class="sr-only">Dexterity</span>
@@ -111,7 +111,7 @@ permalink: "{%- if character_config.character_slug -%}{{ character_config.charac
       <i class="fa-solid fa-person-running" aria-hidden="true"></i>
       </span>
     </div>
-    
+
     <div class="stat con">
       <strong class="stat-label">
         <span aria-hidden="true">CON</span><span class="sr-only">Constitution</span>
@@ -123,7 +123,7 @@ permalink: "{%- if character_config.character_slug -%}{{ character_config.charac
       <i class="fa-solid fa-heart-pulse" aria-hidden="true"></i>
       </span>
     </div>
-    
+
     <div class="stat int">
       <strong class="stat-label">
         <span aria-hidden="true">INT</span><span class="sr-only">Intelligence</span>
@@ -135,7 +135,7 @@ permalink: "{%- if character_config.character_slug -%}{{ character_config.charac
       <i class="fa-solid fa-book" aria-hidden="true"></i>
       </span>
     </div>
-    
+
     <div class="stat wis">
       <strong class="stat-label">
         <span aria-hidden="true">WIS</span><span class="sr-only">Wisdom</span>
@@ -147,7 +147,7 @@ permalink: "{%- if character_config.character_slug -%}{{ character_config.charac
       <i class="fa-solid fa-eye" aria-hidden="true"></i>
       </span>
     </div>
-    
+
     <div class="stat cha">
       <strong class="stat-label">
         <span aria-hidden="true">CHA</span><span class="sr-only">Charisma</span>
@@ -160,7 +160,7 @@ permalink: "{%- if character_config.character_slug -%}{{ character_config.charac
       </span>
     </div>
     </div>
-    
+
   </div>
 {% endif %}
 
@@ -179,7 +179,7 @@ permalink: "{%- if character_config.character_slug -%}{{ character_config.charac
   </div>
 
   <div id="tags">
-    
+
     {%- if tags and tags.length > 0 -%}
     <div class="card">
     <h3 class="content-title">Tags</h3>
@@ -214,7 +214,7 @@ permalink: "{%- if character_config.character_slug -%}{{ character_config.charac
         </ul>
     </div>
     {% endif %}
-    
+
     {% if enemies and enemies.length > 0 %}
     <div class="enemies card">
       <h3 class="content-title">Enemies</h3>
@@ -271,7 +271,7 @@ permalink: "{%- if character_config.character_slug -%}{{ character_config.charac
     {% endif %}
 
   </div>
-    
+
   <div id="gallery-wrapper">
     {% if gallery %}
     <div class="card">
