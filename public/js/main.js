@@ -33,7 +33,7 @@ function onScroll() {
     position = "relative";
 
   } else {
-    
+
     if (currentScrollPosition > lastScrollPosition) {
 
       if (position !== "relative") { transition = true; }
@@ -64,6 +64,34 @@ function onScroll() {
   }
   navbar.style = `position: ${position}; top: ${navbarTop}px; transition: ${ transition ? "none" : "100ms linear" }`;
 }
+function processFeatured() {
+  // gettin all the settings and stuff from inline dataset set by template when the site is built
+  const featured = document.querySelector(`[data-name="featured-home"]`),
+    ocList = featured.querySelector(`.oc-list`);
+    ocs = Array.from(ocList.querySelectorAll(`.oc`)),
+    shuffleEnabled = featured.dataset.shuffle,
+    showAllFeaturedOcs = featured.dataset.showAllFeatured,
+    visibleCount = Number(featured.dataset.maxVisible);
+
+  if (shuffleEnabled === 'true') {
+    // shuffle using Fisher–Yates
+    for (let i = ocs.length - 1; i >= 1; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [ocs[i], ocs[j]] = [ocs[j], ocs[i]];
+    }
+    // reorder DOM elements
+    ocs.forEach((oc) => ocList.appendChild(oc));
+  }
+
+  if (showAllFeaturedOcs !== 'true') {
+    // hide elements beyond the config-specified limit
+    ocs.forEach((oc, index) => {
+      if (index >= visibleCount) {
+        oc.classList.add("hide");
+      }
+    });
+  }
+}
 // Call our function when the DOM is ready.
 document.addEventListener("DOMContentLoaded", function () {
   navbar = document.getElementById("navbar");
@@ -73,6 +101,7 @@ document.addEventListener("DOMContentLoaded", function () {
       window.location.href = event.target.value;
     }
   });
+  if (document.querySelector(`[data-name="featured-home"]`)) { processFeatured() };
   document.querySelector(".nav .toggle").addEventListener("click", (event) => {
     if (document.querySelector(".nav .toggle").getAttribute("data-menu") === "closed") {
       document.querySelector(".nav .toggle").setAttribute("data-menu","open");

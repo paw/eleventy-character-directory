@@ -16,10 +16,8 @@ basic_info:
     Full Name: Jeremy
     Species: Human
     Age: 23
-    Gender: Cisgender Male
-    Sexuality: Straight...?
     Pronouns: He/Him
-    Voice Actor: <a href="google.com">Nathan Vetterlein</a>
+    Voice Actor: <a href="google.com" target="_blank">Nathan Vetterlein</a>
 
 stats:
     STR: 

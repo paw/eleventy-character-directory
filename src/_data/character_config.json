@@ -9,6 +9,8 @@
 
     "ocs_per_homepage_row" : 5,
     "show_featured": true,
+    "show_all_featured_characters" : false,
+    "featured_characters_shuffle" : true,
     "show_recently_created": false,
     "show_recently_updated": true,
     "show_name_badges_on_homepage": false,
