@@ -12,7 +12,7 @@
   "main": ".eleventy.js",
   "scripts": {
     "cleanup": "node -e \"require('node:fs').rmSync('output', { recursive: true, force: true })\"",
-    "start": "npm run cleanup && eleventy --serve",
+    "start": "eleventy --serve",
     "build": "eleventy"
   },
   "dependencies": {

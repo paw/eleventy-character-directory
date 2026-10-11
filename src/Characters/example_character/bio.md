@@ -45,6 +45,7 @@ worlds:
 tags:
     - object
     - cute
+    - round
 
 # stories will automatically be shown on character page
 
@@ -57,10 +58,6 @@ connections:
 # for arrays without
 friends: [1, 2]
 enemies: [9]
-
-# optional custom CSS file
-# store your css in public/css and don't include an extension
-custom_css: file_name_no_extension
 
 # need to have this in the frontmatter if you want the gallery to generate
 gallery: true

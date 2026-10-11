@@ -6,7 +6,7 @@ created: 2025-08-29
 updated: 2025-10-01
 name: Victor
 page_url: victor
-custom_css: victor
+
 show_in_directory: true
 
 creator:

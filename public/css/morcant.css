@@ -1,9 +1,0 @@
-:root {
-  --color-bg: #000000;
-  --color-text-main: #f1f1f1;
-  --color-text-header: red;
-  --color-primary: yellow;
-}
-.portrait img {
-  min-height: 400px;
-}

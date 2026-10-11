@@ -13,6 +13,7 @@ const md = markdownIt({
 
 // MAIN
 export default function (eleventyConfig) {
+
   // get character config
   const characterConfig = getCharacterConfig();
   // resolve character directory
@@ -26,6 +27,10 @@ export default function (eleventyConfig) {
   eleventyConfig.setUseGitIgnore(false);
   // watch for config file changes
   eleventyConfig.addWatchTarget("./src/_data/character_config.json");
+  // watching for new images and for updated css
+  eleventyConfig.addWatchTarget(
+    `./src/${characterConfig.base_directory}/**/*.{md,css,yaml,png,jpg,jpeg,webp,gif,avif,svg}`
+  );
 
   // setup directory stuff
   eleventyConfig.setIncludesDirectory("_includes");
@@ -48,15 +53,22 @@ export default function (eleventyConfig) {
   const Slugify = eleventyConfig.getFilter("slugify");
 
   // stuff for moving over folder & character images later
-  const imagesToCopy = [],
-        imagesToCopySeen = new Map(),
+  const filesToCopy = [],
         validImageTypes = [".png", ".jpg", ".jpeg", ".webp", ".gif", ".avif"];
-
-  function queueImage(source, destination) {
-    imagesToCopy.push({
+  function queueFileToCopy(source, destination) {
+    filesToCopy.push({
       source,
       destination,
     });
+  }
+  function copyFileOnlyIfChanged(src, dest) {
+    fs.mkdirSync(path.dirname(dest), { recursive: true });
+    if (
+      !fs.existsSync(dest) ||
+      !fs.readFileSync(src).equals(fs.readFileSync(dest))
+    ) {
+      fs.copyFileSync(src, dest);
+    }
   }
   // date filter
   eleventyConfig.addFilter("htmlDateString", dateObj => {
@@ -251,7 +263,7 @@ export default function (eleventyConfig) {
     }
   }
 
-  function scanDirectory(directory, relativePath = "", ocs = []) {
+  function scanDirectory(directory, relativePath = "", ocs = [], slugifiedPathsListCounter = new Set()) {
     // storing slugified path urls for breadcrumbs
     const pathParts = [];
     let urlPath = "";
@@ -310,9 +322,32 @@ export default function (eleventyConfig) {
         const images = entries.filter(
           (entry) => entry.isFile() && isImage(entry.name),
         );
+        const css = entries.find(
+          (entry) =>
+            entry.isFile() && path.extname(entry.name).toLowerCase() === ".css",
+          );
+
+        if (css) {
+          const source = path.join(directory, css.name),
+            parsed = path.parse(css.name),
+            outputName = Slugify(`css-${oc.data.name}-id-${oc.data.id}`) + parsed.ext;
+
+          // assign custom css file
+          oc.data.custom_css = outputName;
+          const destination = path.join(
+            "output",
+            "public",
+            "css",
+            outputName,
+          );
+          // queue up the file for copying later
+          queueFileToCopy(source, destination);
+        }
         // placeholder icon
         oc.data.icon = "/public/images/characters/p/placeholder.png";
 
+        // set to check for edge case of colliding slugs
+        const slugsUsed = new Set();
         // check images
         for (const image of images) {
           const source = path.join(directory, image.name),
@@ -320,6 +355,10 @@ export default function (eleventyConfig) {
           let destination,
             outputName = Slugify(parsed.name) + parsed.ext;
           // icon.png becomes the character's icon
+          if (slugsUsed.has(outputName)) {
+            throw new Error(`Issue with image file names in character container:\n${directory}!\nMultiple files slugify to "${outputName}". Please rename your files to prevent images from overwriting eachother.`)
+          }
+          slugsUsed.add(outputName);
           if (
             path
               .basename(image.name, path.extname(image.name))
@@ -342,7 +381,7 @@ export default function (eleventyConfig) {
             outputName,
           );
           // queue up the image for copying later
-          queueImage(source, destination);
+          queueFileToCopy(source, destination);
         }
         // return different data based on whether or not the oc should be shown in directory or not
         if (oc.data.show_in_directory == false) {
@@ -372,6 +411,10 @@ export default function (eleventyConfig) {
         children: [],
         files: [],
       };
+      if (slugifiedPathsListCounter.has(result.url)) {
+        throw new Error(`Issue with folders in directory: ${directory.split(path.sep).slice(0, -1).join(path.sep)}!\nThere are multiple folders whose names slugify to "${pathParts[pathParts.length - 1].slug}", please rename one of them.`);
+      }
+      slugifiedPathsListCounter.add(result.url);
 
       // queue the folder icon for copying if there is one
       if (icon != null) {
@@ -383,7 +426,7 @@ export default function (eleventyConfig) {
             "folders",
             result.icon_url,
           );
-        queueImage(source, destination);
+        queueFileToCopy(source, destination);
       }
 
       // recursively trace directory tree
@@ -392,7 +435,7 @@ export default function (eleventyConfig) {
           childPath = relativePath
             ? `${relativePath}/${entry.name}`
             : entry.name;
-        const child = scanDirectory(fullPath, childPath, ocs);
+        const child = scanDirectory(fullPath, childPath, ocs, slugifiedPathsListCounter);
 
         if (!child || child.type == "hidden_oc") {
           continue;
@@ -461,6 +504,16 @@ export default function (eleventyConfig) {
       const characterConfig = getCharacterConfig();
 
       const root = scanDirectory(charactersDirectory, "", ocs);
+
+      // moving file copying here specifically to allow for better handling when using --serve
+      let file;
+      console.log(`Checking ${filesToCopy.length} and copying new/changed files to output assets directory...`);
+      while ((file = filesToCopy.pop())) {
+        const { source, destination } = file;
+        copyFileOnlyIfChanged(source, destination);
+      }
+      console.log(prettyText(`File copying was successful!`,{ color: 'green' }));
+
       const ocsPerPage = characterConfig.ocs_per_directory_page;
       const directories = [];
 
@@ -820,17 +873,17 @@ export default function (eleventyConfig) {
       .sort((a, b) => a.data.order - b.data.order);
   });
 
-  eleventyConfig.on("eleventy.after", async () => {
-    // copying over added images here :)
-    let image;
-    while ((image = imagesToCopy.pop())) {
-      const { source, destination } = image;
-
-      fs.mkdirSync(path.dirname(destination), {
-        recursive: true,
-      });
-
-      fs.copyFileSync(source, destination);
-    }
-  });
+//   eleventyConfig.on("eleventy.after", async () => {
+//     // copying over added images here :)
+//     let image;
+//     while ((image = imagesToCopy.pop())) {
+//       const { source, destination } = image;
+//
+//       fs.mkdirSync(path.dirname(destination), {
+//         recursive: true,
+//       });
+//
+//       fs.copyFileSync(source, destination);
+//     }
+//   });
 }
