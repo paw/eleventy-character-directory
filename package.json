@@ -11,9 +11,9 @@
   "type": "module",
   "main": ".eleventy.js",
   "scripts": {
-    "clean": "rm -rf output",
-    "start": "npm run clean && eleventy --serve",
-    "build": "npm run clean && eleventy"
+    "cleanup": "node -e \"require('node:fs').rmSync('output', { recursive: true, force: true })\"",
+    "start": "npm run cleanup && eleventy --serve",
+    "build": "eleventy"
   },
   "dependencies": {
     "@11ty/eleventy": "^3.1.6",
