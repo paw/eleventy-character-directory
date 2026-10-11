@@ -34,7 +34,7 @@ See **TODO.md** for a list of planned features and bugs.
     - Characters can be hidden from the directory pages on a per-character basis.
     - Frontmatter is validated in processing so that invalid markdown files don't generate junk pages, character IDs/page URLs never collide, and invalid relationships with non-existent characters are caught
     - Placeholder icon is used when no icon file is specified (replace icon.png in /public/images/characters/p/ for a custom placeholder)
-    - Custom css files can be added to /public/css and then called in the character frontmatter to customize page layout on a per-character basis
+    - A custom css file can be added to the container it will be automatically copied to the assets folder and assigned to the character, allowing you to customize the page layout on a per-character basis and keep everything inside the one folder
 
 - ### Image and Gallery processing
     - Finds character images, assigns metadata to those images by reading a gallery.yaml, assigns icon and portrait URLs
