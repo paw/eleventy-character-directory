@@ -58,7 +58,7 @@ See **TODO.md** for a list of planned features and bugs.
 # Installation
 
 ## You Will Need:
-- A code editor of your choice, such as VSCode
+- A code editor of your choice, such as [VSCode](https://code.visualstudio.com/)/[VSCodium](https://vscodium.com/) or [Zed](https://zed.dev/)
 - [Node.js](https://nodejs.org/)
 - A copy of this repo
 
@@ -67,14 +67,14 @@ See **TODO.md** for a list of planned features and bugs.
 - Download the zip of the repo or clone it in your editor of choice.
 - Open a terminal wherever the contents of the repo exist on your machine.
 - Run **npm install** to automatically install the necessary packages.
-- You can test if everything is good by running **npx @11ty/eleventy --serve**
+- You can test if everything is good by running **npm run start**
 - If everything is fine, you will see **[11ty] Server at http://localhost:8080/** in your terminal. Visiting that URL in your browser will show the exact contents of [the demo](https://oc-demo.snarly.net/).
 - You can cancel out of this with CTRL+C and start editing stuff to your heart's content.
 - To make new characters quickly, you can copy and paste the entire character template at folder in **/templates** for a quick container that has the necessary structure to create a working character and comments inside the frontmatter to help you with it.
 - Commands:
     - Build the site: **npm run build**
-    - Clean up the output folder: **npm run clean**
-    - Start the live web server: **npx @11ty/eleventy --serve** 
+    - Clean up the output folder: **npm run cleanup**
+    - Start the live web server: **npm run start** 
 - [If you have never used 11ty before, see the docs for assistance with commands.](https://www.11ty.dev/docs/)
 
 
