@@ -299,7 +299,6 @@ export default function (eleventyConfig) {
         (entry) =>
           entry.isFile() && path.extname(entry.name).toLowerCase() === ".md",
       );
-
       // ERROR CHECKING
       // do not allow multiple markdown files since 11ty will generate junk pages for md files that don't have permalink: false in their frontmatter
       if (markdownFiles.length !== 1) {
@@ -396,6 +395,21 @@ export default function (eleventyConfig) {
         }
       }
     } else {
+      // checking for accidental orphan oc files
+      const markdownFiles = entries.filter(
+        (entry) =>
+          entry.isFile() && path.extname(entry.name).toLowerCase() === ".md",
+      );
+      markdownFiles.forEach(mdFile => {
+        // look at contents, try to find a match for yaml frontmatter data
+        const source = fs.readFileSync(path.join(directory, mdFile.name), "utf8").trim();
+        const match = source.match(/^---\s*\n([\s\S]*?)\n---\s*\n?([\s\S]*)$/);
+        const data = match === null ? null : parseYaml(match[1]);
+        // if it has layout character in it we have to throw an error, otherwise it WILL generate a wonky oc
+        if (data?.layout === "character.njk") {
+          throw new Error(`${prettyText(`There is a character outside of a character container!`)}\nLocation: ${path.join(directory, mdFile.name)}`);
+        }
+      });
       // it's a folder so build a normal directory object
       const icon = findIcon(directory);
       const result = {

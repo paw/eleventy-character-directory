@@ -40,7 +40,7 @@ permalink: "{{ page.directory.url }}{% if page.page > 1 %}/{{ page.page }}/{% en
     <div class="text">
         <h1>
         {% if page.directory.path == "" %}
-            <i class="{{ character_config.base_directory_icon }}" aria-hidden="true"></i>&nbsp;{{ character_config.base_directory }}
+            {%- if character_config.nav_base_directory_icon -%}{{ character_config.nav_base_directory_icon | safe }}&nbsp;{%- endif -%}{{ character_config.base_directory }}
         {% else %}
             <i class="fa-solid fa-folder" aria-hidden="true"></i>&nbsp;{{ page.directory.name }}
         {% endif %}
@@ -84,7 +84,7 @@ permalink: "{{ page.directory.url }}{% if page.page > 1 %}/{{ page.page }}/{% en
                     class="folder"
                 >
 
-                
+
 
                     {% if folder.icon %}
                     <div class="folder-icon">

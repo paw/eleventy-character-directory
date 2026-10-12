@@ -8,7 +8,7 @@ created: 2007-10-10
 updated: 2025-03-21
 page_url: meet the scout
 icon: /public/image/scout.jpg
-custom_css: file_name_no_extension
+featured: true
 
 name: Scout
 

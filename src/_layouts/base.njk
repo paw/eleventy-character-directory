@@ -21,7 +21,8 @@ limit: 5
     <link rel="icon" href="https://glitch.com/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     {% if page_description %}<meta name="description" content="{{ description }}" />{% endif %}
-    <link rel="stylesheet" type="text/css" href="/public/css/{{character_config.main_css_file}}.css" />
+    <link rel="stylesheet" type="text/css" href="/public/css/global.css" />
+    <link rel="stylesheet" type="text/css" href="/public/css/{{character_config.main_theme_css_file}}.css" />
     <script src="/public/js/main.js" ></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v7.3.1/css/all.css" crossorigin="anonymous">
     <script src="https://unpkg.com/@popperjs/core@2"></script>
@@ -30,29 +31,29 @@ limit: 5
   </head>
   <body>
   <main>
-    
+
     <nav id="navbar" class="nav">
-        <span class="title">{%- if character_config.site_title_icon -%}<i class="{{ character_config.site_title_icon }}" aria-hidden="true"></i>&nbsp;{%- endif -%}{{ character_config.site_title | safe }}</span>
+        <span class="title">{%- if character_config.site_title_icon -%}{{ character_config.site_title_icon | safe }}&nbsp;{%- endif -%}{{ character_config.site_title | safe }}</span>
         <button class="toggle" data-menu="closed" aria-label="Show Site Navigation"><i class="fa-solid fa-bars closed"></i><i class="fa-solid fa-xmark open"></i></button>
         <div class="links">
-          <a href="/"><i class="fa-solid fa-house" aria-hidden="true"></i> Home</a>
-          <a href="/{{ character_config.base_directory | slugify }}"><i class="{{ character_config.base_directory_icon }}" aria-hidden="true"></i> {{ character_config.base_directory }}</a>
+            <a href="/">{%- if character_config.nav_home_icon -%}{{ character_config.nav_home_icon | safe }}&nbsp;{%- endif -%} Home</a>
+          <a href="/{{ character_config.base_directory | slugify }}">{%- if character_config.nav_base_directory_icon -%}{{ character_config.nav_base_directory_icon | safe }}&nbsp;{%- endif -%}{{ character_config.base_directory }}</a>
          {%- for link in collections.navigation -%}
           {% if link.data.permalink != false %}<a href="{{link.url}}">{% if link.data.icon %}{{ link.data.icon | safe }} {% endif %}{{link.data.title}}</a>{% endif %}
          {%- endfor -%}
         </div>
       </nav>
-  
+
   <div id="wrapper">
     {{ content | safe }}
   </div>
-      
+
 
       <footer class="footer">
       &copy;
       </footer>
-    
+
   </main>
-   
+
   </body>
 </html>

@@ -5,7 +5,6 @@ export default {
             if (data.layout === "character.njk") {
                 return data.permalink;
             }
-
             return false;
         },
     },

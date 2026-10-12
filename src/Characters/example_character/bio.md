@@ -7,6 +7,7 @@ show_in_directory: true
 # each ID must be unique for certain features like connections/etc
 id: 25
 name: Baby Globe
+featured: true
 
 # used for ordering purposes
 created: 2026-02-15

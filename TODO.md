@@ -3,8 +3,6 @@
 ## Bug Fixes
 
 - CSS lightbox issue with scrolling with mousewheel only working when hovering directly over the image container.
-- address edge case where files with differing names can normalize to same conflicting slug (eg. 'My-File.png' and 'my file.png')
-- address edge case where character.njk md file can still generate an oc when not in a container
 
 ## Features/Tasks
 
@@ -14,8 +12,6 @@
 - final templates with inline comments for:
   - character
   - world
-- directory
-  - add last updated date tooltip to directory character links
 - stories
   - validation for date frontmatter
 - companion YAML generator for frontmatter

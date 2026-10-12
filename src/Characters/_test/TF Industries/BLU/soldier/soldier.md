@@ -7,6 +7,7 @@ created: 2007-10-10
 updated: 2007-10-10
 name: Soldier
 page_url: screaming eagle
+featured: true
 
 icon: /public/image/soldier.jpg
 quote:
@@ -34,4 +35,4 @@ The Soldier is well known for his spectacular rocket jump. In defiance of all go
 
 ### Section
 
-The Soldier was voiced by the late Rick May. He was voiced by May and Nolan North in Expiration Date. 
+The Soldier was voiced by the late Rick May. He was voiced by May and Nolan North in Expiration Date.

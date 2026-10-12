@@ -14,7 +14,7 @@ title: "Home"
 
   {% if character_config.ocs_per_homepage_row or character_config.ocs_per_homepage_row > 0 %}
     {% if character_config.show_featured %}
-      <section class="card" data-name="featured-home" data-max-visible="{{character_config.ocs_per_homepage_row}}" data-show-all-featured="{{character_config.show_all_featured_characters}}" data-shuffle="{{character_config.featured_characters_shuffle}}">
+      <section class="{%- if not character_config.show_all_featured_characters -%}card loading{%- else -%}card{%- endif -%}" data-name="featured-home" data-max-visible="{{character_config.ocs_per_homepage_row}}" data-show-all-featured="{{character_config.show_all_featured_characters}}" data-shuffle="{{character_config.featured_characters_shuffle}}">
         <h3 class="content-title">
           Featured
         </h3>

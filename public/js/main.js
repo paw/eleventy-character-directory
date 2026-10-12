@@ -90,6 +90,7 @@ function processFeatured() {
         oc.classList.add("hide");
       }
     });
+    featured.classList.remove('loading');
   }
 }
 // Call our function when the DOM is ready.

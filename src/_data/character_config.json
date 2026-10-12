@@ -1,37 +1,37 @@
 {
-    "base_directory" : "Characters",
-    "base_directory_icon" : "fa-solid fa-box-archive",
 
-    "ocs_per_directory_page": 20,
-    "show_empty_directories": true,
-    "all_characters_default_sort_type": "updated",
-    "tag_and_world_sort_type": "id",
+  "site_title" : "My Character Database",
+  "site_title_icon" : "<i class='fa-solid fa-book-atlas' aria-hidden='true'></i>",
+  "nav_home_icon" : "<i class='fa-solid fa-house' aria-hidden='true'></i>",
+  "main_theme_css_file" : "dollhouse",
 
-    "ocs_per_homepage_row" : 5,
-    "show_featured": true,
-    "show_all_featured_characters" : false,
-    "featured_characters_shuffle" : true,
-    "show_recently_created": false,
-    "show_recently_updated": true,
-    "show_name_badges_on_homepage": false,
+  "story_slug": "story",
+  "world_slug": "world",
+  "tag_slug": "tagged",
+  "character_slug": "oc",
 
+  "base_directory" : "Characters",
+  "nav_base_directory_icon" : "<i class='fa-solid fa-box-archive' aria-hidden='true'></i>",
 
-    "multi_page_layout" : true,
-    "show_character_ids": false,
-    "show_name_badges_in_directory": true,
-    "show_name_badges_on_profiles": true,
-    "display_connections_on_profiles": true,
+  "multi_page_layout" : true,
+  "show_character_ids": false,
+  "show_name_badges_in_directory": true,
+  "show_name_badges_on_profiles": true,
+  "display_connections_on_profiles": true,
 
+  "ocs_per_directory_page": 20,
+  "show_empty_directories": true,
+  "all_characters_default_sort_type": "updated",
+  "tag_and_world_sort_type": "id",
 
-    "stories_per_page": 10,
-    "connections_per_page": 10,
+  "ocs_per_homepage_row" : 5,
+  "show_featured": true,
+  "show_all_featured_characters" : false,
+  "featured_characters_shuffle" : true,
+  "show_recently_created": false,
+  "show_recently_updated": true,
+  "show_name_badges_on_homepage": false,
 
-    "story_slug": "story",
-    "world_slug": "world",
-    "tag_slug": "tagged",
-    "character_slug": "oc",
-
-    "site_title" : "My Character Database",
-    "site_title_icon" : "fa-solid fa-book-atlas",
-    "main_css_file" : "global"
+  "stories_per_page": 10,
+  "connections_per_page": 10
 }
