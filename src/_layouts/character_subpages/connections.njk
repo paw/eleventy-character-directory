@@ -25,7 +25,7 @@
         </ul>
     </div>
     {% endif %}
-    
+
     {% if page.oc.data.enemies and page.oc.data.enemies.length > 0 %}
     <div class="enemies card">
       <h3 class="content-title">Enemies</h3>
@@ -57,8 +57,8 @@
               {% endif %}
               <li class="connection">
                 <div class="portrait"><div class="icon me"><img src="{{ page.oc.data.icon }}" alt="{{page.oc.data.name}}"></div></div>
-                <div class="portrait"><div class="icon you"><a href="{{oc.url}}"><img src="{{oc.data.icon}}" alt="{{oc.data.name}}"></a></div></div>
-                <div class="connection-bubble left"><h3 class="name">{{name}}<span class="sr-only"> says:</span></h3>
+                <div class="portrait"><div class="icon you"><a href="{{ oc.url }}"><img src="{{oc.data.icon}}" alt="{{oc.data.name}}"></a></div></div>
+                <div class="connection-bubble left"><h3 class="name">{{ page.oc.data.name }}<span class="sr-only"> says:</span></h3>
                   {% if oc.data.id in page.oc.data.connections %}
                     {{ page.oc.data.connections[oc.data.id] }}
                   {% else %}
