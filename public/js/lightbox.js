@@ -29,7 +29,6 @@ if (gallery) {
     lightboxImage.alt = image.alt;
     lightboxTitle.innerHTML = image.dataset.title;
     lightboxCaption.innerHTML = image.dataset.caption;
-    console.log(image.dataset.title,image.dataset.title.length)
     if (image.dataset.title.length == 0 && image.dataset.caption == 0) {
       lightboxDetailHeader.classList.add('hide')
     } else {

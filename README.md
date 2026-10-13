@@ -76,3 +76,6 @@ See **TODO.md** for a list of planned features and bugs.
     - Clean up the output folder: **npm run cleanup**
     - Start the local server to view changes live: **npm run start** 
 - [If you have never used 11ty before, see the docs for assistance with commands.](https://www.11ty.dev/docs/)
+
+## Important Notes:
+- If you're viewing live changes with **start**, you will have to stop the server before moving existing OC containers around due to how 11ty handles building collections. It will throw an error for an 'existing' OC if the OC is re-located.

@@ -2,7 +2,7 @@
 
 ## Bug Fixes
 
-- CSS lightbox issue with scrolling with mousewheel only working when hovering directly over the image container.
+- n/a
 
 ## Features/Tasks
 
@@ -27,12 +27,10 @@
 
 ### Maybe
 
-- at least one other premade theme, this one based on polaroids (?)- characters
+- at least one other premade theme, this one based on polaroids (?)
 - stories
   - link between next/prev stories (?)
   - option to show the stories on the character's page (?)
-- characters
-  - automatically copy over a css file placed in the directory instead of making you specify a css file in the frontmatter (?)
   
 # DONE ✅
 
@@ -50,7 +48,8 @@
   - fully customizable optional basic info fields
   - optional dnd-style stat block
   - icon automatically pulled from icon.png
-  - optional name an image portrait.png to use that in the character page header instead of the character's icon
+  - optional: name an image portrait.png to use that in the character page header instead of the character's icon
+  - optional: put a css file in the character container and it will automatically be copied over and assigned to the character
   - masonry gallery with image metadata handled by a yaml file
   - optional list of songs
   - optional quote

@@ -1,3 +1,21 @@
+:root {
+    --lightbox-bg: #272727;
+    --lightbox-text: #fff;
+    --lightbox-buttons: #fff;
+    --lightbox-modal: rgba(0, 0, 0, 0.9);
+    --lightbox-separator: 1px solid rgba(255,255,255,0.1);
+    --lightbox-image-background: repeating-conic-gradient(#ddd 0 25%, #eee 0 50%) 50% / 20px 20px;
+    --lightbox-header: #dadada;
+    --lightbox-link: #7cc7f4;
+    --lightbox-link-hover: cyan;
+    --lightbox-image-height-cap: 120vh;
+
+    --tooltip-bg: #333;
+    --tooltip-text: #ccc;
+    --tooltip-borders: #000;
+    --tooltip-font-size: 1rem;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -77,13 +95,17 @@
   position: fixed;
   inset: 0;
   z-index: 1000;
-
   display: none;
   align-items: center;
   justify-content: center;
-
   box-sizing: border-box;
-  background: rgba(0, 0, 0, 0.9);
+  background: var(--lightbox-modal);
+}
+.lightbox a {
+    color: var(--lightbox-link)
+}
+.lightbox a:hover {
+    color: var(--lightbox-link-hover)
 }
 .lightbox.is-open {
   display: flex;
@@ -91,10 +113,11 @@
 
 .lightbox-wrapper {
     max-width: 100%;
+    width: 100%;
     height: 100%;
     left: 0;
     top: 0;
-    padding: 1rem 0 0;
+    padding: 1rem calc(3vw + 3rem) 0;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -127,17 +150,20 @@
   display: block;
   object-fit: contain;
   margin: 0 auto;
+  max-width: 100%;
   /* change this to change max image size*/
-  max-height: 120vh;
+  max-height: var(--lightbox-image-height-cap);
 }
 .lightbox-figure .lightbox-image-wrap {
-  background: repeating-conic-gradient(#ddd 0 25%, #eee 0 50%)
-      50% / 20px 20px
+  background: var(--lightbox-image-background);
+}
+.lightbox-figure :is(h1, h2, h3, h4, h5) {
+    color: inherit;
 }
 .figcaption-inner {
   padding: 0.75rem 0.5rem 0.5rem;
-  color: #fff;
-  background: #322f31;
+  color: var(--lightbox-text);
+  background: var(--lightbox-bg);
   margin: 0 0 1rem;
   border-radius: 0 0 0.3rem 0.3rem;
 }
@@ -159,17 +185,20 @@
 #lightbox-title ~ #lightbox-caption:empty ~ #credit-header {
     margin-top: 2rem;
 }
+#lightbox-title:empty ~ #lightbox-caption:empty ~ #credit-header {
+    margin-top: 0;
+}
 .lightbox-figure figcaption .fig-title {
 	padding: 0 0 0.5rem;
-	border-bottom: 1px solid  rgba(255,255,255,0.1);
+	border-bottom: var(--lightbox-separator);
 	font-size: 1.2rem;
-	color: #dadada;
+	color: var(--lightbox-header);
 }
 #lightbox-counter {
     display: block;
     padding: 1rem 0 0;
     margin: 1rem 0 0;
-    border-top: 1px solid rgba(255,255,255,0.1);
+    border-top: var(--lightbox-separator);
     text-align: center;
     font-weight: bold;
 }
@@ -177,26 +206,26 @@
   z-index: 2;
   border: 0;
   padding: 0;
-  color: #fff;
+  color: var(--lightbox-buttons);
   background: none;
   font-size: 3rem;
   line-height: 1;
-  height: 100%;
   width: 2.5rem;
   cursor: pointer;
   flex-grow: 1;
+  position: absolute;
 }
 .lightbox-arrow i {
   width: 100%;
 }
 
 .lightbox-prev {
-  left: 0;
+  left: 3vw;
   padding-left: 0.5rem;
 }
 
 .lightbox-next {
-  right: 0;
+  right: 3vw;
   padding-right: 0.5rem;
 }
 .lightbox-close {
@@ -207,32 +236,42 @@
   border: 0;
   padding: 0;
   background: none;
-  color: #fff;
+  color: var(--lightbox-buttons);
   font-size: 3rem;
   line-height: 1;
   cursor: pointer;
 }
+@media screen and (max-width: 600px) {
+    .lightbox-arrow {
+        height: 100%;
+        position: static;
+    }
+    .lightbox-wrapper {
+        width: auto;
+        padding: 1rem 0 0;
+    }
+}
 /* default tooltips */
 .tippy-box[data-theme~='tooltips'] {
-  background-color: var(--color-card-inner-section);
-  color: var(--color-text-main);
+  background: var(--tooltip-bg);
+  color: var(--tooltip-text);
   font-weight: bold;
-  border: 2px solid var(--color-navbar);
-  font-size: 0.9rem;
+  border: 2px solid var(--tooltip-borders);
+  font-size: var(--tooltip-font-size);
 }
 .tippy-box[data-theme~='tooltips'][data-placement^='top'] > .tippy-arrow::before {
-  border-top-color: var(--color-navbar);
+  border-top-color: var(--tooltip-borders);
   margin-bottom: -2px;
 }
 .tippy-box[data-theme~='tooltips'][data-placement^='bottom'] > .tippy-arrow::before {
-  border-top-color: var(--color-navbar);
+  border-bottom-color: var(--tooltip-borders);
   margin-bottom: -2px;
 }
 .tippy-box[data-theme~='tooltips'][data-placement^='left'] > .tippy-arrow::before {
-  border-top-color: var(--color-navbar);
+  border-left-color: var(--tooltip-borders);
   margin-bottom: -2px;
 }
 .tippy-box[data-theme~='tooltips'][data-placement^='right'] > .tippy-arrow::before {
-  border-top-color: var(--color-navbar);
+  border-right-color: var(--tooltip-borders);
   margin-bottom: -2px;
 }

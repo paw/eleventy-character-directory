@@ -1,7 +1,7 @@
 
 :root {
   --color-bg: #292B2D;
-  --color-navbar: #42484A;
+  --navbar: #42484A;
   --color-text-main: #F0F0E8;
   --color-text-header: #68C9DE;
   --color-borders: rgba(220, 240, 240, 0.14);
@@ -19,6 +19,8 @@
   --color-primary-text: #172522;
   --color-link: #68C9DE;
   --color-link-hover: #A0E5F2;
+  --color-card-tab-active: #102530;
+  --color-card-tab-hover: #354445;
 }
 
 body {
