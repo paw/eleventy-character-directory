@@ -3,12 +3,15 @@ const gallery = document.querySelector("#gallery");
 if (gallery) {
     const galleryItems = [...gallery.children],
           galleryImages = gallery.querySelectorAll("img");
-      
+
 
   const lightbox = document.querySelector("#lightbox"),
         lightboxImage = document.querySelector("#lightbox-image"),
+        lightboxDetailHeader = document.querySelector("#detail-header"),
         lightboxTitle = document.querySelector("#lightbox-title"),
         lightboxCaption = document.querySelector("#lightbox-caption"),
+        lightboxCreditHeader = document.querySelector("#credit-header"),
+        lightboxCredit = document.querySelector("#img-credit"),
         lightboxCounter = document.querySelector("#lightbox-counter");
 
   const closeButton = document.querySelector(".lightbox-close"),
@@ -26,6 +29,24 @@ if (gallery) {
     lightboxImage.alt = image.alt;
     lightboxTitle.innerHTML = image.dataset.title;
     lightboxCaption.innerHTML = image.dataset.caption;
+    console.log(image.dataset.title,image.dataset.title.length)
+    if (image.dataset.title.length == 0 && image.dataset.caption == 0) {
+      lightboxDetailHeader.classList.add('hide')
+    } else {
+      lightboxDetailHeader.classList.remove('hide')
+    }
+    if (image.dataset.creditName) {
+      lightboxCreditHeader.classList.remove('hide');
+      lightboxCredit.classList.remove('hide');
+      if (image.dataset?.creditUrl) {
+        lightboxCredit.innerHTML = `<a href="${image.dataset.creditUrl}" target="_blank">${image.dataset.creditName}</a>`;
+      } else {
+        lightboxCredit.innerHTML = image.dataset.creditName
+      }
+    } else {
+      lightboxCreditHeader.classList.add('hide');
+      lightboxCredit.classList.add('hide');
+    }
     // Counter
     lightboxCounter.textContent = `${currentIndex+1} / ${galleryImages.length}`;
   }
@@ -118,7 +139,6 @@ if (gallery) {
 
   function createMasonry() {
     const columnCount = getColumnCount();
-    console.log("columnCount",columnCount,"creating masonry?")
     // Remove existing columns
     gallery.innerHTML = "";
 

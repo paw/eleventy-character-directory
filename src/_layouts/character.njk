@@ -279,9 +279,9 @@ permalink: "{%- if character_config.character_slug -%}{{ character_config.charac
       </h2>
       <ul class="masonry-gallery" id="gallery">
         {% for image in gallery %}
-          <li>
-          <img src="{%if image.thumb_url != null %}{{image.thumb_url}}{% else %}{{image.full_url}}{% endif %}" class="lightbox-thumb" data-full="{{image.full_url}}" data-data-tippy-content="{{image.title | safe}}" data-title="{{image.title | safe}}" data-caption="{{image.description | safe}}" data-index="{{ loop.index0 }}" alt="{{image.alt}}" aria-role="button" data-tippy-content="View Full Image" tabindex="0">
-          </li>
+            <li>
+            <img src="{%if image.thumb_url != null %}{{image.thumb_url}}{% else %}{{image.full_url}}{% endif %}" class="lightbox-thumb" data-full="{{image.full_url}}" data-data-tippy-content="{{image.title | safe}}" data-title="{{image.title | safe}}" data-caption="{{image.description | safe}}" {%- if image.credit -%}data-credit-name="{{ image.credit }}"{%- endif -%} {%- if image.credit_url -%}data-credit-url="{{ image.credit_url }}"{%- endif -%} data-index="{{ loop.index0 }}" alt="{{image.alt}}" aria-role="button" data-tippy-content="View Full Image" tabindex="0">
+            </li>
         {% endfor %}
       </ul>
 
@@ -294,8 +294,11 @@ permalink: "{%- if character_config.character_slug -%}{{ character_config.charac
                 <div class="lightbox-image-wrap"><img id="lightbox-image" src="" alt=""></div>
                 <figcaption>
                     <div class="figcaption-inner">
+                        <h2 id="detail-header" class="fig-title">Details:</h2>
                       <h3 id="lightbox-title"></h3>
                       <div id="lightbox-caption"></div>
+                      <h2 class="fig-title" id="credit-header">Credit:</h2>
+                      <div id="img-credit"></div>
                       <span id="lightbox-counter" aria-live="polite"></span>
                     </div>
                 </figcaption>

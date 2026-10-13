@@ -6,7 +6,7 @@ images:
       description: Wikipedia's 25th birthday mascot, Baby Globe, in a neutral posture.
       alt: Wikipedia's 25th birthday mascot, Baby Globe, in a neutral posture.
       credit: Wikimedia Foundation
-      credit_url: https://wikimediafoundation.org/
+      credit_url:
 
     - full: Baby_Globe_in_Paris.gif
       thumbnail:
