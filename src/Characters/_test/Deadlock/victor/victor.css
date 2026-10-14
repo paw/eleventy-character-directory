@@ -1,5 +1,5 @@
 
-:root {
+:root, body[data-theme="light"] {
   --color-bg: #292B2D;
   --navbar: #42484A;
   --color-text-main: #F0F0E8;

@@ -2,8 +2,10 @@
 
   "site_title" : "My Character Database",
   "site_title_icon" : "<i class='fa-solid fa-book-atlas' aria-hidden='true'></i>",
-  "nav_home_icon" : "<i class='fa-solid fa-house' aria-hidden='true'></i>",
+  "site_footer_text" : "<a href='https://github.com/paw/eleventy-character-directory' target='_blank'>11ty Character Directory</a>",
   "main_theme_css_file" : "dollhouse",
+  "nav_home_icon" : "<i class='fa-solid fa-house' aria-hidden='true'></i>",
+  "enable_theme_selector" : true,
 
   "story_slug": "story",
   "world_slug": "world",

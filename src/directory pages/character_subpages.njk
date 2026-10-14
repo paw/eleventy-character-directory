@@ -19,10 +19,10 @@ permalink: "{{ page.permalink }}"
         {%- if page.oc.data.quote -%}
         <div class="quote">
           <div class="words">“{{page.oc.data.quote.words}}”</div>
-          <div class="credit">{%- if quote.credit -%}― {{ page.oc.data.quote.credit }}{%- endif -%}</div>
+          <div class="credit">{%- if page.oc.data.quote.credit -%}― {{ page.oc.data.quote.credit }}{%- endif -%}</div>
         </div>
         {%- endif -%}
-          
+
         {%- if page.oc.data.creator -%}
         <div class="flex-end header-stats three">
         {%- else -%}
@@ -43,7 +43,7 @@ permalink: "{{ page.permalink }}"
             {% endfor %}
             </ul>
           </div>
-        {% endif %} 
+        {% endif %}
         </div>
       </div>
       {%- if page.oc.data.portrait -%}
@@ -53,7 +53,7 @@ permalink: "{{ page.permalink }}"
       {%- endif -%}
     </div>
 </div>
-  
+
 {% if page.section == "gallery" %}
     {% include "../_layouts/character_subpages/gallery.njk" %}
 {% elif page.section == "relationships" %}
@@ -61,7 +61,7 @@ permalink: "{{ page.permalink }}"
 {% endif %}
 
 </div>
-  
+
 <script type="text/javascript" src="/public/js/lightbox.js"></script>
 {% if page.oc.data.custom_css %}
 <link rel="stylesheet" type="text/css" href="/public/css/{{page.oc.data.custom_css}}.css" />

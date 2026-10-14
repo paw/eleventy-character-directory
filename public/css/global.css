@@ -275,3 +275,12 @@
   border-right-color: var(--tooltip-borders);
   margin-bottom: -2px;
 }
+/*theme toggler*/
+#theme-toggle i {
+    display: none;
+}
+body[data-theme-mode="auto"] #theme-toggle .auto,
+body[data-theme-mode="cookie"][data-theme="dark"] #theme-toggle .dark,
+body[data-theme-mode="cookie"][data-theme="light"] #theme-toggle .light {
+    display: block;
+}

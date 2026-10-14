@@ -103,14 +103,16 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
   if (document.querySelector(`[data-name="featured-home"]`)) { processFeatured() };
-  document.querySelector(".nav .toggle").addEventListener("click", (event) => {
-    if (document.querySelector(".nav .toggle").getAttribute("data-menu") === "closed") {
-      document.querySelector(".nav .toggle").setAttribute("data-menu","open");
+  document.querySelector("#mobile-menu").addEventListener("click", (event) => {
+    if (document.querySelector("#mobile-menu").getAttribute("data-menu") === "closed") {
+      document.querySelector("#mobile-menu").setAttribute("data-menu","open");
       document.querySelector(".nav .links").classList.add("open");
+      document.querySelector("#mobile-menu").setAttribute("aria-label","Hide Site Navigation");
       document.body.classList.add("no-scroll");
     } else {
-      document.querySelector(".nav .toggle").setAttribute("data-menu","closed");
+      document.querySelector("#mobile-menu").setAttribute("data-menu","closed");
       document.querySelector(".nav .links").classList.remove("open");
+      document.querySelector("#mobile-menu").setAttribute("aria-label","Show Site Navigation");
       document.body.classList.remove("no-scroll");
     }
   });
