@@ -16,18 +16,3 @@ worlds: ["2fort","Dustbowl","Upward"]
 tags: ["TF2","genius"]
 
 ---
-
-## Backstory
-
-character backstory goes here **Markdown supported**.
-
-Optional Values you can remove:
-- full-name
-- species
-- stats
-- setting
-- gallery
-
-### Section
-
-**You can have however many sections you want.** The Gallery will appear at the bottom of the page.

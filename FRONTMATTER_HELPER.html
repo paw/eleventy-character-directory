@@ -1,46 +1,501 @@
 <!DOCTYPE html>
 <head>
+    <title>Frontmatter Helper</title>
     <link rel="stylesheet" type="text/css" href="./public/css/global.css" />
     <link rel="stylesheet" type="text/css" href="./public/css/dollhouse.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v7.3.1/css/all.css" crossorigin="anonymous">
     <style>
-        #basic { display: grid; grid-template-columns: 50% 50% }
-        #connections, .full { grid-column: 1 / 3; }
-        #connections div {
-            display: grid; grid-template-columns: 10% 20% 10% 50% 10%;
-            align-items: baseline;
+        .col2 { display: grid; grid-template-columns: 50% 50%; grid-gap: 0.5rem; }
+        button {
+            font-size: 1.2rem;
+            padding: 0.5rem 1rem;
         }
-        .temp {
-            opacity: 0.4 !important;
+        button[type="remove"] {
+            padding: 0;
+            font-size: 1rem;
+        }
+        #connections, .full { grid-column: 1 / 3; }
+        #connections [data-type="connection"], #connection-template {
+            display: grid;
+            grid-template-columns: 20% auto 10% 5%;
+            align-items: end;
+            grid-gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .fa-grip {
+            align-self: center;
+            font-size: 2rem;
+            cursor: grab;
+        }
+        #song {
+            counter-reset: number;
+        }
+        #song-template, #songlist [data-type="song"], #field-template, #fieldlist [data-type="field"] {
+            display: grid;
+            grid-template-columns: auto 25% 25% 25% auto 5%;
+            grid-gap: 0.5rem;
+            margin-bottom: 1rem;
+            counter-increment: number;
+        }
+        #field-template, #fieldlist [data-type="field"] {
+            grid-template-columns: 5% auto auto 10% 5%;
+        }
+        #song-template, #field-template {
+            display: none;
+        }
+        #song-template::before, #songlist [data-type="song"]::before,
+       #field-template::before, #fieldlist [data-type="field"]::before {
+            content: counter(number)". ";
+        }
+        #connection-template {
+            display: none !important;
             pointer-events: none;
         }
+        #output {
+            width: 100%;
+            min-height: 300px;
+        }
+        .editor-toolbar {
+            background: #ccc;
+        }
+        .editor-preview {
+            --color-text-main: #000;
+        }
+        .monospace {
+            font-family: monospace;
+        }
+        [name="context"] {
+            resize: vertical;
+            width: 100%;
+        }
+        input { max-width: 100%; }
     </style>
 </head>
 <body>
     <div class="content">
-        <div id="inputs">
-            <div class="card" id="basic">
-                <h2 class="content-title full">Basic Info</h2>
-                <label for="name">name</label><input type="text" placeholder="Name" name="name">
-                <label for="id">id</label><input type="number" step="1" min="0" placeholder="1" name="id">
-                <label for="friends">friends</label><input type="text" placeholder="1,2,3" name="friends">
-                <label for="enemies">enemies</label><input type="text" placeholder="1,2,3" name="enemies">
-            </div>
-            
-            <div id="connections" class="card">
-                <h2 class="content-title">Connections</h2>
-                <button name="add connection" style="width: 100%;">Add New Connection <i class="fa-solid fa-plus"></i></button>
-                <div class="template temp">character id: <input type="number" step="1" min="0" placeholder="1" name="id"><b>Feelings:</b><textarea></textarea> <button><i class="fa-solid fa-circle-xmark"></i> Remove</button></div>
+        <div class="card" id="intro">
+            <h2 class="content-title full">Frontmatter Helper</h2>
+            <p>If you're uncomfortable editing the 11ty character frontmatter manually, this tool exists to help you generate a valid OC. :)</p>
+        </div>
+
+        <div class="card" id="load">
+            <h2 class="content-title full">Load Exisiting Character</h2>
+            <div class="output">
+                <input type="file" id="oc" name="oc" accept=".md" />
+                <button id="load">Load</button>
             </div>
         </div>
-        <button id="submit">Generate</button>
-        <button id="clear">Clear</button>
-        <div class="output">
-            <textarea id="output"></textarea>
+
+        <div id="inputs">
+            <div class="card col2" id="main">
+                <h2 class="content-title full">Main Info</h2>
+                <p class="full">All items with a * are required for a functional OC. All items with ** are required AND must be unique across all OCs. Creator name and url are optional.</p>
+                <label for="name">name*</label><input type="text" placeholder="Name" name="name" required>
+                <label for="id">id**</label><input type="number" step="1" min="1" placeholder="1" name="id" required>
+                <label for="url">page url**</label><input type="text" placeholder="url" name="url" required>
+                <label for="created">created*</label><input type="date" name="created" required>
+                <label for="updated">updated*</label><input type="date" name="updated" required>
+                <label for="creator">creator name</label><input type="text" placeholder="Creator Name" name="creator">
+                <label for="creator_url">creator url</label><input type="text" placeholder="https://creatorwebsite.com" name="creator_url">
+                <div class="col2"><label for="featured">featured character?</label><input type="checkbox" name="featured"></div>
+                <div class="col2"><label for="hidden">hidden character?</label><input type="checkbox" name="hidden"></div>
+                <label for="layoutoverride">global layout override:</label>
+                <select name="layoutoverride">
+                    <option value="" data-value="">Disabled</option>
+                    <option data-str="multi_page_layout: false" value="false">Use Single Page Layout</option>
+                    <option data-str="multi_page_layout: true" value="true">Use Multi Page Layout</option>
+                </select>
+            </div>
+            <div class="card col2">
+                <h2 class="content-title full">Worlds & Tags</h2>
+                <p class="full">Separate by commas. Quotes around names are not necessary UNLESS you want a world or tag to display surrounded by quotes or apostrophes. In this case you will have to surround it with quotes of the opposite type OR escape them with a backslash (\) (eg. you want <span class="monospace">"World"</span>, put <span class="monospace">'"World"'</span> or <span class="monospace">"\"World\""</span> as the name)</p>
+                <label for="worlds">worlds</label><input type="text" placeholder='World 1, World 2, World 3' name="worlds">
+                <label for="tags">tags</label><input type="text" placeholder='tag 1, tag 2, tag 3' name="tags">
+            </div>
+
+
+            <div class="card col2" id="basicinfo">
+                <h2 class="content-title full">Basic Info</h2>
+                <p class="full">Basic Info Key/Value pairs. Keys cannot contain HTML, values can (in case you want to link to a species sheet or whatever).</p>
+                <div class="full">
+                    <div id="fieldlist"></div>
+                    <button name="addfield" style="width: 100%;">Add New Pair <i class="fa-solid fa-plus"></i></button>
+                    <div id="field-template" data-type="field"><label for="bkey">key<br><input type="text" name="bkey"></label><label for="bvalue">value<br><input type="text" name="bvalue"></label><button onclick="this.parentNode.remove()" type="remove"><i class="fa-solid fa-circle-xmark"></i> Remove</button><i class="fa-solid fa-grip"></i></div>
+                </div>
+
+            </div>
+
+            <div class="card col2" id="header">
+                <h2 class="content-title full">Profile Header Options</h2>
+                <p class="full">All of these are optional. Subtitle can contain HTML.</p>
+                <label for="subtitle">subtitle</label><input type="text" placeholder="the Hedgehog" name="subtitle">
+                <label for="quote">quote:</label><input type="text" placeholder="All that glitters is not gold." name="quote">
+                <label for="quotesrc">quote attribution:</label><input type="text" placeholder="William Shakespeare" name="quotesrc">
+
+                <h3 class="full">Songs</h3>
+                <div id="songs" class="full">
+                    <div id="songlist"></div>
+                    <button name="addsong" style="width: 100%;">Add New Song <i class="fa-solid fa-plus"></i></button>
+                    <div id="song-template" data-type="song"><label for="songtitle">title<br><input type="text" name="songtitle"></label><label for="songartist">artist<br><input type="text" name="songartist"></label><label for="songlink">link<br><input type="text" name="songlink"></label><button onclick="this.parentNode.remove()" type="remove"><i class="fa-solid fa-circle-xmark"></i> Remove</button><i class="fa-solid fa-grip"></i></div>
+                </div>
+            </div>
+
+            <div id="stats" class="card">
+                <h2 class="content-title full">D&D Statblock</h2>
+                <label for="stats">Enable?</label><input type="checkbox" name="stats">
+                <div id="statblock" class="col2 hide">
+                     <label for="str">Strength</label><input type="number" step="1" min="3" max="20" placeholder="10" name="str">
+                     <label for="dex">Dexterity</label><input type="number" step="1" min="3" max="20" placeholder="10" name="dex">
+                     <label for="con">Constitution</label><input type="number" step="1" min="3" max="20" placeholder="10" name="con">
+                     <label for="int">Intelligence</label><input type="number" step="1" min="3" max="20" placeholder="10" name="int">
+                     <label for="wis">Wisdom</label><input type="number" step="1" min="3" max="20" placeholder="10" name="wis">
+                     <label for="cha">Charisma</label><input type="number" step="1" min="3" max="20" placeholder="10" name="cha">
+                </div>
+            </div>
+
+            <div id="relationships" class="card">
+                <h2 class="content-title">Relationships</h2>
+                <h3>Basic:</h3>
+                <div class="col2">
+                    <label for="friends">friends</label><input type="text" placeholder="1,2,3" name="friends">
+                    <label for="enemies">enemies</label><input type="text" placeholder="1,2,3" name="enemies">
+                </div>
+                <h3>Connections:</h3>
+                <div id="connections">
+                    <div id="context"></div>
+                    <button name="addconnection" style="width: 100%;">Add New Connection <i class="fa-solid fa-plus"></i></button>
+                    <div id="connection-template" data-type="connection"><label for="conid">character id:<br><input type="number" step="1" min="0" placeholder="1" name="conid"></label><div><b>Feelings:</b><br><textarea name="context"></textarea></div><button onclick="this.parentNode.remove()" type="remove"><i class="fa-solid fa-circle-xmark"></i> Remove</button><i class="fa-solid fa-grip"></i></div>
+                </div>
+            </div>
+            <div id="bio" class="card">
+                <h2 class="content-title">Profile Content</h2>
+                <textarea id="markdown-editor"></textarea>
+            </div>
+        </div>
+        <div id="outputs" class="card">
+            <h2 class="content-title full">Output</h2>
+            <button id="submit">Generate</button>
+            <button id="clear">Reset</button>
+            <div class="output">
+                <textarea id="output"></textarea>
+            </div>
         </div>
     </div>
-</body>
-<script type="text/javascript">
-    let template = ``;
+
+<script type="module">
+import { parse as parseYaml } from 'https://cdn.jsdelivr.net/npm/yaml@2.9.1/browser/index.min.js';
+
+const today = new Date();
+const year = today.getFullYear();
+const month = String(today.getMonth() + 1).padStart(2, "0");
+const day = String(today.getDate()).padStart(2, "0");
+const TODAY = `${year}-${month}-${day}`;
+const EDITOR = new EasyMDE({
+    element: document.querySelector("#markdown-editor"),
+    spellChecker: false,
+    status: false,
+});
+
+const basic_keys_template = `     {{key}}: {{value}}`;
+const stats_template = `
+stats:
+    STR: {{str}}
+    DEX: {{dex}}
+    CON: {{con}}
+    INT: {{int}}
+    WIS: {{wis}}
+    CHA: {{cha}}`;
+const songs_template = `    - title: {{title}}
+      artist: {{artist}}
+      url: '{{url}}'`;
+const yamlTemplate = `---
+layout: character.njk
+
+id: {{id}}
+page_url: {{url}}
+
+name: {{name}}
+subtitle: {{subtitle}}
+
+created: {{created}}
+updated: {{updated}}
+
+show_in_directory: {{show_in_directory}}
+featured: {{featured}}
+
+creator:
+    name: {{creator_name}}
+    url: {{creator_url}}
+
+basic_info:
+{{basic_keys}}
+quote:
+    words: {{quote_words}}
+    credit: {{quote_attribution}}
+
+songs:
+{{songs}}{{stats}}
+
+worlds: [{{worlds}}]
+tags: [{{tags}}]
+
+friends: [{{friends}}]
+enemies: [{{enemies}}]
+
+connections:
+{{connections}}
+{{layout_override}}
+---
+
+{{bio}}`;
+
+function clearForm() {
+  const inputs = document.querySelectorAll(`#inputs input:not([name="updated"])`);
+  inputs.forEach(input => {
+    if (input.type == "checkbox") {
+      input.checked = false;
+    } else {
+      input.value = '';
+    }
+  });
+  document.querySelector("#output").value = '';
+  document.querySelector("#context").innerHTML = '';
+  document.querySelector("#songlist").innerHTML = '';
+  document.querySelector("#fieldlist").innerHTML = '';
+  document.querySelector("#statblock").classList.add("hide");
+  document.querySelector(`select[name="layoutoverride"]`).selectedIndex = 0;
+  EDITOR.value('');
+}
+document.querySelector(`[name="stats"]`).addEventListener("click", (e) => {
+  if (e.target.checked) {
+    document.querySelector("#statblock").classList.remove("hide")
+  } else {
+
+    document.querySelector("#statblock").classList.add("hide")
+  }
+})
+function validateInputs() {
+  const name = document.querySelector(`[name="name"]`),
+    id = document.querySelector(`[name="id"]`),
+    url = document.querySelector(`[name="url"]`);
+}
+document.querySelector("#clear").addEventListener("click", (event) => {
+  clearForm()
+})
+document.querySelector("#submit").addEventListener("click", (event) => {
+  let data = `${yamlTemplate}`;
+  let stats = `${stats_template}`;
+  let basickeys = ``;
+  let songs = ``;
+  let connections = ``;
+  validateInputs()
+  data = data.replace(/{{id}}/ig,document.querySelector(`[name="id"]`).value)
+  data = data.replace(/{{name}}/ig,document.querySelector(`[name="name"]`).value.trim())
+  data = data.replace(/{{url}}/ig,document.querySelector(`[name="url"]`).value.trim())
+  data = data.replace(/{{created}}/ig,document.querySelector(`[name="created"]`).value)
+  data = data.replace(/{{updated}}/ig,document.querySelector(`[name="updated"]`).value)
+  data = data.replace(/{{show_in_directory}}/ig,(document.querySelector(`[name="hidden"]`).checked) == true ? false : true)
+  data = data.replace(/{{featured}}/ig,(document.querySelector(`[name="featured"]`).checked) == true ? true : false)
+
+  if (document.querySelectorAll(`#context [data-type="connection"]`).length > 0) {
+    document.querySelectorAll(`#context [data-type="connection"]`).forEach(connection => {
+      let val = `${basic_keys_template}\n`.replace(/{{key}}/,connection.querySelector(`[name="conid"]`).value).replace(/{{value}}/,connection.querySelector(`textarea`).value.trim())
+      connections += val;
+    })
+    data = data.replace(/{{connections}}/ig,connections);
+  } else {
+    data = data.replace(/{{connections}}/ig,'');
+  }
+
+  if (document.querySelectorAll(`#songlist [data-type="song"]`).length > 0) {
+    document.querySelectorAll(`#songlist [data-type="song"]`).forEach(connection => {
+      let val = `${songs_template}\n`.replace(/{{title}}/,connection.querySelector(`[name="songtitle"]`).value.trim()).replace(/{{artist}}/,connection.querySelector(`[name="songartist"]`).value.trim()).replace(/{{url}}/,connection.querySelector(`[name="songlink"]`).value.trim())
+      songs += val;
+    })
+    data = data.replace(/{{songs}}/ig,songs);
+  } else {
+    data = data.replace(/{{songs}}/ig,'');
+  }
+
+  if (document.querySelectorAll(`#fieldlist [data-type="field"]`).length > 0) {
+    document.querySelectorAll(`#fieldlist [data-type="field"]`).forEach(connection => {
+      let val = `${basic_keys_template}\n`.replace(/{{key}}/,connection.querySelector(`input[name="bkey"]`).value.trim()).replace(/{{value}}/,connection.querySelector(`input[name="bvalue"]`).value.trim())
+      basickeys += val;
+    })
+    data = data.replace(/{{basic_keys}}/ig,basickeys);
+  } else {
+    data = data.replace(/{{basic_keys}}/ig,'');
+  }
+
+  data = data.replace(/{{creator_name}}/ig,document.querySelector(`[name="creator"]`).value.trim())
+  data = data.replace(/{{creator_url}}/ig,document.querySelector(`[name="creator_url"]`).value.trim())
+
+  data = data.replace(/{{friends}}/ig,document.querySelector(`[name="friends"]`).value.trim())
+  data = data.replace(/{{enemies}}/ig,document.querySelector(`[name="enemies"]`).value.trim())
+
+  data = data.replace(/{{worlds}}/ig,document.querySelector(`[name="worlds"]`).value.trim());
+  data = data.replace(/{{tags}}/ig,document.querySelector(`[name="tags"]`).value.trim());
+
+  data = data.replace(/{{subtitle}}/ig,document.querySelector(`[name="subtitle"]`).value.trim().length > 0 ? `"${document.querySelector(`[name="subtitle"]`).value.trim().replace(/"/g,`\\"`)}"` : '')
+  data = data.replace(/{{quote_words}}/ig,document.querySelector(`[name="quote"]`).value.trim())
+  data = data.replace(/{{quote_attribution}}/ig,document.querySelector(`[name="quotesrc"]`).value.trim())
+
+  if (document.querySelector(`[name="stats"]`).checked) {
+    stats = stats.replace(/{{str}}/,document.querySelector(`[name="str"]`).value).replace(/{{dex}}/,document.querySelector(`[name="dex"]`).value).replace(/{{con}}/,document.querySelector(`[name="con"]`).value).replace(/{{int}}/,document.querySelector(`[name="int"]`).value).replace(/{{wis}}/,document.querySelector(`[name="wis"]`).value).replace(/{{cha}}/,document.querySelector(`[name="cha"]`).value)
+    data = data.replace(/{{stats}}/ig,stats)
+  } else {
+    data = data.replace(/{{stats}}/,"");
+  }
+
+  data = data.replace(/{{layout_override}}/ig,document.querySelector(`select[name="layoutoverride"]`).value.length > 0 ? `multi_page_layout: ${document.querySelector(`select[name="layoutoverride"]`).value}` : '')
+
+  data = data.replace(/{{bio}}/ig,EDITOR.value())
+
+  document.querySelector("#output").value = data;
+})
+
+document.querySelector(`[name="addconnection"]`).addEventListener("click", (event) => {
+  const con = document.querySelector("#connection-template").cloneNode(true);
+  con.id = '';
+  document.querySelector("#context").appendChild(con);
+})
+document.querySelector(`[name="addsong"]`).addEventListener("click", (event) => {
+  const song = document.querySelector("#song-template").cloneNode(true);
+  song.id = '';
+  document.querySelector("#songlist").appendChild(song);
+})
+document.querySelector(`[name="addfield"]`).addEventListener("click", (event) => {
+  const field = document.querySelector("#field-template").cloneNode(true);
+  field.id = '';
+  document.querySelector("#fieldlist").appendChild(field);
+})
+
+document.querySelector("#load").addEventListener("click", async (event) => {
+  const file = document.querySelector("#oc").files[0];
+
+    if (!file) return;
+
+    try {
+      const md = await file.text();
+      const match = md.match(/^---\s*\n([\s\S]*?)\n---\s*\n?([\s\S]*)$/);
+      console.log(match);
+      if (match !== null) {
+        const data = parseYaml(match[1]);
+        const bio = match[2];
+        console.log(data);
+        console.log(bio)
+
+        clearForm();
+
+        // load values in
+        document.querySelector(`[name="name"]`).value = data.name;
+        document.querySelector(`[name="id"]`).value = data.id;
+        document.querySelector(`[name="url"]`).value = data.page_url;
+
+        document.querySelector(`[name="hidden"]`).checked = data?.show_in_directory == true ? false : true;
+        document.querySelector(`[name="featured"]`).checked = data?.featured == true ? true : false;
+
+        document.querySelector(`[name="created"]`).value = data?.created ? data.created : TODAY;
+
+        document.querySelector(`[name="friends"]`).value = data?.friends ? data.friends : "";
+        document.querySelector(`[name="enemies"]`).value = data?.enemies ? data.enemies : "";
+
+        document.querySelector(`[name="creator"]`).value = data?.creator?.name ? data.creator.name : "";
+        document.querySelector(`[name="creator_url"]`).value = data?.creator?.url ? data.creator.url : "";
+
+        document.querySelector(`[name="subtitle"]`).value = data?.subtitle ? data.subtitle : "";
+
+        document.querySelector(`[name="quote"]`).value = data?.quote?.words ? data.quote.words : "";
+        document.querySelector(`[name="quotesrc"]`).value = data?.quote?.credit ? data.quote.credit : "";
+
+        if (data?.multi_page_layout === false || data?.multi_page_layout === true) {
+          const select = document.querySelector(`select[name="layoutoverride"]`)
+          select.selectedIndex = [...select.options].findIndex(
+            option => String(option.value) === String(data.multi_page_layout)
+          );
+        } else {
+          console.log("something not right")
+        }
+        if (data?.connections) {
+          const container = document.querySelector("#context");
+          container.innerHTML = '';
+          const template = document.querySelector("#connection-template");
+          for (const [key,value] of Object.entries(data.connections)) {
+            const con = template.cloneNode(true);
+            con.id = '';
+            con.querySelector(`[name="conid"]`).value = key;
+            con.querySelector("textarea").value = value;
+            container.appendChild(con);
+          }
+        }
+        if (data?.basic_info) {
+          const container = document.querySelector("#fieldlist");
+          container.innerHTML = '';
+          const template = document.querySelector("#field-template");
+          for (const [key,value] of Object.entries(data.basic_info)) {
+            const con = template.cloneNode(true);
+            con.id = '';
+            con.querySelector(`input[name="bkey"]`).value = key;
+            con.querySelector(`input[name="bvalue"]`).value = value;
+            container.appendChild(con);
+          }
+        }
+
+        if (data?.songs) {
+          const container = document.querySelector("#songlist");
+          container.innerHTML = '';
+          const template = document.querySelector("#song-template");
+          for (const song of data.songs) {
+            const con = template.cloneNode(true);
+            con.id = '';
+            console.log(song)
+            con.querySelector(`[name="songtitle"]`).value = song.title;
+            con.querySelector(`[name="songartist"]`).value = song.artist;
+            con.querySelector(`[name="songlink"]`).value = song.url;
+            container.appendChild(con);
+          }
+        }
+
+        if (data?.stats) {
+          document.querySelector(`[name="stats"]`).checked = true;
+          document.querySelector("#statblock").classList.remove("hide");
+          document.querySelector(`[name="str"]`).value = data.stats.STR;
+          document.querySelector(`[name="dex"]`).value = data.stats.DEX;
+          document.querySelector(`[name="con"]`).value = data.stats.CON;
+          document.querySelector(`[name="wis"]`).value = data.stats.WIS;
+          document.querySelector(`[name="int"]`).value = data.stats.INT;
+          document.querySelector(`[name="cha"]`).value = data.stats.CHA;
+        }
+
+        document.querySelector(`[name="worlds"]`).value = data?.worlds?.length > 0 ? data.worlds : "";
+        document.querySelector(`[name="tags"]`).value = data?.tags?.length > 0 ? data.tags : "";
+
+        EDITOR.value(bio);
+
+      } else {
+        throw new Error('No YAML data found.');
+      }
+    } catch (error) {
+      console.error("Failed to read or parse YAML:", error);
+      alert(`Something is wrong with your character's frontmatter:\n${error}`)
+    }
+})
+document.addEventListener("DOMContentLoaded", () => {
+  clearForm();
+  document.querySelector(`[name="updated"]`).value = `${year}-${month}-${day}`;
+  new Sortable(document.querySelector("#context"), {
+    animation: 150
+  });
+  new Sortable(document.querySelector("#songlist"), {
+    animation: 150
+  });
+  new Sortable(document.querySelector("#fieldlist"), {
+    animation: 150
+  });
+});
 </script>
+</body>
 </html>

@@ -784,6 +784,10 @@ a:hover {
   min-width: 200px;
   min-height: 200px;
 }
+#ocprofile:empty::before {
+    font-style: italic;
+    content: 'This character does not have a description yet.'
+}
 .subpages ul {
 	padding: 0;
 	margin: 0;

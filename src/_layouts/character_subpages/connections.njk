@@ -44,7 +44,7 @@
     </div>
     {% endif %}
 
-    {% if page.oc.data.connections is defined and page.oc.data.show_in_directory and character_config.display_connections_on_profiles %}
+    {% if page.oc.data.has_connections and page.oc.data.show_in_directory and character_config.display_connections_on_profiles %}
     <div class="card connections">
       <h3 class="content-title">Connections</h3>
       <ul class="connection-list">
@@ -58,20 +58,14 @@
               <li class="connection">
                 <div class="portrait"><div class="icon me"><img src="{{ page.oc.data.icon }}" alt="{{page.oc.data.name}}"></div></div>
                 <div class="portrait"><div class="icon you"><a href="{{ oc.url }}"><img src="{{oc.data.icon}}" alt="{{oc.data.name}}"></a></div></div>
-                <div class="connection-bubble left"><h3 class="name">{{ page.oc.data.name }}<span class="sr-only"> says:</span></h3>
-                  {% if oc.data.id in page.oc.data.connections %}
-                    {{ page.oc.data.connections[oc.data.id] }}
-                  {% else %}
-                  ...
-                  {% endif %}
-                  <i class="fa-solid fa-play tail" aria-hidden="true"></i></div>
+                <div class="connection-bubble left">
+                  <h3 class="name">{{ page.oc.data.name }}<span class="sr-only"> says:</span></h3>
+                  {{ relationship.opinion1 if relationship.char1.data.id === page.oc.data.id else relationship.opinion2 }}
+                  <i class="fa-solid fa-play tail" aria-hidden="true"></i>
+                </div>
                 <div class="connection-bubble right">
-                  <h3 class="name">{{oc.data.name}}<span class="sr-only"> says:</span></h3>
-                  {% if oc.data.connections and page.oc.data.id in oc.data.connections %}
-                  {{ oc.data.connections[page.oc.data.id] }}
-                  {% else %}
-                  ...
-                  {% endif %}
+                  <h3 class="name">{{ oc.data.name }}<span class="sr-only"> says:</span></h3>
+                  {{ relationship.opinion2 if relationship.char1.data.id === page.oc.data.id else relationship.opinion1 }}
                   <i class="fa-solid fa-play tail" aria-hidden="true"></i>
                 </div>
               </li>

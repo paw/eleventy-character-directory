@@ -49,8 +49,7 @@ tags: []
 friends: [6000]
 enemies: []
 
-
-gallery: true
+multi_page_layout: false
 ---
 
 Silver is a Hero in Deadlock, making her living tracking down lowlifes, but today New York’s misanthrope lycanthrope plans on summoning a god. Fortunately, her career as a bounty hunter has prepared her well for all that the ritual requires. She makes quick work of adversaries by catching them with her Entangling Bola, Boot Kicking them in the face, and finishing them off with a Slam Fire from her rifle. But inevitably, the Lycan Curse comes calling whether she likes it or not, and her foes will regret being too close when it does.

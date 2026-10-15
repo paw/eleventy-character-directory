@@ -58,17 +58,17 @@ See **TODO.md** for a list of planned features and bugs.
 # Installation
 
 ## You Will Need:
-- A code editor of your choice, such as [VSCode](https://code.visualstudio.com/)/[VSCodium](https://vscodium.com/) or [Zed](https://zed.dev/)
+- A code editor of your choice, such as [VSCode](https://code.visualstudio.com/)/[VSCodium](https://vscodium.com/), [Zed](https://zed.dev/), [Gram](https://gram-editor.com/), etc. I recommend any of these listed here due to their ability to open a terminal directly in the editor.
 - [Node.js](https://nodejs.org/) installed on your machine.
 - A copy of this repo.
 
 ## Instructions:
 - Install Node.js if you don't have it. To check if it's installed, you can run **node --version** in a terminal.
-- Download the zip of the repo, clone it in your editor of choice, or make a copy of the repo.
+- Download the zip of the repo onto your machine or make a copy of the repo on your GitHub account.
+  - **Note:** You will not need to keep **wrangler.json** unless you are planning to [connect a cloned repo to a Cloudflare Worker for deployment.](https://developers.cloudflare.com/workers/ci-cd/builds/git-integration/github-integration/) The demo is deployed from this repo using this method.
 - Open a terminal wherever the contents of the repo exist on your machine.
-- Run **npm install** to automatically install the necessary packages.
-- You can test if everything is good by running **npm run start**
-- If everything is fine, you will see **[11ty] Server at http://localhost:8080/** in your terminal. Visiting that URL in your browser will show the exact contents of [the demo](https://oc-demo.snarly.net/).
+- Run the command **npm install** to automatically install necessary packages. You can ignore the warnings regarding vulnerabilities as these are due to dependencies required by 11ty.
+- You can test if everything is set up correctly by running the command **npm run start**. If everything is fine, you will see **[11ty] Server at http://localhost:8080/** in your terminal. Visiting that URL in your browser will show the exact contents of [the demo](https://oc-demo.snarly.net/).
 - You can cancel out of this with CTRL+C and start editing stuff to your heart's content!
 - To make new characters quickly, you can copy and paste the entire character template at folder in **/templates** for a quick container that has the necessary structure to create a working character and comments inside the frontmatter to help you with it.
 - **Commands:**

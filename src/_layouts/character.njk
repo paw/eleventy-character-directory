@@ -25,12 +25,12 @@ permalink: "{%- if character_config.character_slug -%}{{ character_config.charac
         </div>
         {%- endif -%}
 
-        {%- if creator -%}
+        {%- if creator.name -%}
         <div class="flex-end header-stats three">
         {%- else -%}
         <div class="flex-end header-stats">
         {%- endif -%}
-        {%- if creator -%}
+        {%- if creator.name -%}
         <span class="creator">
           <b>Creator:</b>&nbsp;{%- if creator.url -%}<a href="{{ creator.url }}">{%- endif -%}{{creator.name}}{%- if creator.url -%}</a>{%- endif -%}
         </span>
@@ -70,7 +70,7 @@ permalink: "{%- if character_config.character_slug -%}{{ character_config.charac
 
     <div class="backstory card">
     <h3 class="content-title">Profile</h3>
-    {{ content | safe }}
+    <div id="ocprofile">{{ content | safe }}</div>
     </div>
 
     {% if basic_info %}
@@ -232,7 +232,7 @@ permalink: "{%- if character_config.character_slug -%}{{ character_config.charac
     </div>
     {% endif %}
 
-    {% if connections and show_in_directory and character_config.display_connections_on_profiles %}
+    {% if has_connections and show_in_directory and character_config.display_connections_on_profiles %}
     <div class="card connections">
       <h3 class="content-title">Connections</h3>
       <ul class="connection-list">
@@ -246,20 +246,14 @@ permalink: "{%- if character_config.character_slug -%}{{ character_config.charac
               <li class="connection">
                 <div class="portrait"><div class="icon me"><img src="{{ icon }}" alt="{{name}}"></div></div>
                 <div class="portrait"><div class="icon you"><a href="{{oc.url}}"><img src="{{oc.data.icon}}" alt="{{oc.data.name}}"></a></div></div>
-                <div class="connection-bubble left"><h3 class="name">{{name}}<span class="sr-only"> says:</span></h3>
-                  {% if oc.data.id in connections %}
-                    {{ connections[oc.data.id] }}
-                  {% else %}
-                  ...
-                  {% endif %}
-                  <i class="fa-solid fa-play tail" aria-hidden="true"></i></div>
+                <div class="connection-bubble left">
+                  <h3 class="name">{{ page.oc.data.name }}<span class="sr-only"> says:</span></h3>
+                  {{ relationship.opinion1 if relationship.char1.data.id === page.oc.data.id else relationship.opinion2 }}
+                  <i class="fa-solid fa-play tail" aria-hidden="true"></i>
+                </div>
                 <div class="connection-bubble right">
-                  <h3 class="name">{{oc.data.name}}<span class="sr-only"> says:</span></h3>
-                  {% if oc.data.connections and id in oc.data.connections %}
-                  {{ oc.data.connections[id] }}
-                  {% else %}
-                  ...
-                  {% endif %}
+                  <h3 class="name">{{ oc.data.name }}<span class="sr-only"> says:</span></h3>
+                  {{ relationship.opinion2 if relationship.char1.data.id === page.oc.data.id else relationship.opinion1 }}
                   <i class="fa-solid fa-play tail" aria-hidden="true"></i>
                 </div>
               </li>

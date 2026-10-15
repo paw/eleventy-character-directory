@@ -493,16 +493,20 @@ export default function (eleventyConfig) {
         // log the pair as seen
         recordedPairs.add(pair);
 
-        // get the other oc's opinion, might be undefined but that's okay because we address it later
-        const theirOpinionOfMe = ocsById.get(Number(otherOc))?.data.connections[oc.data.id];
+        oc.data.has_connections = true;
+        ocsById.get(Number(otherOc)).data.has_connections = true;
+
+        // get the other oc's opinion, might be undefined but that's okay because we fill it in with a placeholder
+        const theirOpinion = ocsById.get(Number(otherOc))?.data?.connections?.[oc.data.id];
+        const theirOpinionOfMe = theirOpinion ?? "...";
 
         // save the relationship
         finalConnections.push({
           char1: oc,
           char2: ocs.find(oc => oc.data.id === Number(otherOc)),
           opinion1: myOpinionOfThem,
-          opinion2: theirOpinionOfMe ?? "...",
-          mutual: myOpinionOfThem !== undefined && theirOpinionOfMe !== undefined
+          opinion2: theirOpinionOfMe,
+          mutual: myOpinionOfThem !== undefined && theirOpinion !== undefined
         })
       }
     }
@@ -666,9 +670,12 @@ export default function (eleventyConfig) {
       if (multiPageLayout) {
 
         // push page only if at least 1 of friends/enemies or connections exists and they should show in directory
+        // one limitation: if oc has only one-sided connections and nothing else page will not be pushed since at this point
+        // connections collection has not been built. not really any way to overcome this except setting has_connections to true in frontmatter manually
         if ((oc.data?.friends?.length > 0) ||
           (oc.data?.enemies?.length > 0) ||
-          (Object.keys(oc.data.connections ?? {}).length > 0 && oc.data.show_in_directory)) {
+          (Object.keys(oc.data.connections ?? {}).length > 0 && oc.data.show_in_directory) ||
+          (oc.data.has_connections)) {
           pages.push({
             oc,
             section: "relationships",
