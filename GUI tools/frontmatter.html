@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <head>
     <title>Frontmatter Helper</title>
-    <link rel="stylesheet" type="text/css" href="./public/css/global.css" />
-    <link rel="stylesheet" type="text/css" href="./public/css/dollhouse.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../public/css/global.css" />
+    <link rel="stylesheet" type="text/css" href="../public/css/dollhouse.css" />
+    <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+    <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.7/Sortable.min.js" integrity="sha512-ri8dokds012Oxz+iFzMs4KNJXVc+h7J1zq6unM1NTtzBLj4jD1R5BWiK6QycK0TdSdkt7zYcIcv6sUPhmYkbdQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v7.3.1/css/all.css" crossorigin="anonymous">
     <style>
         .col2 { display: grid; grid-template-columns: 50% 50%; grid-gap: 0.5rem; }
+        p {
+            margin: 0 0 1rem;
+        }
         button {
             font-size: 1.2rem;
             padding: 0.5rem 1rem;
@@ -83,7 +86,7 @@
 
         <div class="card" id="load">
             <h2 class="content-title full">Load Exisiting Character</h2>
-            <div class="output">
+            <div class="output col2">
                 <input type="file" id="oc" name="oc" accept=".md" />
                 <button id="load">Load</button>
             </div>
@@ -136,10 +139,11 @@
                 <label for="quotesrc">quote attribution:</label><input type="text" placeholder="William Shakespeare" name="quotesrc">
 
                 <h3 class="full">Songs</h3>
+                <p class="full">Anything with * is required for song to show.</p>
                 <div id="songs" class="full">
                     <div id="songlist"></div>
                     <button name="addsong" style="width: 100%;">Add New Song <i class="fa-solid fa-plus"></i></button>
-                    <div id="song-template" data-type="song"><label for="songtitle">title<br><input type="text" name="songtitle"></label><label for="songartist">artist<br><input type="text" name="songartist"></label><label for="songlink">link<br><input type="text" name="songlink"></label><button onclick="this.parentNode.remove()" type="remove"><i class="fa-solid fa-circle-xmark"></i> Remove</button><i class="fa-solid fa-grip"></i></div>
+                    <div id="song-template" data-type="song"><label for="songtitle">title*<br><input type="text" name="songtitle"></label><label for="songartist">artist<br><input type="text" name="songartist"></label><label for="songlink">link*<br><input type="text" name="songlink"></label><button onclick="this.parentNode.remove()" type="remove"><i class="fa-solid fa-circle-xmark"></i> Remove</button><i class="fa-solid fa-grip"></i></div>
                 </div>
             </div>
 
@@ -176,7 +180,8 @@
             </div>
         </div>
         <div id="outputs" class="card">
-            <h2 class="content-title full">Output</h2>
+            <h2 class="content-title full">MD File</h2>
+            <p>Copy and paste the contents of the textarea below into a *.md file inside the character's container. It can be named anything, name is not important.</p>
             <button id="submit">Generate</button>
             <button id="clear">Reset</button>
             <div class="output">
@@ -199,8 +204,8 @@ const EDITOR = new EasyMDE({
     status: false,
 });
 
-const basic_keys_template = `     {{key}}: {{value}}`;
-const stats_template = `
+const basicKeyTemplate = `     {{key}}: "{{value}}"`;
+const statsTemplate = `
 stats:
     STR: {{str}}
     DEX: {{dex}}
@@ -261,6 +266,7 @@ function clearForm() {
       input.value = '';
     }
   });
+  document.querySelector("#oc").value = '';
   document.querySelector("#output").value = '';
   document.querySelector("#context").innerHTML = '';
   document.querySelector("#songlist").innerHTML = '';
@@ -287,7 +293,7 @@ document.querySelector("#clear").addEventListener("click", (event) => {
 })
 document.querySelector("#submit").addEventListener("click", (event) => {
   let data = `${yamlTemplate}`;
-  let stats = `${stats_template}`;
+  let stats = `${statsTemplate}`;
   let basickeys = ``;
   let songs = ``;
   let connections = ``;
@@ -302,7 +308,7 @@ document.querySelector("#submit").addEventListener("click", (event) => {
 
   if (document.querySelectorAll(`#context [data-type="connection"]`).length > 0) {
     document.querySelectorAll(`#context [data-type="connection"]`).forEach(connection => {
-      let val = `${basic_keys_template}\n`.replace(/{{key}}/,connection.querySelector(`[name="conid"]`).value).replace(/{{value}}/,connection.querySelector(`textarea`).value.trim())
+      let val = `${basicKeyTemplate}\n`.replace(/{{key}}/,connection.querySelector(`[name="conid"]`).value).replace(/{{value}}/,connection.querySelector(`textarea`).value.trim().replace(/"/g,'\\"'))
       connections += val;
     })
     data = data.replace(/{{connections}}/ig,connections);
@@ -322,7 +328,7 @@ document.querySelector("#submit").addEventListener("click", (event) => {
 
   if (document.querySelectorAll(`#fieldlist [data-type="field"]`).length > 0) {
     document.querySelectorAll(`#fieldlist [data-type="field"]`).forEach(connection => {
-      let val = `${basic_keys_template}\n`.replace(/{{key}}/,connection.querySelector(`input[name="bkey"]`).value.trim()).replace(/{{value}}/,connection.querySelector(`input[name="bvalue"]`).value.trim())
+      let val = `${basicKeyTemplate}\n`.replace(/{{key}}/,connection.querySelector(`input[name="bkey"]`).value.trim()).replace(/{{value}}/,connection.querySelector(`input[name="bvalue"]`).value.trim().replace(/"/g,'\\"'))
       basickeys += val;
     })
     data = data.replace(/{{basic_keys}}/ig,basickeys);
@@ -374,7 +380,8 @@ document.querySelector(`[name="addfield"]`).addEventListener("click", (event) =>
 })
 
 document.querySelector("#load").addEventListener("click", async (event) => {
-  const file = document.querySelector("#oc").files[0];
+  const input = document.querySelector("#oc");
+  const file = input.files[0];
 
     if (!file) return;
 
@@ -475,6 +482,8 @@ document.querySelector("#load").addEventListener("click", async (event) => {
 
         EDITOR.value(bio);
 
+        input.value = "";
+
       } else {
         throw new Error('No YAML data found.');
       }
@@ -487,12 +496,15 @@ document.addEventListener("DOMContentLoaded", () => {
   clearForm();
   document.querySelector(`[name="updated"]`).value = `${year}-${month}-${day}`;
   new Sortable(document.querySelector("#context"), {
+    handle: '.fa-grip',
     animation: 150
   });
   new Sortable(document.querySelector("#songlist"), {
+    handle: '.fa-grip',
     animation: 150
   });
   new Sortable(document.querySelector("#fieldlist"), {
+    handle: '.fa-grip',
     animation: 150
   });
 });

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<head>
+    <title>Gallery Helper</title>
+    <link rel="stylesheet" type="text/css" href="../public/css/global.css" />
+    <link rel="stylesheet" type="text/css" href="../public/css/dollhouse.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.7/Sortable.min.js" integrity="sha512-ri8dokds012Oxz+iFzMs4KNJXVc+h7J1zq6unM1NTtzBLj4jD1R5BWiK6QycK0TdSdkt7zYcIcv6sUPhmYkbdQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v7.3.1/css/all.css" crossorigin="anonymous">
+    <style>
+        .col2 { display: grid; grid-template-columns: 50% 50%; grid-gap: 0.5rem; }
+        p {
+            margin: 0 0 1rem;
+        }
+        button {
+            font-size: 1.2rem;
+            padding: 0.5rem 1rem;
+        }
+        button[type="remove"] {
+            padding: 0.2rem;
+            font-size: 1rem;
+            margin: 0.5rem;
+        }
+        .full { grid-column: 1 / 3; }
+        .fa-grip {
+            align-self: center;
+            font-size: 2rem;
+            cursor: grab;
+            margin: auto;
+        }
+        #gallery {
+            counter-reset: number;
+        }
+        #pic-template, #piclist [data-type="pic"] {
+            display: grid;
+            grid-template-columns: 30% auto 10% auto;
+            grid-gap: 0.5rem;
+            margin-bottom: 1rem;
+            counter-increment: number;
+            align-items: center;
+        }
+        #pic-template {
+            display: none;
+        }
+        [name="description"] {
+            resize: vertical;
+        }
+        #pic-template::before, #piclist [data-type="pic"]::before{
+            content: "(#"counter(number)") ";
+            grid-column: 1 / 5;
+            font-weight: bold;
+        }
+        #output {
+            width: 100%;
+            min-height: 300px;
+        }
+        .monospace {
+            font-family: monospace;
+        }
+        input { max-width: 100%; }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <div class="card" id="intro">
+            <h2 class="content-title full">Gallery Helper</h2>
+            <p>tool for generating the gallery.yaml</p>
+        </div>
+
+        <div class="card" id="load">
+            <h2 class="content-title">Load Exisiting Gallery</h2>
+            <p class="">Select the oc's directory. Need to get whole directory to be able to preview images that are already part of the gallery metadata.</p>
+            <div class="output col2">
+                <input type="file" id="gal" name="gal" webkitdirectory multiple/>
+                <button id="load">Load</button>
+            </div>
+        </div>
+
+        <div id="inputs">
+            <div class="card col2" id="main">
+                <h2 class="content-title full">Image Select</h2>
+                <p class="full">select images to add to the gallery list</p>
+                <input type="file" name="filefield" multiple id="images" accept="image/*">
+                <button name="addimages" style="width: 100%;">Add Selected Images<i class="fa-solid fa-plus"></i></button>
+            </div>
+
+            <div class="card col2" id="gallery">
+                <h2 class="content-title full">Gallery List</h2>
+                <p class="full">all things are optional except the file url. i highly recommend including at least alt text at a minimum. click and drag and re-order images.</p>
+                <div class="full">
+                    <div id="piclist"></div>
+                    <div id="pic-template" data-type="pic">
+                        <div class="preview"></div>
+                        <div class="col2">
+                            <label for="full">image file*</label><input type="text" placeholder="image.png" name="full">
+                            <label for="thumbnail" class="full">optional thumbnail</label><input type="file" name="thumbfile" accept="image/*"><input type="text" placeholder="thumb.png" name="thumbnail">
+                            <label for="title">title</label><input type="text" placeholder="Reference Sheet" name="title">
+                            <label for="description">description</label><textarea name="description" placeholder="A ref sheet of my character""></textarea>
+                            <label for="alt">alt text</label><input type="text" placeholder="A reference sheet of my character featuring a turnaround." name="alt">
+                            <label for="creditname">credit name</label><input type="text" placeholder="Artist" name="creditname">
+                            <label for="creditlink">credit link</label><input type="text" placeholder="https://artistwebsite.com/" name="creditlink">
+                        </div>
+                        <button type="remove"><i class="fa-solid fa-circle-xmark"></i> Remove</button><i class="fa-solid fa-grip"></i>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div id="outputs" class="card">
+            <h2 class="content-title full">Output</h2>
+            <button id="submit">Generate</button>
+            <button id="clear">Reset</button>
+            <div class="output">
+                <textarea id="output"></textarea>
+            </div>
+        </div>
+    </div>
+
+<script type="module">
+import { parse as parseYaml } from 'https://cdn.jsdelivr.net/npm/yaml@2.9.1/browser/index.min.js';
+
+const validImageTypes = [".png", ".jpg", ".jpeg", ".webp", ".gif", ".avif"];
+
+const imageTemplate = `
+  - full: {{full}}
+    thumbnail: {{thumbnail}}
+    title: {{title}}
+    description: {{description}}
+    alt: {{alt}}
+    credit: {{creditname}}
+    credit_url: {{creditlink}}
+`;
+
+const yamlTemplate = `images:
+{{images}}`;
+
+function clearForm() {
+  const inputs = document.querySelectorAll(`#inputs input:not([name="updated"])`);
+  inputs.forEach(input => {
+    if (input.type == "checkbox") {
+      input.checked = false;
+    } else {
+      input.value = '';
+    }
+  });
+  document.querySelector("#output").value = '';
+  document.querySelectorAll(`#piclist [type="remove"]`).forEach(btn => {
+    btn.click();
+  })
+  document.querySelector("#gal").value = '';
+}
+
+document.querySelector("#clear").addEventListener("click", (event) => {
+  clearForm()
+})
+document.querySelector("#submit").addEventListener("click", (event) => {
+  let data = `${yamlTemplate}`;
+  let images = ``;
+
+  document.querySelectorAll(`#piclist [data-type="pic"]`).forEach(galleryImage => {
+    let newImage = `${imageTemplate}`;
+    newImage = newImage.replace(/{{full}}/ig,galleryImage.querySelector(`input[name="full"]`).value.trim() ?? '');
+    newImage = newImage.replace(/{{thumbnail}}/ig,galleryImage.querySelector(`input[name="thumbnail"]`).value.trim() ?? '');
+    newImage = newImage.replace(/{{title}}/ig,galleryImage.querySelector(`input[name="title"]`).value.trim() ?? '');
+    newImage = newImage.replace(/{{description}}/ig,galleryImage.querySelector(`textarea[name="description"]`).value.trim() ?? '');
+    newImage = newImage.replace(/{{alt}}/ig,galleryImage.querySelector(`input[name="alt"]`).value.trim() ?? '');
+    newImage = newImage.replace(/{{creditname}}/ig,galleryImage.querySelector(`input[name="creditname"]`).value.trim() ?? '');
+    newImage = newImage.replace(/{{creditlink}}/ig,galleryImage.querySelector(`input[name="creditlink"]`).value.trim() ?? '');
+    images += newImage;
+  });
+
+  data = data.replace(/{{images}}/ig,images)
+
+  document.querySelector("#output").value = data;
+})
+
+document.querySelector("#load").addEventListener("click", async (event) => {
+
+  const gal = document.querySelector("#gal");
+  const files = gal.files;
+  console.log(files)
+
+  try {
+    const yaml = [...files].find(
+      file => file.name === "gallery.yaml"
+    );
+    console.log("yaml",yaml)
+    if (!yaml) throw new Error('no gallery .yaml');
+
+        const text = await yaml.text();
+        const gallery = parseYaml(text);
+        const piclist = document.querySelector("#piclist");
+        const template = document.querySelector("#pic-template");
+
+        clearForm();
+
+        console.log(gallery)
+
+        for (const image of gallery.images) {
+          const clone = template.cloneNode(true);
+          clone.id = '';
+          const pic = [...files].find(
+            file => file.name === image.full
+          );
+          const preview = clone.querySelector(".preview");
+
+          const img = document.createElement("img");
+          const imageUrl = URL.createObjectURL(pic);
+
+          img.src = imageUrl;
+          img.alt = `Preview of ${pic.name}`;
+          preview.append(img);
+
+          clone.querySelector(`input[name="full"]`).value = image.full;
+          clone.querySelector(`input[name="thumbnail"]`).value = image.thumbnail ?? '';
+          clone.querySelector(`input[name="title"]`).value = image.title ?? '';
+          clone.querySelector(`textarea[name="description"]`).value = image.description ?? '';
+          clone.querySelector(`input[name="alt"]`).value = image.alt ?? '';
+          clone.querySelector(`input[name="creditname"]`).value = image.credit ?? '';
+          clone.querySelector(`input[name="creditlink"]`).value = image.credit_url ?? '';
+
+          clone.querySelector(`button[type="remove"]`).addEventListener("click", () => {
+            URL.revokeObjectURL(imageUrl);
+            clone.remove();
+          });
+
+          clone.querySelector(`[name="thumbfile"]`).addEventListener("change", () => {
+            const file = clone.querySelector(`[name="thumbfile"]`).files[0]
+            clone.querySelector(`input[name="thumbnail"]`).value = file.name;
+            clone.querySelector(`[name="thumbfile"]`).value = ''
+          });
+          piclist.appendChild(clone);
+        }
+        gal.value = ''
+  } catch (error) {
+    console.error("Failed to read or parse YAML:", error);
+  }
+})
+
+document.querySelector(`button[name="addimages"]`).addEventListener("click", (event) => {
+  const input = document.querySelector("#images");
+  const template = document.querySelector("#pic-template");
+  const container = document.querySelector("#piclist");
+
+    for (const file of input.files) {
+      if (!file.type.startsWith("image/")) continue;
+
+      const clone = template.cloneNode(true);
+      clone.id = '';
+      const preview = clone.querySelector(".preview");
+
+      const img = document.createElement("img");
+      const imageUrl = URL.createObjectURL(file);
+
+      img.src = imageUrl;
+      img.alt = `Preview of ${file.name}`;
+      preview.append(img);
+
+      clone.querySelector('[name="full"]').value = file.name;
+
+      clone.querySelector(`button[type="remove"]`).addEventListener("click", () => {
+        URL.revokeObjectURL(imageUrl);
+        clone.remove();
+      });
+
+      clone.querySelector(`[name="thumbfile"]`).addEventListener("change", () => {
+        const file = clone.querySelector(`[name="thumbfile"]`).files[0]
+        clone.querySelector(`input[name="thumbnail"]`).value = file.name;
+        clone.querySelector(`[name="thumbfile"]`).value = ''
+      });
+
+      container.append(clone);
+    }
+
+    // Allows selecting the same files again later.
+    input.value = "";
+  });
+document.addEventListener("DOMContentLoaded", () => {
+  clearForm();
+  new Sortable(document.querySelector("#piclist"), {
+    handle: '.fa-grip',
+    animation: 150
+  });
+});
+</script>
+</body>
+</html>

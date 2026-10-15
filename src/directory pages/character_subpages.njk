@@ -16,19 +16,19 @@ permalink: "{{ page.permalink }}"
       <div class="text">
         <h1 class="name">{{page.oc.data.name}}{% if character_config.show_character_ids %}<span class="id">(#{{page.oc.data.id}})</span>{% endif %}</h1>
         {%- if page.oc.data.subtitle -%}<h2 class="subtitle">{{page.oc.data.subtitle}}</h1>{%- endif -%}
-        {%- if page.oc.data.quote -%}
+        {%- if page.oc.data.quote and page.oc.data.quote.words.length > 0 -%}
         <div class="quote">
           <div class="words">“{{page.oc.data.quote.words}}”</div>
           <div class="credit">{%- if page.oc.data.quote.credit -%}― {{ page.oc.data.quote.credit }}{%- endif -%}</div>
         </div>
         {%- endif -%}
 
-        {%- if page.oc.data.creator -%}
+        {%- if page.oc.data.creator and page.oc.data.creator.name.length > 0 -%}
         <div class="flex-end header-stats three">
         {%- else -%}
         <div class="flex-end header-stats">
         {%- endif -%}
-        {%- if page.oc.data.creator -%}
+        {%- if page.oc.data.creator and page.oc.data.creator.name.length > 0 -%}
         <span class="creator">
           <b>Creator:</b>&nbsp;{%- if page.oc.data.creator.url -%}<a href="{{ page.oc.data.creator.url }}">{%- endif -%}{{page.oc.data.creator.name}}{%- if page.oc.data.creator.url -%}</a>{%- endif -%}
         </span>
@@ -39,7 +39,9 @@ permalink: "{{ page.permalink }}"
           <div class="songlist"><strong class="content-title sr-only">Playlist:</strong>
             <ul class="songs">
             {% for song in page.oc.data.songs %}
-              <li class="song"><a href="{{song.url}}" target="_blank" data-tippy-content="{{song.artist}} – {{song.title}}"><i class="fa-solid fa-music" aria-hidden="true"></i></a></li>
+                {% if song.url and song.title -%}
+                    <li class="song"><a href="{{song.url}}" target="_blank" data-tippy-content="{{song.artist}}{%-if song.artist and song.title -%}&nbsp;–&nbsp;{%- endif -%}{{song.title}}"><i class="fa-solid fa-music" aria-hidden="true"></i></a></li>
+                {%- endif -%}
             {% endfor %}
             </ul>
           </div>

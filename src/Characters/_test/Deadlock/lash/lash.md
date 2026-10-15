@@ -5,7 +5,7 @@ id: 6969
 page_url: the lash
 
 name: Lash
-subtitle: "Initiator. High-Flying. Arrogant."
+subtitle: "<span class=\"test\">Initiator.</span> High-Flying. Arrogant."
 
 created: 2024-04-24
 updated: 2026-10-15
