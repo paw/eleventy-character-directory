@@ -14,7 +14,7 @@ creator:
     url: 
 featured: false
 
-subtitle: FERAL. HOT MESS. TRANSFORMATION.
+subtitle: "<span class=\"nameblock\">FERAL</span> <span class=\"nameblock\">HOT MESS</span> <span class=\"nameblock\">TRANSFORMATION</span>"
 
 # basic_info:
 #     Ink: "Wearingeul's For Whom the Bell Tolls"

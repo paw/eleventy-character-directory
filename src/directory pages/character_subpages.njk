@@ -15,7 +15,7 @@ permalink: "{{ page.permalink }}"
     <div class="header card">
       <div class="text">
         <h1 class="name">{{page.oc.data.name}}{% if character_config.show_character_ids %}<span class="id">(#{{page.oc.data.id}})</span>{% endif %}</h1>
-        {%- if page.oc.data.subtitle -%}<h2 class="subtitle">{{page.oc.data.subtitle}}</h1>{%- endif -%}
+        {%- if page.oc.data.subtitle -%}<h2 class="subtitle">{{page.oc.data.subtitle | safe}}</h1>{%- endif -%}
         {%- if page.oc.data.quote and page.oc.data.quote.words.length > 0 -%}
         <div class="quote">
           <div class="words">“{{page.oc.data.quote.words}}”</div>
@@ -66,5 +66,5 @@ permalink: "{{ page.permalink }}"
 
 <script type="text/javascript" src="/public/js/lightbox.js"></script>
 {% if page.oc.data.custom_css %}
-<link rel="stylesheet" type="text/css" href="/public/css/{{page.oc.data.custom_css}}.css" />
+<link rel="stylesheet" type="text/css" href="/public/css/{{page.oc.data.custom_css}}" />
 {% endif %}

@@ -13,7 +13,7 @@ creator:
     url: 
 featured: true
 
-subtitle: Duelist. Isolator. Telekinetic.
+subtitle: "<span class=\"nameblock\">Duelist</span> <span class=\"nameblock\">Isolator</span> <span class=\"nameblock\">Telekinetic</span>"
 
 # basic_info:
 #     Ink: "Wearingeul's For Whom the Bell Tolls"

@@ -1,0 +1,14 @@
+#profile .nameblock {
+    display: inline-block;
+    padding: 2px 8px;
+    background: var(--color-primary);
+    color: var(--color-primary-text);
+    font-weight: bold;
+    text-transform: uppercase;
+}
+#profile .nameblock:nth-child(odd) {
+    transform: rotate(-2deg)
+}
+#profile .nameblock:nth-child(even) {
+    transform: rotate(1deg)
+}
