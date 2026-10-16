@@ -10,6 +10,9 @@
         p {
             margin: 0 0 1rem;
         }
+        ul.full {
+            margin-top: 0;
+        }
         button {
             font-size: 1.2rem;
             padding: 0.5rem 1rem;
@@ -56,6 +59,34 @@
             font-family: monospace;
         }
         input { max-width: 100%; }
+        #piclist:empty::before {
+            font-style: italic;
+            content: 'Empty gallery. Please select some images.'
+        }
+        #piclist.rearrange { display: flex; flex-wrap: wrap; }
+        #piclist.rearrange [data-type="pic"] > .col2, .rearrange [type="remove"] { display: none }
+        #piclist.rearrange [data-type="pic"] {
+            display: block;
+            position: relative;
+            max-width: 150px;
+            margin: 0.5rem auto;
+        }
+        #piclist.rearrange [data-type="pic"]::before {
+            position: absolute;
+            background: #000;
+            color: #fff;
+            padding: 0.5rem;
+            z-index: 2;
+            top: 0;
+            left: 0;
+        }
+        #piclist.rearrange [data-type="pic"] .fa-grip {
+            position: absolute;
+            z-index: 2;
+            top: 0;
+            right: 0;
+            background: #000;
+        }
     </style>
 </head>
 <body>
@@ -83,8 +114,15 @@
 
             <div class="card col2" id="gallery">
                 <h2 class="content-title full">Gallery List</h2>
-                <p class="full">all things are optional except the file url. i highly recommend including at least alt text at a minimum. click and drag and re-order images.</p>
+                <ul class="full">
+                    <li>all things are optional except the file url.</li>
+                    <li>i highly recommend including at least alt text at a minimum.</li>
+                    <li>click and drag images by the handle to re-order the gallery.</li>
+                    <li>click the button below to temporarily hide metadata and make it easier to rearrange images.</li>
+                    <li>descriptions can contain HTML but be aware that all apostrophes (') are escaped so you must use quotes for any inline html/css properties</li>
+                </ul>
                 <div class="full">
+                    <button id="toggle-rearrange-mode" style="margin: 0.5rem 0 0.5rem auto;display: block;" onclick="document.querySelector('#piclist').classList.toggle('rearrange');">Toggle Rearrange Mode</button>
                     <div id="piclist"></div>
                     <div id="pic-template" data-type="pic">
                         <div class="preview"></div>
@@ -158,9 +196,9 @@ document.querySelector("#submit").addEventListener("click", (event) => {
     let newImage = `${imageTemplate}`;
     newImage = newImage.replace(/{{full}}/ig,galleryImage.querySelector(`input[name="full"]`).value.trim() ?? '');
     newImage = newImage.replace(/{{thumbnail}}/ig,galleryImage.querySelector(`input[name="thumbnail"]`).value.trim() ?? '');
-    newImage = newImage.replace(/{{title}}/ig,galleryImage.querySelector(`input[name="title"]`).value.trim() ?? '');
-    newImage = newImage.replace(/{{description}}/ig,galleryImage.querySelector(`textarea[name="description"]`).value.trim() ?? '');
-    newImage = newImage.replace(/{{alt}}/ig,galleryImage.querySelector(`input[name="alt"]`).value.trim() ?? '');
+    newImage = newImage.replace(/{{title}}/ig, galleryImage.querySelector(`input[name="title"]`).value.trim().length > 0 ? `"${galleryImage.querySelector(`input[name="title"]`).value.trim().replace(/'/g,'&apos;').replace(/"/g,'&quot;')}"` : '');
+    newImage = newImage.replace(/{{description}}/ig, galleryImage.querySelector(`textarea[name="description"]`).value.trim().length > 0 ? `'${galleryImage.querySelector(`textarea[name="description"]`).value.trim().replace(/'/g,'&apos;')}'` : '');
+    newImage = newImage.replace(/{{alt}}/ig,galleryImage.querySelector(`input[name="alt"]`).value.trim().length > 0 ? `"${galleryImage.querySelector(`input[name="alt"]`).value.trim().replace(/'/g,'&apos;').replace(/"/g,'&quot;')}"` : '');
     newImage = newImage.replace(/{{creditname}}/ig,galleryImage.querySelector(`input[name="creditname"]`).value.trim() ?? '');
     newImage = newImage.replace(/{{creditlink}}/ig,galleryImage.querySelector(`input[name="creditlink"]`).value.trim() ?? '');
     images += newImage;
@@ -210,9 +248,9 @@ document.querySelector("#load").addEventListener("click", async (event) => {
 
           clone.querySelector(`input[name="full"]`).value = image.full;
           clone.querySelector(`input[name="thumbnail"]`).value = image.thumbnail ?? '';
-          clone.querySelector(`input[name="title"]`).value = image.title ?? '';
-          clone.querySelector(`textarea[name="description"]`).value = image.description ?? '';
-          clone.querySelector(`input[name="alt"]`).value = image.alt ?? '';
+          clone.querySelector(`input[name="title"]`).value = image?.title?.length > 0 ? image.title.replace(/&apos;/g,"'").replace(/&quot;/g,'"') : '';
+          clone.querySelector(`textarea[name="description"]`).value = image?.description?.length > 0 ? image.description.replace(/&apos;/g,"'") : '';
+          clone.querySelector(`input[name="alt"]`).value = image?.alt?.length > 0 ? image.alt.replace(/&apos;/g,"'").replace(/&quot;/g,'"') : '';
           clone.querySelector(`input[name="creditname"]`).value = image.credit ?? '';
           clone.querySelector(`input[name="creditlink"]`).value = image.credit_url ?? '';
 
