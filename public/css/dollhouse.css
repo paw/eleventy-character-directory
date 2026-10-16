@@ -782,7 +782,7 @@ a:hover {
   margin: 0 0 auto;
   display: block;
 }
-.oc .header span {
+.oc .header .header-stats span {
   display: block;
 }
 .content-title {
