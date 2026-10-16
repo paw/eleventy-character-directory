@@ -30,17 +30,4 @@ Hailing from the lost country of New Zealand and raised in the unforgiving outba
 
 Although he is typically known for instantaneously killing enemies at a distance, the Sniper can use the Huntsman to get closer to the enemy. Additionally, the Sydney Sleeper and the mysterious contents of Jarate allow him to take on a support role by causing enemies to take Mini-Crits.
 
-The Sniper is voiced by John Patrick Lowrie. 
-
-character backstory goes here **Markdown supported**.
-
-Optional Values you can remove:
-- full-name
-- species
-- stats
-- setting
-- gallery
-
-### Section
-
-**You can have however many sections you want.** The Gallery will appear at the bottom of the page.
+The Sniper is voiced by John Patrick Lowrie.

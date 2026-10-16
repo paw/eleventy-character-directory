@@ -20,23 +20,10 @@ connections:
 
 ---
 
-## Backstory
+The **Heavy**, short for **Heavy Weapons Guy**, is a towering hulk of a man hailing from the USSR. He is often considered the face of the game due to his prominent appearance on box art, promotional materials, and loading screens. He starred in the very first Meet the Team video and has appeared in all further movies to date.
 
-Hailing from the lost country of New Zealand and raised in the unforgiving outback of Australia, the Sniper is a tough and ready crack shot mercenary. The Sniper's main role on the battlefield is to pick off important enemy targets from afar using his Sniper Rifle and its ability to deal guaranteed Critical hits with a headshot (with some exceptions). He is effective at long range, but weakens with proximity, where he is forced to use his Submachine Gun or his Kukri. As a result, the Sniper tends to perch on higher grounds or in hard-to-see places, where he can easily pin down enemies at chokepoints.
+The Heavy is the largest and arguably most dangerous class in Team Fortress 2, boasting the most base health combined with the devastating firepower of his trusty Minigun. This weapon can inflict huge damage at a very high rate of fire, allowing him to mow down opposing Heavies, cowards, and tiny-baby-men in mere seconds. However, as the slowest class in the game, the Heavy's low movement speed is his main weakness, making him an appealing target for Snipers and Spies. Upon revving up or firing his Minigun, this already unimpressive speed slows to a crawl, making it even easier for enemies to damage him. As a result, the Heavy is often dependent on support from Medics and Engineers to keep him in the fight. Thanks to his burly stature, he also takes 50% less knockback from most damage sources—excluding Sentry Gun bullets.
 
-Although he is typically known for instantaneously killing enemies at a distance, the Sniper can use the Huntsman to get closer to the enemy. Additionally, the Sydney Sleeper and the mysterious contents of Jarate allow him to take on a support role by causing enemies to take Mini-Crits.
+Aside from shredding entire teams when adequately supported, the Heavy is able to provide limited healing for himself and his comrades via his Sandvich, which, when consumed, is capable of restoring him to perfect health within seconds. It can also be dropped to provide an instant, often-appreciated 50% health boost to his teammates, equal to a medium health kit. However, if the Heavy is not careful, an opportunistic enemy may pick up the dropped Sandvich for a health boost of their own.
 
-The Sniper is voiced by John Patrick Lowrie. 
-
-character backstory goes here **Markdown supported**.
-
-Optional Values you can remove:
-- full-name
-- species
-- stats
-- setting
-- gallery
-
-### Section
-
-**You can have however many sections you want.** The Gallery will appear at the bottom of the page.
+The Heavy is voiced by Gary Schwartz.

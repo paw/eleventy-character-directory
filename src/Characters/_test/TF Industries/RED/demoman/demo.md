@@ -20,14 +20,10 @@ gallery:
 
 ---
 
-## Backstory
+The Demoman is a self-described black Scottish cyclops and a scrumpy-swilling demolitions expert from Ullapool, Scotland, who is one of the most versatile mercenaries, capable of dealing large amounts of explosive damage, whether directly or through splash damage. Armed with his Grenade Launcher and Stickybomb Launcher, the Demoman uses his one good eye and knowledge of his surrounding environment for well-timed stickybomb detonations and precise grenade impacts that send enemies skyward, often in many pieces. His weapons' large splash radius can also work against him; if an enemy manages to catch him at close range, he will often take damage from his own explosives as he struggles to defend himself.
 
-The Soldier is a crazed, jingoistic patriot from Midwest, USA, who portrays himself as a military man despite being rejected from the US army. Tough and well-armed, he is a versatile class, capable of both offense and defense, and a great starter class to get familiar with the game.
+The Demoman excels at swift destruction; he can launch grenades and stickybombs at creative angles to wreak havoc on enemy encampments and Sentry Guns while remaining out of the line of fire or simply blast his enemies into a red mist with a seemingly endless stream of these explosives. His stickybombs are also a perfect tool for area denial and are effective at keeping opponents away from carts, control points, Intelligence, or any other location he deems off-limits.
 
-Well-balanced and possessing both survivability and mobility, the Soldier is considered one of the most flexible classes in Team Fortress 2. Despite his low ground movement speed, he is capable of using rocket jumps to reach his destination quickly. His large health pool is second only to that of the Heavy, and his wide array of armaments and weaponry allows him to bring whatever weapon or equipment is best suited to the situation at hand.
+The Demoman can replace his default Stickybomb Launcher with a shield, allowing him to charge forward rapidly and gain guaranteed Mini-Crits or Critical hits on melee weapons. The shields can often be paired with one of the various melee weapons in his arsenal to complement the charging ability, such as the Eyelander's increased impact damage, the Claidheamh Mòr's increased charging duration, or the Persian Persuader's ability to recharge the ability by picking up ammo packs. The Demoman's primary weapon can be switched out for the Ali Baba's Wee Booties or the Bootlegger, giving even more buffs to a shield while also being usable without a shield. A Demoman running a boots primary, a shield secondary, and a sword melee weapon is often referred to as a Demoknight.
 
-The Soldier is well known for his spectacular rocket jump. In defiance of all good sense and judgment, the Soldier can detonate a rocket at his feet and launch himself skyward at the cost of some health (which can be reduced by the Gunboats, or negated altogether with the Rocket Jumper). To rocket jump effectively, the player must fire the rocket at the ground or a wall, then immediately jump and crouch. This ability allows the Soldier to navigate the battlefield by air, appear from unexpected places, and reach areas inaccessible to the Scout's double jump and HYPE jumps. After rocket jumping, the Soldier can remain airborne for longer by deploying the B.A.S.E. Jumper.
-
-### Section
-
-The Soldier was voiced by the late Rick May. He was voiced by May and Nolan North in Expiration Date. 
+The Demoman is voiced by Gary Schwartz.

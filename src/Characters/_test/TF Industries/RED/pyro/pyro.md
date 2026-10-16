@@ -15,8 +15,8 @@ creator_url: https://teamfortress.com
 icon: /public/image/pyro.jpg
 full-name: Pyro
 species: Eladrin
-worlds: ["Arcanopunk (D&D)"]
-tags: ["Pyromaniac", "TF2", "gw2","2fort"]
+worlds: ["Arcanopunk (D&D)","2fort"]
+tags: ["Pyromaniac", "TF2"]
 
 songs:
   - title: Bambous
