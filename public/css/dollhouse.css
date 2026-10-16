@@ -320,6 +320,7 @@ hr {
 #world-n-tags {
 	display: flex;
 	grid-gap: 1rem;
+	margin-bottom: 1.5rem;
 }
 #world-n-tags:has(#tags:empty), #world-n-tags:has(#worlds:empty)  {
 	display: block;

@@ -136,7 +136,11 @@ if (gallery) {
   }
 
 
-  function createMasonry() {
+  function createMasonry(initialLoad = false) {
+    if (initialLoad) {
+      gallery.classList.remove('waiting');
+      document.querySelector('#gallery-loading').classList.add('hide')
+    }
     const columnCount = getColumnCount();
     // Remove existing columns
     gallery.innerHTML = "";
@@ -182,6 +186,6 @@ if (gallery) {
 
   document.addEventListener("DOMContentLoaded", function () {
       window.addEventListener("resize", createMasonry);
-      Promise.all(imagePromises).then(createMasonry);
+      Promise.all(imagePromises).then(createMasonry(true));
   });
 }

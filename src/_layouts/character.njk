@@ -291,7 +291,8 @@ permalink: "{%- if character_config.character_slug -%}{{ character_config.charac
       <h2 class="content-title">
         {{ name }}'s Gallery
       </h2>
-      <ul class="masonry-gallery" id="gallery">
+      <div id="gallery-loading" class="loading"><i class="fa-solid fa-spinner" aria-label="Loading..."></i></div>
+      <ul class="masonry-gallery waiting" id="gallery">
         {% for image in gallery %}
             <li>
             <img src="{%if image.thumb_url != null %}{{image.thumb_url}}{% else %}{{image.full_url}}{% endif %}" class="lightbox-thumb" data-full="{{image.full_url}}" data-data-tippy-content="{{image.title | safe}}" data-title="{{image.title | safe}}" data-caption="{{image.description | safe}}" {%- if image.credit -%}data-credit-name="{{ image.credit }}"{%- endif -%} {%- if image.credit_url -%}data-credit-url="{{ image.credit_url }}"{%- endif -%} data-index="{{ loop.index0 }}" alt="{{image.alt}}" aria-role="button" data-tippy-content="View Full Image" tabindex="0">

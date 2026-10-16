@@ -63,7 +63,33 @@ main {
 [data-name="featured-home"].loading img {
     opacity: 0;
 }
-/*lightbox*/
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.loading i {
+  animation: rotation 1s linear infinite;
+  font-size: 5rem;
+}
+.card .loading {
+    margin: 0.5rem auto;
+    text-align: center;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/*gallery*/
 .masonry-gallery {
   display: flex;
   align-items: flex-start;
@@ -71,6 +97,10 @@ main {
   padding: 0.5rem;
   margin: 0;
   list-style: none;
+}
+.masonry-gallery.waiting {
+    opacity: 0;
+    pointer-events: none;
 }
 .masonry-gallery img {
   pointer-events: none;
