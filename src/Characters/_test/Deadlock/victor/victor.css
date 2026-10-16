@@ -23,7 +23,7 @@
   --color-card-tab-hover: #354445;
 }
 
-body {
+#mobile-background {
     background: var(--color-bg) url('/public/images/backgrounds/victorbg.png');
     background-size: contain;
     background-position: bottom right;

@@ -1,10 +1,10 @@
 {
 
+  "favicon" : "/public/images/characters/p/placeholder.png",
   "site_title" : "My Character Database",
   "site_title_icon" : "<i class='fa-solid fa-book-atlas' aria-hidden='true'></i>",
   "site_footer_text" : "<a href='https://github.com/paw/eleventy-character-directory' target='_blank'>11ty Character Directory</a>",
   "main_theme_css_file" : "dollhouse",
-  "nav_home_icon" : "<i class='fa-solid fa-house' aria-hidden='true'></i>",
   "enable_theme_selector" : true,
 
   "story_slug": "story",
@@ -14,6 +14,7 @@
 
   "base_directory" : "Characters",
   "nav_base_directory_icon" : "<i class='fa-solid fa-box-archive' aria-hidden='true'></i>",
+  "nav_home_link_icon" : "<i class='fa-solid fa-house' aria-hidden='true'></i>",
 
   "multi_page_layout" : true,
   "show_character_ids": false,

@@ -317,8 +317,17 @@ hr {
     margin-top: 0.5rem;
     border: var(--borders);
 }
-#worlds a {
-  display: inline-block;
+#world-n-tags {
+	display: flex;
+	grid-gap: 1rem;
+}
+#world-n-tags #worlds, #world-n-tags #tags {
+    width: 50%;
+    flex-grow: 1;
+}
+#world-n-tags .card {
+    width: 100%;
+    height: 100%;
 }
 #stories .story-header {
   display: flex;
@@ -354,8 +363,16 @@ hr {
   margin: 0.5rem 0.2rem;
 }
 #tags a, #worlds a {
-  white-space: pre;
-  margin-bottom: 0.2rem;
+    white-space: pre;
+    margin-top: 0;
+    display: inline-block;
+    margin-bottom: 0.5rem;
+}
+#tags li {
+    margin-bottom: 0.3rem;
+}
+#tags li a {
+    margin: 0;
 }
 .oc-list.extra-small .character-name-badge {
   font-size: 0.8rem;
@@ -468,6 +485,12 @@ a:focus .folder-placeholder .open {
   }
   #worlds ul {
     grid-template-columns: 50% 50%;
+  }
+  #world-n-tags {
+      display: block;
+  }
+  #world-n-tags #worlds, #world-n-tags #tags {
+      width: 100%;
   }
 }
 @media screen and (max-width: 400px) {
@@ -787,6 +810,22 @@ a:hover {
 #ocprofile:empty::before {
     font-style: italic;
     content: 'This character does not have a description yet.'
+}
+.au-link {
+	display: inline-flex;
+	align-items: center;
+	grid-gap: 0.2rem;
+	vertical-align: text-top;
+}
+.au-link img {
+	width: 20px;
+	min-height: 20px;
+	padding: 0.2rem;
+	border: var(--borders);
+	border-radius: var(--border-radius);
+}
+.au-link:hover img, .au-link:focus img {
+    border-color: var(--color-borders-hover);
 }
 .subpages ul {
 	padding: 0;

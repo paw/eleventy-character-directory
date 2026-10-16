@@ -8,7 +8,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.7/Sortable.min.js" integrity="sha512-ri8dokds012Oxz+iFzMs4KNJXVc+h7J1zq6unM1NTtzBLj4jD1R5BWiK6QycK0TdSdkt7zYcIcv6sUPhmYkbdQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v7.3.1/css/all.css" crossorigin="anonymous">
     <style>
-        .col2 { display: grid; grid-template-columns: 50% 50%; grid-gap: 0.5rem; }
+        .col2 { display: grid; grid-template-columns: 50% 50%; grid-gap: 0.5rem; align-items: center; }
+        .col2 > .col2 { padding: 0.5rem 0 }
         p {
             margin: 0 0 1rem;
         }
@@ -92,6 +93,7 @@
             </div>
         </div>
 
+        <form action="javascript:void(0);">
         <div id="inputs">
             <div class="card col2" id="main">
                 <h2 class="content-title full">Main Info</h2>
@@ -103,6 +105,7 @@
                 <label for="updated">updated*</label><input type="date" name="updated" required>
                 <label for="creator">creator name</label><input type="text" placeholder="Creator Name" name="creator">
                 <label for="creator_url">creator url</label><input type="text" placeholder="https://creatorwebsite.com" name="creator_url">
+                <label for="au">is an AU version of:</label><input type="number" step="1" min="1" placeholder="Leave blank to skip" name="au">
                 <div class="col2"><label for="featured">featured character?</label><input type="checkbox" name="featured"></div>
                 <div class="col2"><label for="hidden">hidden character?</label><input type="checkbox" name="hidden"></div>
                 <label for="layoutoverride">global layout override:</label>
@@ -188,6 +191,7 @@
                 <textarea id="output"></textarea>
             </div>
         </div>
+        </form>
     </div>
 
 <script type="module">
@@ -227,7 +231,7 @@ subtitle: {{subtitle}}
 
 created: {{created}}
 updated: {{updated}}
-
+{{is_au}}
 show_in_directory: {{show_in_directory}}
 featured: {{featured}}
 
@@ -303,6 +307,7 @@ document.querySelector("#submit").addEventListener("click", (event) => {
   data = data.replace(/{{url}}/ig,document.querySelector(`[name="url"]`).value.trim())
   data = data.replace(/{{created}}/ig,document.querySelector(`[name="created"]`).value)
   data = data.replace(/{{updated}}/ig,document.querySelector(`[name="updated"]`).value)
+  data = data.replace(/{{is_au}}/ig,document.querySelector(`input[name="au"]`).value.length > 0 ? `is_AU_of: ${document.querySelector(`[name="au"]`).value}\n` : '');
   data = data.replace(/{{show_in_directory}}/ig,(document.querySelector(`[name="hidden"]`).checked) == true ? false : true)
   data = data.replace(/{{featured}}/ig,(document.querySelector(`[name="featured"]`).checked) == true ? true : false)
 
@@ -398,25 +403,26 @@ document.querySelector("#load").addEventListener("click", async (event) => {
         clearForm();
 
         // load values in
-        document.querySelector(`[name="name"]`).value = data.name;
-        document.querySelector(`[name="id"]`).value = data.id;
-        document.querySelector(`[name="url"]`).value = data.page_url;
+        document.querySelector(`input[name="name"]`).value = data.name;
+        document.querySelector(`input[name="id"]`).value = data.id;
+        document.querySelector(`input[name="url"]`).value = data.page_url;
 
-        document.querySelector(`[name="hidden"]`).checked = data?.show_in_directory == true ? false : true;
-        document.querySelector(`[name="featured"]`).checked = data?.featured == true ? true : false;
+        document.querySelector(`input[name="hidden"]`).checked = data?.show_in_directory == true ? false : true;
+        document.querySelector(`input[name="featured"]`).checked = data?.featured == true ? true : false;
 
-        document.querySelector(`[name="created"]`).value = data?.created ? data.created : TODAY;
+        document.querySelector(`input[name="created"]`).value = data?.created ? data.created : TODAY;
 
-        document.querySelector(`[name="friends"]`).value = data?.friends ? data.friends : "";
-        document.querySelector(`[name="enemies"]`).value = data?.enemies ? data.enemies : "";
+        document.querySelector(`input[name="friends"]`).value = data?.friends ? data.friends : "";
+        document.querySelector(`input[name="enemies"]`).value = data?.enemies ? data.enemies : "";
+        document.querySelector(`input[name="au"]`).value = data?.is_AU_of ? data.is_AU_of : "";
 
-        document.querySelector(`[name="creator"]`).value = data?.creator?.name ? data.creator.name : "";
-        document.querySelector(`[name="creator_url"]`).value = data?.creator?.url ? data.creator.url : "";
+        document.querySelector(`input[name="creator"]`).value = data?.creator?.name ? data.creator.name : "";
+        document.querySelector(`input[name="creator_url"]`).value = data?.creator?.url ? data.creator.url : "";
 
-        document.querySelector(`[name="subtitle"]`).value = data?.subtitle ? data.subtitle : "";
+        document.querySelector(`input[name="subtitle"]`).value = data?.subtitle ? data.subtitle : "";
 
-        document.querySelector(`[name="quote"]`).value = data?.quote?.words ? data.quote.words : "";
-        document.querySelector(`[name="quotesrc"]`).value = data?.quote?.credit ? data.quote.credit : "";
+        document.querySelector(`input[name="quote"]`).value = data?.quote?.words ? data.quote.words : "";
+        document.querySelector(`input[name="quotesrc"]`).value = data?.quote?.credit ? data.quote.credit : "";
 
         if (data?.multi_page_layout === false || data?.multi_page_layout === true) {
           const select = document.querySelector(`select[name="layoutoverride"]`)
@@ -424,7 +430,7 @@ document.querySelector("#load").addEventListener("click", async (event) => {
             option => String(option.value) === String(data.multi_page_layout)
           );
         } else {
-          console.log("something not right")
+          document.querySelector(`select[name="layoutoverride"]`).selectedIndex = 0;
         }
         if (data?.connections) {
           const container = document.querySelector("#context");

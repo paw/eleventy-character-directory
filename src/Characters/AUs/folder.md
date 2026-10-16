@@ -1,0 +1,1 @@
+Alternate Universe support. AU profiles are treated as their own characters and can be hidden from the directory if you don't want them to show in the flat directory views or in folders. However, please note that they are automatically attached to their parent character and their profiles will link to eachother.

@@ -18,7 +18,7 @@ limit: 5
     <title>{{ character_config.site_title }}</title>
     {% endif %}
     <meta charset="utf-8" />
-    <link rel="icon" href="https://glitch.com/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="{{character_config.favicon}}">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     {% if page_description %}<meta name="description" content="{{ description }}" />{% endif %}
     <link rel="stylesheet" type="text/css" href="/public/css/global.css" />
@@ -31,13 +31,14 @@ limit: 5
     <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/perspective.css"/>
   </head>
   <body>
+      <div id="mobile-background"></div>
   <main>
 
     <nav id="navbar" class="nav">
         <span class="title">{%- if character_config.site_title_icon -%}{{ character_config.site_title_icon | safe }}&nbsp;{%- endif -%}{{ character_config.site_title | safe }}</span>
         <button class="toggle" id="mobile-menu" data-menu="closed" aria-label="Show Site Navigation"><i class="fa-solid fa-bars closed"></i><i class="fa-solid fa-xmark open"></i></button>
         <div class="links">
-            <a href="/">{%- if character_config.nav_home_icon -%}{{ character_config.nav_home_icon | safe }}&nbsp;{%- endif -%} Home</a>
+            <a href="/">{%- if character_config.nav_home_link_icon -%}{{ character_config.nav_home_link_icon | safe }}&nbsp;{%- endif -%} Home</a>
             <a href="/{{ character_config.base_directory | slugify }}">{%- if character_config.nav_base_directory_icon -%}{{ character_config.nav_base_directory_icon | safe }}&nbsp;{%- endif -%}{{ character_config.base_directory }}</a>
          {%- for link in collections.navigation -%}
           {% if link.data.permalink != false %}<a href="{{link.url}}">{% if link.data.icon %}{{ link.data.icon | safe }} {% endif %}{{link.data.title}}</a>{% endif %}
@@ -54,7 +55,6 @@ limit: 5
           <span class="footer-text">{{character_config.site_footer_text | safe}}</span>
           {%- if character_config.enable_theme_selector -%}<button class="toggle" id="theme-toggle" aria-label="Toggle Theme"><i class="fa-solid fa-circle-half-stroke auto" data-tippy-content="Theme: Auto"></i><i class="fa-solid fa-moon dark" data-tippy-content="Theme: Dark"></i><i class="fa-solid fa-sun light" data-tippy-content="Theme: Light"></i></button>{%- endif -%}
       </footer>
-
   </main>
 
   </body>

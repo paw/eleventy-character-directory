@@ -90,6 +90,16 @@ export default function (eleventyConfig) {
       .filter(oc => oc.data.show_in_directory === true)
       .filter(oc => oc.data.featured === true);
   });
+
+  eleventyConfig.addFilter("findOneOC", (ocs,id) => {
+    return ocs
+      .find(oc => oc.data.id === id);
+  });
+  eleventyConfig.addFilter("findAllOCs", (ocs,idsToFind) => {
+    return ocs
+      .filter(oc => idsToFind.includes(oc.data.id))
+  });
+
   eleventyConfig.addFilter("created", ocs => {
     return ocs.filter(oc => oc.data.show_in_directory === true).sort((a, b) => b.data.created - a.data.created);
   });
@@ -100,6 +110,7 @@ export default function (eleventyConfig) {
     const ocs = validateCharacters(collection.getFilteredByTag("oc"));
     // if we're good we can get gallery for all ocs :)
     for (const oc of ocs) {
+      oc.data.altUniverseVersions = getAUs(ocs,oc.data.id);
       oc.data.gallery = getGallery(oc);
       if (!oc.data.page_url) { oc.data.page_url = oc.data.id }
     }
@@ -287,13 +298,22 @@ export default function (eleventyConfig) {
       withFileTypes: true,
     });
     // see if there are any directories inside it
-    const directories = entries.filter((entry) => entry.isDirectory());
+    const directories = entries.filter((entry) => entry.isDirectory() && entry.name !== "images");
     // empty dirs will be treated like empty folders
     const empty = entries.length === 0 ? true : false;
 
+    let hasFolderDescription = false;
+    if (!empty) {
+      // check for folder description
+      hasFolderDescription = entries.filter(
+        (entry) =>
+          entry.isFile() && entry.name.toLowerCase() === "folder.md",
+      ).length === 1 ? true : false;
+    }
+
     // deepest directory in the tree = oc container
     // we exclude the root directory from this logic since characters are allowed to be unsorted
-    if (relativePath !== "" && directories.length === 0 && !empty) {
+    if (relativePath !== "" && directories.length === 0 && !empty && !hasFolderDescription) {
       // find the oc markdown file
       const markdownFiles = entries.filter(
         (entry) =>
@@ -610,6 +630,12 @@ export default function (eleventyConfig) {
       .filter((oc) => oc.data.show_in_directory === true)
       .sort((a, b) => b.data.created - a.data.created);
   });
+
+  function getAUs(ocs, id) {
+    let myAltVersions = ocs.filter(oc => oc.data?.is_AU_of === id);
+    console.log(`alt versions of ${id}: ${myAltVersions.length}`)
+    return myAltVersions.length > 0 ? myAltVersions : undefined;
+  }
 
   function getGallery(oc) {
     // get the directory

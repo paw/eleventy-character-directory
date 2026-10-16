@@ -68,6 +68,22 @@ permalink: "{%- if character_config.character_slug -%}{{ character_config.charac
 </nav>
 {%- endif -%}
 
+{%- if is_AU_of is not undefined or altUniverseVersions is not undefined -%}
+<div id="aus" class="card">
+    {%- if is_AU_of is not undefined -%}
+        {%- set parent = collections.ocs | findOneOC(is_AU_of) -%}
+        <div><i class="fa-solid fa-code-fork" aria-hidden="true"></i> This character is an Alternate Universe version of&ensp;<a href="{{parent.url}}" class="au-link"><img src="{{parent.data.icon}}" class="minicon">{{parent.data.name}}</a>
+        </div>
+    {%- endif -%}
+    {%- if altUniverseVersions is not undefined -%}
+        <div><i class="fa-solid fa-code-fork" aria-hidden="true"></i> Alternate Universe Versions:&ensp;
+            {%- for au in altUniverseVersions -%}
+                <a href="{{au.url}}" class="au-link"><img src="{{au.data.icon}}" alt="Icon of {{au.data.name}}"> {{au.data.name}}</a></li>{%- if not loop.last -%},&nbsp;{%- endif -%}
+            {%- endfor -%}
+        </div>
+    {%- endif -%}
+</div>
+{%- endif -%}
 <div id="overview">
 
     <div class="backstory card">
@@ -166,33 +182,35 @@ permalink: "{%- if character_config.character_slug -%}{{ character_config.charac
   </div>
 {% endif %}
 
-<div id="worlds">
+    <div id="world-n-tags">
+        <div id="worlds">
 
-    {%- if worlds and worlds.length > 0 -%}
-    <div class="card">
-    <h3 class="content-title">Worlds</h3>
-      {%- set all_worlds = collections.ocWorlds -%}
-      {%- for world in worlds -%}
-        <a href="/{% if character_config.world_slug %}{{character_config.world_slug}}/{% endif %}{{all_worlds[world | lower].name | slugify }}">{{ all_worlds[world | lower].name }}</a>&nbsp;
-      {%- endfor -%}
-    </div>
-    {%- endif -%}
-
-  </div>
-
-  <div id="tags">
-    {%- if tags and tags.length > 1 -%}
-    <div class="card">
-    <h3 class="content-title">Tags</h3>
-      {%- for tag in tags -%}
-        {%- if (tag != "oc") -%}
-          <a href="/{% if character_config.tag_slug %}{{character_config.tag_slug}}/{% endif %}{{tag | slugify }}">#{{tag}}</a>&nbsp;
+        {%- if worlds and worlds.length > 0 -%}
+        <div class="card">
+        <h3 class="content-title">Worlds</h3>
+          {%- set all_worlds = collections.ocWorlds -%}
+          {%- for world in worlds -%}
+            <a href="/{% if character_config.world_slug %}{{character_config.world_slug}}/{% endif %}{{all_worlds[world | lower].name | slugify }}">{{ all_worlds[world | lower].name }}</a>&nbsp;
+          {%- endfor -%}
+        </div>
         {%- endif -%}
-      {%- endfor -%}
-    </div>
-    {%- endif -%}
 
-  </div>
+      </div>
+
+      <div id="tags">
+        {%- if tags and tags.length > 1 -%}
+        <div class="card">
+        <h3 class="content-title">Tags</h3>
+          {%- for tag in tags -%}
+            {%- if (tag != "oc") -%}
+              <a href="/{% if character_config.tag_slug %}{{character_config.tag_slug}}/{% endif %}{{tag | slugify }}">#{{tag}}</a>&nbsp;
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+        {%- endif -%}
+
+      </div>
+    </div>
 
   </div>
   {% if not effective_multi_page_layout %}

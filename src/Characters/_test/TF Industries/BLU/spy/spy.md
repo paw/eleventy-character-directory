@@ -10,6 +10,7 @@ page_url: meet the spy
 
 worlds:
     - doublecross
+    - 2fort
 tags: ["tf2","invisible"]
 
 connections:
