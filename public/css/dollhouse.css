@@ -321,9 +321,15 @@ hr {
 	display: flex;
 	grid-gap: 1rem;
 }
+#world-n-tags:has(#tags:empty), #world-n-tags:has(#worlds:empty)  {
+	display: block;
+}
 #world-n-tags #worlds, #world-n-tags #tags {
     width: 50%;
     flex-grow: 1;
+}
+#world-n-tags:has(#tags:empty) #worlds, #world-n-tags:has(#worlds:empty) #tags {
+    width: 100%;
 }
 #world-n-tags .card {
     width: 100%;
